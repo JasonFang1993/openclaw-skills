@@ -6,6 +6,15 @@
 
 | 技能名称 | 功能描述 | 安装难度 |
 |---------|---------|---------|
+| **pdf** | PDF 处理（提取、合并、创建、水印） | ⭐ |
+| **pptx** | PPT 制作（幻灯片、模板、设计） | ⭐ |
+| **docx** | Word 文档（报告、合同、表格） | ⭐ |
+| **xlsx** | Excel 数据（表格、公式、图表） | ⭐ |
+| **canvas-design** | 视觉设计（海报、艺术创作） | ⭐ |
+| **webapp-testing** | Web 应用测试（Playwright） | ⭐ |
+| **weather** | 天气查询（免费无需 API） | ⭐ |
+| **find-skills** | 搜索 skills 库 | ⭐ |
+| **systematic-debugging** | 系统化调试方法 | ⭐ |
 | **browser-use** | 云端浏览器自动化（需 API Key） | ⭐⭐ |
 | **browser-cash** | 匿名浏览器 session，防检测 | ⭐⭐ |
 | **kesslerio-stealth-browser** | 反机器人浏览器，绕过验证 | ⭐⭐⭐ |
@@ -28,7 +37,7 @@ npx clawhub@latest install <skill-name>
 npx clawhub@latest install browser-use
 
 # 安装所有 skill
-for skill in browser-use browser-cash kesslerio-stealth-browser ddg-search jina-reader research-company skill-creator; do
+for skill in pdf pptx docx xlsx canvas-design webapp-testing weather find-skills systematic-debugging browser-use browser-cash kesslerio-stealth-browser ddg-search jina-reader research-company skill-creator; do
   npx clawhub@latest install $skill
 done
 ```
@@ -249,6 +258,29 @@ npx clawhub@latest install skill-creator
 
 ```
 openclaw-skills/
+├── pdf/                    # PDF 处理
+│   ├── SKILL.md
+│   └── scripts/
+├── pptx/                   # PPT 制作
+│   ├── SKILL.md
+│   └── scripts/
+├── docx/                   # Word 文档
+│   ├── SKILL.md
+│   └── scripts/
+├── xlsx/                   # Excel 数据
+│   ├── SKILL.md
+│   └── scripts/
+├── canvas-design/          # 视觉设计
+│   └── SKILL.md
+├── webapp-testing/         # Web 测试
+│   ├── SKILL.md
+│   └── scripts/
+├── weather/                # 天气查询
+│   └── SKILL.md
+├── find-skills/           # 搜索 skills
+│   └── SKILL.md
+├── systematic-debugging/    # 调试方法
+│   └── SKILL.md
 ├── browser-use/           # 云端浏览器
 │   ├── SKILL.md
 │   └── references/
@@ -324,6 +356,18 @@ npm install -g puppeteer
 ---
 
 ## 📝 更新日志
+
+### v1.1.0 (2026-02-05)
+- 新增 9 个免费实用技能
+  - pdf (PDF 处理)
+  - pptx (PPT 制作)
+  - docx (Word 文档)
+  - xlsx (Excel 数据)
+  - canvas-design (视觉设计)
+  - webapp-testing (Web 测试)
+  - weather (天气查询)
+  - find-skills (搜索 skills)
+  - systematic-debugging (调试方法)
 
 ### v1.0.0 (2026-02-03)
 - 初始版本
