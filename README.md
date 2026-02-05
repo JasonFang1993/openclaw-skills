@@ -13,6 +13,7 @@
 | **canvas-design** | 视觉设计（海报、艺术创作） | ⭐ |
 | **webapp-testing** | Web 应用测试（Playwright） | ⭐ |
 | **weather** | 天气查询（免费无需 API） | ⭐ |
+| **weixin-reader** | 微信文章读取（反爬虫破解） | ⭐ |
 | **find-skills** | 搜索 skills 库 | ⭐ |
 | **systematic-debugging** | 系统化调试方法 | ⭐ |
 | **browser-use** | 云端浏览器自动化（需 API Key） | ⭐⭐ |
@@ -37,7 +38,7 @@ npx clawhub@latest install <skill-name>
 npx clawhub@latest install browser-use
 
 # 安装所有 skill
-for skill in pdf pptx docx xlsx canvas-design webapp-testing weather find-skills systematic-debugging browser-use browser-cash kesslerio-stealth-browser ddg-search jina-reader research-company skill-creator; do
+for skill in pdf pptx docx xlsx canvas-design webapp-testing weather weixin-reader find-skills systematic-debugging browser-use browser-cash kesslerio-stealth-browser ddg-search jina-reader research-company skill-creator; do
   npx clawhub@latest install $skill
 done
 ```
@@ -277,6 +278,9 @@ openclaw-skills/
 │   └── scripts/
 ├── weather/                # 天气查询
 │   └── SKILL.md
+├── weixin-reader/         # 微信文章读取
+│   ├── SKILL.md
+│   └── scripts/
 ├── find-skills/           # 搜索 skills
 │   └── SKILL.md
 ├── systematic-debugging/    # 调试方法
@@ -356,6 +360,12 @@ npm install -g puppeteer
 ---
 
 ## 📝 更新日志
+
+### v1.2.0 (2026-02-05)
+- 新增 weixin-reader (微信文章读取)
+  - 解决微信反爬虫保护
+  - iPhone User-Agent 伪装
+  - HTML 文本提取
 
 ### v1.1.0 (2026-02-05)
 - 新增 9 个免费实用技能
