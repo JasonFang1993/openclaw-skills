@@ -240,6 +240,64 @@ const SUSPICIOUS_PATTERNS = [
   }
 ];
 
+// 欺骗性声明检测 - 发现声称安全但可能有问题的情况
+const DECEPTION_PATTERNS = [
+  {
+    id: 'CLAIMS_SAFE',
+    pattern: /(-\s*)?safe(\s*-\s*)?|secure|harmless|no.*risk/i,
+    severity: 'warning',
+    score: 10,
+    name: 'Claims to be Safe',
+    description: 'Code claims to be safe without evidence',
+    recommendation: 'Verify claims independently'
+  },
+  {
+    id: 'CLAIMS_APPROVED',
+    pattern: /approved|signed|certified|verified.*by.*(admin|root|authority)/i,
+    severity: 'warning',
+    score: 15,
+    name: 'Claims to be Approved',
+    description: 'Code claims to be approved by authority',
+    recommendation: 'Check actual approval sources'
+  },
+  {
+    id: 'CLAIMS_BYPASS',
+    pattern: /(bypass|skip|ignore|disable).*(security|check|audit|validation)|no.*check.*needed/i,
+    severity: 'warning',
+    score: 20,
+    name: 'Claims to Bypass Security',
+    description: 'Code claims to bypass security measures',
+    recommendation: 'SECURITY RED FLAG - Investigate thoroughly'
+  },
+  {
+    id: 'CLAIMS_TRUSTED',
+    pattern: /trusted.*source|official.*(plugin|module)|from.*(author|developer).*(you|me|us)/i,
+    severity: 'info',
+    score: 5,
+    name: 'Claims Trusted Source',
+    description: 'Code claims to be from trusted source',
+    recommendation: 'Verify source independently'
+  },
+  {
+    id: 'CLAIMS_ADMIN',
+    pattern: /i\s*(am|m)\s*(admin|root|owner|developer|maintainer|authorized)|trust\s*me/i,
+    severity: 'warning',
+    score: 15,
+    name: 'Claims Administrator Status',
+    description: 'Claims administrator status as justification',
+    recommendation: 'Status claims do not replace security review'
+  },
+  {
+    id: 'CLAIMS_NO_EVAL',
+    pattern: /no.*eval|eval.*safe|eval.*harmless|eval.*required/i,
+    severity: 'info',
+    score: 5,
+    name: 'Claims eval is Safe',
+    description: 'Claims that eval usage is safe',
+    recommendation: 'eval with user input is never safe'
+  }
+];
+
 /**
  * Main audit function
  */
@@ -296,6 +354,35 @@ function findAllFiles(dir, pattern) {
   return files;
 }
 
+function extractComments(code) {
+  const comments = [];
+  
+  // Single-line comments
+  const singleLineRegex = /\/\/(.*)/g;
+  let match;
+  while ((match = singleLineRegex.exec(code)) !== null) {
+    comments.push({
+      text: match[1].trim(),
+      line: code.substring(0, match.index).split('\n').length
+    });
+  }
+  
+  // Multi-line comments
+  const multiLineRegex = /\/\*([\s\S]*?)\*\//g;
+  while ((match = multiLineRegex.exec(code)) !== null) {
+    const lines = match[1].split('\n');
+    const startLine = code.substring(0, match.index).split('\n').length;
+    lines.forEach((line, i) => {
+      comments.push({
+        text: line.trim(),
+        line: startLine + i
+      });
+    });
+  }
+  
+  return comments;
+}
+
 function scanFile(filePath, results) {
   try {
     const content = fs.readFileSync(filePath, 'utf8');
@@ -338,6 +425,30 @@ function scanFile(filePath, results) {
         });
       }
     }
+    
+    // Check for deception patterns in comments
+    const comments = extractComments(content);
+    for (const deception of DECEPTION_PATTERNS) {
+      for (const comment of comments) {
+        if (deception.pattern.test(comment.text)) {
+          // Only flag if there's also dangerous code nearby
+          const nearbyDanger = results.findings.critical.length > 0;
+          
+          if (nearbyDanger) {
+            results.findings[deception.severity].push({
+              pattern: deception.id,
+              name: deception.name,
+              file: relativePath,
+              line: comment.line,
+              description: `${deception.description} (Found: "${comment.text.substring(0, 50)}")`,
+              severity: deception.severity,
+              recommendation: `${deception.recommendation} CODE HAS KNOWN DANGEROUS PATTERNS!`
+            });
+          }
+        }
+      }
+    }
+    
   } catch (error) {
     // Skip unreadable files
   }
