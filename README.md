@@ -23,6 +23,7 @@
 | **ddg-search** | DuckDuckGo 免费网页搜索 | ⭐ |
 | **jina-reader** | 网页内容提取（Jina AI） | ⭐ |
 | **research-company** | 公司调研，生成 PDF 报告 | ⭐ |
+| **http-client** | HTTP 客户端（配置文件、请求管理、历史追踪） | ⭐ |
 | **skill-creator** | 创建新技能指南 | ⭐ |
 
 ---
@@ -39,7 +40,7 @@ npx clawhub@latest install <skill-name>
 npx clawhub@latest install browser-use
 
 # 安装所有 skill
-for skill in pdf pptx docx xlsx canvas-design webapp-testing weather weixin-reader find-skills systematic-debugging browser-use browser-cash kesslerio-stealth-browser ddg-search jina-reader research-company skill-creator; do
+for skill in pdf pptx docx xlsx canvas-design webapp-testing weather weixin-reader find-skills systematic-debugging browser-use browser-cash kesslerio-stealth-browser ddg-search jina-reader research-company skill-creator http-client; do
   npx clawhub@latest install $skill
 done
 ```
@@ -243,7 +244,58 @@ python3 scripts/generate_report.py /tmp/research_data.json report.pdf
 
 ---
 
-### 7. 🛠️ skill-creator（创建新技能指南）
+### 7. 🌐 http-client（HTTP 客户端）
+
+**功能**：功能完整的命令行 HTTP 客户端，支持配置文件、请求保存/加载、历史追踪、认证、自动重试、抗爬虫保护
+
+**安装**：
+```bash
+npx clawhub@latest install http-client
+
+# 或手动安装
+cp -r http-client ~/.openclaw/skills/
+```
+
+**使用**：
+```bash
+# 基础 GET 请求
+cd http-client
+node bin/http-client.js -u https://httpbin.org/get --pretty
+
+# POST 请求
+node bin/http-client.js -u https://httpbin.org/post \
+  -m POST \
+  -d '{"name":"test"}' \
+  --pretty
+
+# 保存请求
+node bin/http-client.js -u https://api.example.com/users \
+  -m POST \
+  --save my-api
+
+# 加载已保存的请求
+node bin/http-client.js --load my-api --pretty
+
+# 查看历史
+node bin/http-client.js --history
+```
+
+**功能特性**：
+| 功能 | 描述 |
+|------|------|
+| HTTP 方法 | GET/POST/PUT/PATCH/DELETE |
+| 认证 | Bearer、Basic Auth |
+| 自动重试 | 指数退避重试 |
+| 抗爬虫 | 随机 UA + 延迟 |
+| 配置文件 | 保存/加载请求 |
+| 历史追踪 | 自动记录历史 |
+| 请求脱敏 | 敏感信息自动掩码 |
+
+**文档**：`http-client/SKILL.md`
+
+---
+
+### 8. 🛠️ skill-creator（创建新技能指南）
 
 **功能**：学习如何创建自定义技能
 
@@ -305,6 +357,9 @@ openclaw-skills/
 │   ├── SKILL.md
 │   ├── scripts/
 │   └── references/
+├── http-client/         # HTTP 客户端
+│   ├── SKILL.md
+│   └── bin/
 ├── skill-creator/       # 技能创建指南
 │   └── SKILL.md
 └── README.md            # 本文件
@@ -423,6 +478,18 @@ sql:
 ---
 
 ## 📝 更新日志
+
+### v1.4.0 (2026-02-06)
+- 新增 http-client (HTTP 客户端工具)
+  - 支持配置文件 (.http-client.json)
+  - 支持保存/加载/管理请求
+  - 自动追踪请求历史
+  - 请求脱敏，保护敏感数据
+  - 支持 Bearer/Basic 认证
+  - 自动重试 + 指数退避
+  - 抗爬虫模式 (随机 UA)
+  - 彩色输出 + JSON 格式化
+  - 零依赖，原生 Node.js
 
 ### v1.3.0 (2026-02-05)
 - 新增 feishu-org-sync (飞书组织架构同步工具)
