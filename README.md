@@ -24,6 +24,7 @@
 | **jina-reader** | 网页内容提取（Jina AI） | ⭐ |
 | **research-company** | 公司调研，生成 PDF 报告 | ⭐ |
 | **http-client** | HTTP 客户端（配置文件、请求管理、历史追踪） | ⭐ |
+| **github-search** | GitHub 仓库搜索（API、Stars、详细信息） | ⭐ |
 | **skill-creator** | 创建新技能指南 | ⭐ |
 
 ---
@@ -40,7 +41,7 @@ npx clawhub@latest install <skill-name>
 npx clawhub@latest install browser-use
 
 # 安装所有 skill
-for skill in pdf pptx docx xlsx canvas-design webapp-testing weather weixin-reader find-skills systematic-debugging browser-use browser-cash kesslerio-stealth-browser ddg-search jina-reader research-company skill-creator http-client; do
+for skill in pdf pptx docx xlsx canvas-design webapp-testing weather weixin-reader find-skills systematic-debugging browser-use browser-cash kesslerio-stealth-browser ddg-search jina-reader research-company http-client github-search skill-creator; do
   npx clawhub@latest install $skill
 done
 ```
@@ -469,6 +470,96 @@ sql:
 
 ---
 
+## 📦 github-search（GitHub 仓库搜索）
+
+### 简介
+
+使用 GitHub API 搜索开源仓库，比较项目质量，收集技术研究数据。支持关键词搜索、语言筛选、排序选项（Stars、Forks、更新时间），以及获取仓库详细信息。
+
+### 特点
+
+- ✅ **免费无需 API Key**：使用 GitHub 公共 API
+- ✅ **多功能搜索**：关键词、语言、排序、过滤
+- ✅ **详细信息获取**：仓库详情、Topics、统计数据
+- ✅ **纯 Python 实现**：无外部依赖
+- ✅ **JSON 输出**：方便程序解析
+
+### 使用方式
+
+```bash
+# 进入 skill 目录
+cd openclaw-skills/github-search
+
+# 搜索仓库
+python3 scripts/github_search.py search "whatsapp bot automation"
+
+# 按语言筛选
+python3 scripts/github_search.py search "machine learning" --language python
+
+# 获取仓库详情
+python3 scripts/github_search.py details aldinokemal go-whatsapp-web-multidevice
+
+# 获取仓库 Topics
+python3 scripts/github_search.py topics pedroslopez whatsapp-web.js
+```
+
+### 搜索示例
+
+```bash
+# 搜索 WhatsApp 相关项目
+python3 scripts/github_search.py search "whatsapp bot automation" --per-page 10 --sort stars
+
+# 搜索 Go 语言项目
+python3 scripts/github_search.py search "docker orchestration" --language go --per-page 20
+
+# 搜索最近更新的项目
+python3 scripts/github_search.py search "api server" --sort updated --order desc
+```
+
+### 输出格式
+
+所有命令返回 JSON 格式输出：
+
+```json
+{
+  "success": true,
+  "total_count": 27731,
+  "items": [
+    {
+      "full_name": "owner/repo",
+      "description": "项目描述",
+      "stars": 1000,
+      "forks": 100,
+      "language": "JavaScript",
+      "updated_at": "2026-02-09T12:00:00Z",
+      "html_url": "https://github.com/owner/repo",
+      "open_issues": 10,
+      "license": "MIT"
+    }
+  ]
+}
+```
+
+### 命令参数
+
+| 参数 | 说明 | 示例 |
+|------|------|------|
+| `search` | 搜索仓库 | `search "whatsapp bot"` |
+| `--language` | 按语言筛选 | `--language python` |
+| `--sort` | 排序方式 | `--sort stars\|forks\|updated` |
+| `--order` | 排序顺序 | `--order desc\|asc` |
+| `--per-page` | 结果数量 | `--per-page 20` |
+| `details` | 仓库详情 | `details owner repo` |
+| `topics` | 仓库标签 | `topics owner repo` |
+
+### 速率限制
+
+GitHub API 公共请求限制为 60 次/小时。如需更高限制：
+- 使用认证请求（添加 `--token` header）
+- 设置环境变量：`GITHUB_TOKEN`
+
+---
+
 ## 📞 支持
 
 - 遇到问题：查看各技能目录下的 `SKILL.md`
@@ -478,6 +569,14 @@ sql:
 ---
 
 ## 📝 更新日志
+
+### v1.5.0 (2026-02-09)
+- 新增 github-search (GitHub 仓库搜索工具)
+  - 使用 GitHub API 搜索开源项目
+  - 支持关键词、语言筛选、排序
+  - 获取仓库详细信息和 Topics
+  - 纯 Python 实现，无外部依赖
+  - 成功测试 WhatsApp 项目搜索（21k+ stars）
 
 ### v1.4.0 (2026-02-06)
 - 新增 http-client (HTTP 客户端工具)
