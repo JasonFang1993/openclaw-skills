@@ -13,7 +13,6 @@
 | **canvas-design** | 视觉设计（海报、艺术创作） | ⭐ |
 | **webapp-testing** | Web 应用测试（Playwright） | ⭐ |
 | **weather** | 天气查询（免费无需 API） | ⭐ |
-| **feishu-org-sync** | 飞书组织架构同步（MySQL/PG/Oracle） | ⭐ |
 | **weixin-reader** | 微信文章读取（反爬虫破解） | ⭐ |
 | **find-skills** | 搜索 skills 库 | ⭐ |
 | **systematic-debugging** | 系统化调试方法 | ⭐ |
@@ -413,68 +412,6 @@ npm install -g puppeteer
 
 ---
 
-## 📦 feishu-org-sync（飞书组织架构同步）
-
-### 简介
-
-通用飞书组织架构同步工具，支持从 MySQL、PostgreSQL、Oracle、SQL Server 等数据库同步部门、用户到飞书通讯录。
-
-### 特点
-
-- ✅ **零代码**：只需修改配置文件
-- ✅ **多数据库**：支持 5 种主流数据库
-- ✅ **增量同步**：自动检测变更
-- ✅ **定时任务**：每天自动同步
-
-### 使用方式
-
-```bash
-# 克隆项目
-git clone https://github.com/JasonFang1993/openclaw-skills.git
-cd openclaw-skills/feishu-org-sync
-
-# 安装依赖
-pip install -r requirements.txt
-
-# 配置（修改 config.yaml）
-vim config.yaml
-
-# 测试连接
-python main.py --test
-
-# 执行同步
-python main.py
-```
-
-### 配置示例
-
-```yaml
-feishu:
-  app_id: "your-app-id"
-  app_secret: "your-app-secret"
-
-datasource:
-  type: "mysql"
-  connection:
-    host: "192.168.1.100"
-    port: 3306
-    username: "root"
-    password: "password"
-    database: "hr_db"
-
-sql:
-  departments: |
-    SELECT id, name, parent_id FROM departments
-  users: |
-    SELECT id, name, mobile, department_id FROM employees
-```
-
-### 文档
-
-详细使用说明请查看：`feishu-org-sync/README.md`
-
----
-
 ## 📦 github-search（GitHub 仓库搜索）
 
 ### 简介
@@ -606,11 +543,7 @@ GitHub API 公共请求限制为 60 次/小时。如需更高限制：
   - 零依赖，原生 Node.js
 
 ### v1.3.0 (2026-02-05)
-- 新增 feishu-org-sync (飞书组织架构同步工具)
-  - 支持 MySQL、PostgreSQL、Oracle、SQL Server、SQLite
-  - 零代码配置，只需修改 config.yaml
-  - 支持增量同步和定时任务
-  - 53 个单元测试全部通过
+- 新增 weixin-reader (微信文章读取)
 
 ### v1.2.0 (2026-02-05)
 - 新增 weixin-reader (微信文章读取)
