@@ -30,7 +30,7 @@ python scripts/xml2drawio.py "<mxGraphModel>...</mxGraphModel>"
 
 ## Usage Patterns
 
-### Flowchart (Manual Import)
+### Flowchart (PlantUML)
 ```bash
 python scripts/mermaid2drawio.py """
 A[Start] --> B{Decision}
@@ -38,9 +38,9 @@ B -->|Yes| C[Continue]
 B -->|No| D[Stop]
 """
 ```
-Output: Draw.io XML code - paste into https://www.draw.io (File > Import)
+Output: PlantUML code - import via **Arrange > Insert > Advanced > PlantUML**
 
-### Organization Chart
+### Organization Chart (CSV)
 ```bash
 python scripts/csv2drawio.py """
 id,label,parent,style
@@ -49,13 +49,13 @@ VP1,VP Sales,CEO,shape=rectangle
 VP2,VP Eng,CEO,shape=rectangle
 """ --type tree --title "Org Chart"
 ```
-Output: Draw.io CSV format URL
+Output: Draw.io CSV format - import via **Arrange > Insert > Advanced > CSV**
 
 ### XML Format
 ```bash
 python scripts/xml2drawio.py "<mxGraphModel>...</mxGraphModel>"
 ```
-Output: Draw.io XML URL
+Output: Draw.io native XML format
 
 ## Resources
 
@@ -71,14 +71,14 @@ Output: Draw.io XML URL
 ## Dependencies
 
 - Python 3.6+
-- Uses raw deflate compression (compatible with Draw.io)
 - No external dependencies required
+- All formats use Draw.io native import features
 
 ## Output
 
 Scripts output:
-- **Mermaid**: Draw.io XML code (import manually: File > Import)
-- **CSV**: Draw.io URL
-- **XML**: Draw.io URL
+- **Mermaid**: PlantUML code - import via Insert > Advanced > PlantUML
+- **CSV**: CSV format - import via Insert > Advanced > CSV
+- **XML**: XML format - can be imported or used directly
 
-All formats can be opened in Draw.io editor for export to PNG/SVG/PDF.
+All can be edited and exported to PNG/SVG/PDF in Draw.io.

@@ -1,150 +1,47 @@
 #!/usr/bin/env python3
 """
-Draw.io Diagram Generator - Mermaid to Draw.io XML converter
+Draw.io Diagram Generator - PlantUML to Draw.io converter
 
-This script converts Mermaid diagrams to Draw.io XML format.
+PlantUML is supported natively in Draw.io!
 """
 
 import sys
-import re
 
-def parse_mermaid_to_xml(mermaid_code, title="Diagram"):
+def mermaid_to_plantuml(mermaid_code, title="Diagram"):
     """
-    Parse Mermaid code and convert to Draw.io XML format
+    Convert Mermaid code to PlantUML format (supported by Draw.io)
     """
-    cells = []
-    cell_id = 0
-    node_map = {}  # node_id -> cell_id
-
     lines = mermaid_code.strip().split('\n')
-    x_pos = 100
-    y_pos = 100
+    plantuml_lines = ['@startuml', f'title {title}']
 
     for line in lines:
         line = line.strip()
         if not line or line.startswith('%%') or line.startswith('graph '):
             continue
 
-        # Extract node ID and label from "A[Label]" or "A{Label}"
-        node_def_match = re.match(r'^(\w+)\[(.+)\]\s*$', line)
-        if node_def_match:
-            node_id = node_def_match.group(1)
-            label = node_def_match.group(2)
-            cell_id += 1
-            cells.append(f'''        <mxCell id="{cell_id}" value="{label}" vertex="1" parent="1">
-            <mxGeometry as="geometry" x="{x_pos}" y="{y_pos}" width="120" height="60"/>
-        </mxCell>''')
-            node_map[node_id] = cell_id
-            x_pos += 150
-            if x_pos > 800:
-                x_pos = 100
-                y_pos += 100
-            continue
+        # Convert Mermaid to PlantUML syntax
+        # A[Label] -> rectangle "Label"
+        line = line.replace('[', ' as "').replace(']', '"')
+        # A{Decision} -> if "Decision"
+        line = line.replace('{', ' ("').replace('}', '")')
+        # --> --> -->
+        line = line.replace('-->', '-->')
+        # |label| --> |label| -->
 
-        # Extract decision node "A{Decision}"
-        decision_match = re.match(r'^(\w+)\{(.+)\}\s*$', line)
-        if decision_match:
-            node_id = decision_match.group(1)
-            label = decision_match.group(2)
-            cell_id += 1
-            cells.append(f'''        <mxCell id="{cell_id}" value="{label}" vertex="1" parent="1" style="rhombus;whiteSpace=wrap;html=1;">
-            <mxGeometry as="geometry" x="{x_pos}" y="{y_pos}" width="120" height="80"/>
-        </mxCell>''')
-            node_map[node_id] = cell_id
-            x_pos += 150
-            if x_pos > 800:
-                x_pos = 100
-                y_pos += 100
-            continue
+        plantuml_lines.append(line)
 
-        # Parse edge: "A --> B" or "A -->|label| B" or "A --> B{Decision}"
-        # First, extract node IDs from the line
-        edge_match = re.match(r'^(\w+)\s*-->\s*(?:\|([^|]+)\|)?\s*(\w+)', line)
-        if edge_match:
-            source = edge_match.group(1)
-            edge_label = edge_match.group(2) or ''
-            target = edge_match.group(3)
+    plantuml_lines.append('@enduml')
+    return '\n'.join(plantuml_lines)
 
-            # Create source node if not exists
-            if source not in node_map:
-                cell_id += 1
-                cells.append(f'''        <mxCell id="{cell_id}" value="{source}" vertex="1" parent="1">
-            <mxGeometry as="geometry" x="{x_pos}" y="{y_pos}" width="120" height="60"/>
-        </mxCell>''')
-                node_map[source] = cell_id
-                x_pos += 150
-                if x_pos > 800:
-                    x_pos = 100
-                    y_pos += 100
-
-            # Create target node if not exists (could be decision node)
-            if target not in node_map:
-                if target.startswith('{') and target.endswith('}'):
-                    # Decision node
-                    label = target[1:-1]
-                    cell_id += 1
-                    cells.append(f'''        <mxCell id="{cell_id}" value="{label}" vertex="1" parent="1" style="rhombus;whiteSpace=wrap;html=1;">
-            <mxGeometry as="geometry" x="{x_pos}" y="{y_pos}" width="120" height="80"/>
-        </mxCell>''')
-                else:
-                    cell_id += 1
-                    cells.append(f'''        <mxCell id="{cell_id}" value="{target}" vertex="1" parent="1">
-            <mxGeometry as="geometry" x="{x_pos}" y="{y_pos}" width="120" height="60"/>
-        </mxCell>''')
-                node_map[target] = cell_id
-                x_pos += 150
-                if x_pos > 800:
-                    x_pos = 100
-                    y_pos += 100
-
-            # Create edge
-            cell_id += 1
-            cells.append(f'''        <mxCell id="{cell_id}" value="{edge_label}" edge="1" source="{node_map[source]}" target="{node_map[target]}" parent="1">
-            <mxGeometry as="geometry" relative="1"/>
-        </mxCell>''')
-            continue
-
-    # Build XML
-    if cells:
-        cells_str = '\n'.join(cells)
-        xml = f'''<mxfile host="draw.io" agent="Python" version="1.0">
-  <diagram name="{title}">
-    <mxGraphModel dx="1422" dy="794" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827">
-      <root>
-        <mxCell id="0"/>
-        <mxCell id="1" parent="0"/>
-        <mxCell id="2" value="{title}" vertex="1" parent="1">
-          <mxGeometry as="geometry" x="284" y="20" width="600" height="40"/>
-        </mxCell>
-{cells_str}
-      </root>
-    </mxGraphModel>
-  </diagram>
-</mxfile>'''
-    else:
-        # Fallback: show Mermaid code as text box
-        escaped_code = mermaid_code.replace('&', '&amp;').replace('<', '&lt;').replace('>', '&gt;').replace('"', '&quot;')
-        xml = f'''<mxfile host="draw.io" agent="Python" version="1.0">
-  <diagram name="{title}">
-    <mxGraphModel dx="1422" dy="794" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827">
-      <root>
-        <mxCell id="0"/>
-        <mxCell id="1" parent="0"/>
-        <mxCell id="2" value="{title}" vertex="1" parent="1">
-          <mxGeometry as="geometry" x="284" y="20" width="600" height="40"/>
-        </mxCell>
-        <mxCell id="3" value="&lt;b&gt;Mermaid Code:&lt;/b&gt;&lt;pre&gt;{escaped_code}&lt;/pre&gt;" vertex="1" parent="1">
-          <mxGeometry as="geometry" x="100" y="80" width="900" height="500"/>
-        </mxCell>
-      </root>
-    </mxGraphModel>
-  </diagram>
-</mxfile>'''
-
-    return xml
+def plantuml_to_drawio(plantuml_code, title="Diagram"):
+    """
+    Generate PlantUML code for Draw.io import
+    """
+    return plantuml_code
 
 def extract_mermaid_from_input(input_text):
     """Extract Mermaid code from input text"""
+    import re
     # Check for mermaid code block
     pattern = r'```mermaid\n([\s\S]*?)```'
     matches = re.findall(pattern, input_text)
@@ -153,9 +50,15 @@ def extract_mermaid_from_input(input_text):
     return input_text.strip()
 
 def main():
-    """Main CLI interface"""
     if len(sys.argv) < 2:
         print("Usage: python mermaid2drawio.py <mermaid_code> [--title TITLE]")
+        print("\nNote: Draw.io supports PlantUML natively!")
+        print("\nExample:")
+        print('  python mermaid2drawio.py """')
+        print('  A[Start] --> B{Decision}')
+        print('  B -->|Yes| C[Continue]')
+        print('  B -->|No| D[Stop]')
+        print('  """ --title "Flowchart"')
         sys.exit(1)
 
     mermaid_code = sys.argv[1]
@@ -167,14 +70,14 @@ def main():
             title = sys.argv[idx + 1]
 
     mermaid_code = extract_mermaid_from_input(mermaid_code)
-    xml = parse_mermaid_to_xml(mermaid_code, title)
+    plantuml = mermaid_to_plantuml(mermaid_code, title)
 
-    # Output XML for manual import
-    print(xml)
+    print(plantuml)
     print("\n" + "="*60)
     print("Import to Draw.io:")
-    print("1. Open https://www.draw.io")
-    print("2. File > Import > Paste XML above")
+    print("1. Open https://app.diagrams.net")
+    print("2. Arrange > Insert > Advanced > PlantUML")
+    print("3. Paste the code above")
     print("="*60)
 
 if __name__ == "__main__":
