@@ -108,18 +108,7 @@ def main():
     # Generate URL
     url = mermaid_to_drawio(mermaid_code, title)
     
-    print(f"Generated Draw.io URL for diagram:")
     print(f"\n{url}")
-    print(f"\nOpening in browser...")
-    
-    # Optionally open in browser
-    import webbrowser
-    try:
-        webbrowser.open(url)
-        print("Browser opened successfully!")
-    except Exception as e:
-        print(f"Could not open browser: {e}")
-        print("Please manually open the URL above.")
 
 if __name__ == "__main__":
     main()

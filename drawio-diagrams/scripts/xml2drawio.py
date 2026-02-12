@@ -96,15 +96,7 @@ def main():
     
     url = xml_to_drawio_url(xml_data, title)
     
-    print(f"Generated Draw.io URL:")
     print(f"\n{url}")
-    
-    import webbrowser
-    try:
-        webbrowser.open(url)
-        print("\nBrowser opened!")
-    except Exception as e:
-        print(f"\nCould not open browser: {e}")
 
 if __name__ == "__main__":
     main()

@@ -85,8 +85,9 @@ VP2,VP Eng,CEO,shape=rectangle
 
 ## Output
 
-Scripts generate a Draw.io URL that:
-- Opens directly in browser
-- Loads diagram in Draw.io editor
+Scripts output a Draw.io URL that:
+- Is displayed directly in the response
+- Can be clicked to open in browser
+- Loads the diagram in Draw.io editor
 - Enables export to PNG, SVG, PDF
 - Keeps data local (no server upload)

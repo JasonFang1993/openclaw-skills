@@ -127,16 +127,7 @@ def main():
     # Generate URL
     url = csv_to_drawio_url(csv_data, title, diagram_type)
     
-    print(f"Generated Draw.io URL for {diagram_type} diagram:")
     print(f"\n{url}")
-    print(f"\nOpening in browser...")
-    
-    import webbrowser
-    try:
-        webbrowser.open(url)
-        print("Browser opened successfully!")
-    except Exception as e:
-        print(f"Could not open browser: {e}")
 
 if __name__ == "__main__":
     main()
