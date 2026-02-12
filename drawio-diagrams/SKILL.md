@@ -10,13 +10,21 @@ Generate professional diagrams using Draw.io from Mermaid, CSV, or XML inputs.
 ## Quick Start
 
 ```bash
-# Mermaid to diagram
-python scripts/mermaid2drawio.py "graph TD; A-->B; B-->C;"
+# Mermaid flowchart (import XML via File > Import)
+python scripts/mermaid2drawio.py """
+A[Start] --> B{Decision}
+B -->|Yes| C[Continue]
+B -->|No| D[Stop]
+"""
 
-# CSV to org chart
-python scripts/csv2drawio.py "id,label,parent\nCEO,CEO,\nVP1,VP Sales,CEO"
+# CSV org chart
+python scripts/csv2drawio.py """
+id,label,parent,style
+CEO,CEO,,shape=rectangle
+VP1,VP Sales,CEO,shape=rectangle
+"""
 
-# XML to diagram
+# XML format
 python scripts/xml2drawio.py "<mxGraphModel>...</mxGraphModel>"
 ```
 
@@ -30,7 +38,7 @@ python scripts/xml2drawio.py "<mxGraphModel>...</mxGraphModel>"
 
 ## Usage Patterns
 
-### Flowchart (PlantUML)
+### Flowchart (Draw.io XML Import)
 ```bash
 python scripts/mermaid2drawio.py """
 A[Start] --> B{Decision}
@@ -38,7 +46,7 @@ B -->|Yes| C[Continue]
 B -->|No| D[Stop]
 """
 ```
-Output: PlantUML code - import via **Arrange > Insert > Advanced > PlantUML**
+Output: Draw.io XML - import via **File > Import > Paste XML**
 
 ### Organization Chart (CSV)
 ```bash
@@ -49,13 +57,13 @@ VP1,VP Sales,CEO,shape=rectangle
 VP2,VP Eng,CEO,shape=rectangle
 """ --type tree --title "Org Chart"
 ```
-Output: Draw.io CSV format - import via **Arrange > Insert > Advanced > CSV**
+Output: Draw.io URL - import via **Arrange > Insert > Advanced > CSV**
 
 ### XML Format
 ```bash
 python scripts/xml2drawio.py "<mxGraphModel>...</mxGraphModel>"
 ```
-Output: Draw.io native XML format
+Output: Draw.io URL - import via **File > Import**
 
 ## Resources
 
@@ -77,8 +85,8 @@ Output: Draw.io native XML format
 ## Output
 
 Scripts output:
-- **Mermaid**: PlantUML code - import via Insert > Advanced > PlantUML
-- **CSV**: CSV format - import via Insert > Advanced > CSV
-- **XML**: XML format - can be imported or used directly
+- **Mermaid**: Draw.io XML (import via File > Import)
+- **CSV**: Draw.io URL (import via Arrange > Insert > Advanced > CSV)
+- **XML**: Draw.io URL (import via File > Import)
 
 All can be edited and exported to PNG/SVG/PDF in Draw.io.
