@@ -26,6 +26,7 @@
 | **github-search** | GitHub 仓库搜索（API、Stars、详细信息） | ⭐ |
 | **skill-creator** | 创建新技能指南 | ⭐ |
 | **drawio-diagrams** | Draw.io 图表生成（Mermaid/CSV/XML） | ⭐ |
+| **vue-auto-tester** | Vue 3 自动测试（Vitest + Playwright） | ⭐ |
 
 ---
 
@@ -41,7 +42,7 @@ npx clawhub@latest install <skill-name>
 npx clawhub@latest install browser-use
 
 # 安装所有 skill
-for skill in pdf pptx docx xlsx canvas-design webapp-testing weather weixin-reader find-skills systematic-debugging browser-use browser-cash kesslerio-stealth-browser ddg-search jina-reader research-company http-client github-search skill-creator drawio-diagrams; do
+for skill in pdf pptx docx xlsx canvas-design webapp-testing weather weixin-reader find-skills systematic-debugging browser-use browser-cash kesslerio-stealth-browser ddg-search jina-reader research-company http-client github-search skill-creator drawio-diagrams vue-auto-tester; do
   npx clawhub@latest install $skill
 done
 ```
@@ -626,6 +627,97 @@ VP2,VP Eng,CEO,shape=rectangle
 
 - `SKILL.md` - 技能说明
 - `references/usage_guide.md` - 完整使用指南
+
+---
+
+## 📦 vue-auto-tester（Vue 3 自动测试）
+
+### 简介
+
+自动测试和调试 Vue 3 项目。使用 Vitest + Playwright，自动启动 dev server、检查控制台错误、运行测试、截图对比。
+
+### 特点
+
+- ✅ **完整测试**：控制台错误检查 + Vitest + 截图对比
+- ✅ **自动修复**：自动安装缺失的 npm 包
+- ✅ **组件检查**：验证 Vue 组件结构
+- ✅ **截图对比**：检测视觉回归
+
+### 使用方式
+
+```bash
+# 克隆项目
+git clone https://github.com/JasonFang1993/openclaw-skills.git
+cd openclaw-skills/vue-auto-tester
+```
+
+### 脚本说明
+
+| 命令 | 功能 | 示例 |
+|------|------|------|
+| `auto_test_vue_project.py` | 完整测试套件 | `python scripts/auto_test_vue_project.py ./my-vue-app --screenshot --fix` |
+| `check_console_errors.py` | 检查控制台错误 | `python scripts/check_console_errors.py ./my-vue-app` |
+| `compare_screenshots.py` | 截图对比 | `python scripts/compare_screenshots.py ./my-vue-app --baseline` |
+| `auto_fix_errors.py` | 自动修复错误 | `python scripts/auto_fix_errors.py ./my-vue-app --fix` |
+
+### 快速开始
+
+```bash
+# 完整测试
+python scripts/auto_test_vue_project.py ./my-vue-app
+
+# 带截图对比
+python scripts/auto_test_vue_project.py ./my-vue-app --screenshot
+
+# 保存 baseline（首次或更新）
+python scripts/auto_test_vue_project.py ./my-vue-app --baseline
+
+# 自动修复错误
+python scripts/auto_test_vue_project.py ./my-vue-app --fix
+```
+
+### 依赖
+
+```bash
+# 安装测试依赖
+npm install -D vitest @vue/test-utils @playwright/test
+
+# 安装 Playwright 浏览器
+npx playwright install chromium
+```
+
+### 输出示例
+
+```json
+{
+  "project": "/path/to/project",
+  "timestamp": "2026-02-12T17:30:00",
+  "dev_server": {
+    "status": "ready",
+    "port": 5173
+  },
+  "console_errors": [
+    {
+      "text": "Uncaught ReferenceError: axios is not defined",
+      "location": "{\"url\":\"http://localhost:5173/src/api.js\",\"lineNumber\":10}"
+    }
+  ],
+  "vitest_results": {
+    "status": "completed",
+    "returncode": 0,
+    "tests": 15,
+    "passed": 15
+  },
+  "screenshot_comparison": {
+    "match": true
+  },
+  "success": true
+}
+```
+
+### 文档
+
+- `SKILL.md` - 技能说明
 - `references/examples.md` - 示例集合
 
 ---
