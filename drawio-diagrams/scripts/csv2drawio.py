@@ -64,9 +64,13 @@ def csv_to_drawio_csv(csv_data, diagram_type="tree"):
     return csv_output
 
 def compress_data(data):
-    """Compress data using deflate algorithm"""
+    """Compress data using raw deflate (compatible with Draw.io)"""
     import zlib
-    return zlib.compress(data.encode('utf-8'))
+    try:
+        compressor = zlib.compressobj(zlib.Z_DEFAULT_COMPRESSION, zlib.DEFLATED, -zlib.MAX_WBITS)
+        return compressor.compress(data.encode('utf-8')) + compressor.flush()
+    except Exception:
+        return zlib.compress(data.encode('utf-8'))
 
 def encode_url(data):
     """Encode compressed data to URL-safe base64"""

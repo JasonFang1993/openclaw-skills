@@ -20,11 +20,13 @@ except ImportError:
     pako = None
 
 def compress_data(data):
-    """Compress data using pako (deflate algorithm)"""
-    if pako:
-        return pako.deflate(data.encode('utf-8'))
-    else:
-        # Fallback to zlib
+    """Compress data using raw deflate (compatible with Draw.io)"""
+    try:
+        # Use raw deflate (no zlib header) - compatible with Draw.io
+        compressor = zlib.compressobj(zlib.Z_DEFAULT_COMPRESSION, zlib.DEFLATED, -zlib.MAX_WBITS)
+        return compressor.compress(data.encode('utf-8')) + compressor.flush()
+    except Exception:
+        # Fallback to simple zlib if needed
         return zlib.compress(data.encode('utf-8'))
 
 def encode_url(data):

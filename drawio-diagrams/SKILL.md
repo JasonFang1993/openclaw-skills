@@ -80,8 +80,8 @@ VP2,VP Eng,CEO,shape=rectangle
 ## Dependencies
 
 - Python 3.6+
-- Optional: `pako` for better compression (`pip install pako`)
-- Falls back to zlib if pako not available
+- Uses raw deflate compression (compatible with Draw.io)
+- No external dependencies required
 
 ## Output
 
