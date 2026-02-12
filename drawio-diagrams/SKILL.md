@@ -30,31 +30,15 @@ python scripts/xml2drawio.py "<mxGraphModel>...</mxGraphModel>"
 
 ## Usage Patterns
 
-### Flowchart
+### Flowchart (Manual Import)
 ```bash
 python scripts/mermaid2drawio.py """
-graph TD
-    A[Start] --> B{Decision}
-    B -->|Yes| C[Continue]
-    B -->|No| D[Stop]
+A[Start] --> B{Decision}
+B -->|Yes| C[Continue]
+B -->|No| D[Stop]
 """
 ```
-
-### Architecture Diagram
-```bash
-python scripts/mermaid2drawio.py """
-graph TB
-    subgraph Frontend
-        UI[React UI]
-    end
-    subgraph Backend
-        API[API Gateway]
-        Auth[Auth Service]
-    end
-    UI --> API
-    API --> Auth
-"""
-```
+Output: Draw.io XML code - paste into https://www.draw.io (File > Import)
 
 ### Organization Chart
 ```bash
@@ -65,6 +49,13 @@ VP1,VP Sales,CEO,shape=rectangle
 VP2,VP Eng,CEO,shape=rectangle
 """ --type tree --title "Org Chart"
 ```
+Output: Draw.io CSV format URL
+
+### XML Format
+```bash
+python scripts/xml2drawio.py "<mxGraphModel>...</mxGraphModel>"
+```
+Output: Draw.io XML URL
 
 ## Resources
 
@@ -85,9 +76,9 @@ VP2,VP Eng,CEO,shape=rectangle
 
 ## Output
 
-Scripts output a Draw.io URL that:
-- Is displayed directly in the response
-- Can be clicked to open in browser
-- Loads the diagram in Draw.io editor
-- Enables export to PNG, SVG, PDF
-- Keeps data local (no server upload)
+Scripts output:
+- **Mermaid**: Draw.io XML code (import manually: File > Import)
+- **CSV**: Draw.io URL
+- **XML**: Draw.io URL
+
+All formats can be opened in Draw.io editor for export to PNG/SVG/PDF.
