@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 """
 Draw.io Diagram Generator - Mermaid to PlantUML converter
+
+Outputs PlantUML code for Draw.io PlantUML (SVG) import
 """
 
 import sys
@@ -10,122 +12,104 @@ def mermaid_to_plantuml(mermaid_code, title="Diagram"):
     """Convert Mermaid code to PlantUML format"""
     lines = mermaid_code.strip().split('\n')
     
-    # Map: node_id -> label
-    node_map = {}  # A -> 用户发送消息, B -> (AI识别意图)
-    node_types = {}  # A -> rectangle, B -> decision
+    # First pass: collect all node definitions
+    # A[Label] -> A: Label
+    # A{Decision} -> A: (Decision)
+    node_defs = {}  # A -> "Label" or "(Label)"
     
-    # Parse all lines
-    all_lines = []
     for line in lines:
         line = line.strip()
         if not line or line.startswith('%%') or line.startswith('graph '):
             continue
         
-        # Store original for processing
-        all_lines.append(line)
+        # Find all node definitions
+        for match in re.finditer(r'(\w+)\[(.+?)\]', line):
+            node_id = match.group(1)
+            label = match.group(2)
+            node_defs[node_id] = f'"{label}"'
+        
+        for match in re.finditer(r'(\w+)\{(.+?)\}', line):
+            node_id = match.group(1)
+            label = match.group(2)
+            node_defs[node_id] = f'({label})'
     
-    # First pass: extract all node definitions
-    for line in all_lines:
-        # Check for node definition: A[Label] or A{Decision}
-        def_match = re.match(r'^(\w+)\[(.+)\]\s*$', line)
-        if def_match:
-            node_id = def_match.group(1)
-            label = def_match.group(2)
-            node_map[node_id] = label
-            node_types[node_id] = 'rectangle'
+    # Second pass: convert to PlantUML
+    output = ['@startuml', f'title {title}', 'skinparam shadowing false', '']
+    
+    for line in lines:
+        line = line.strip()
+        if not line or line.startswith('%%') or line.startswith('graph '):
             continue
         
-        def_match = re.match(r'^(\w+)\{(.+)\}\s*$', line)
-        if def_match:
-            node_id = def_match.group(1)
-            label = def_match.group(2)
-            node_map[node_id] = label
-            node_types[node_id] = 'decision'
+        # Check if it's a sequence diagram (has colons)
+        if re.search(r':\s*\w', line) and not re.search(r'rectangle|\(|\)', line):
+            # Sequence diagram style - just clean up node refs
+            for node_id, label in node_defs.items():
+                line = re.sub(rf'\b{node_id}\b', label, line)
+            output.append(line)
             continue
         
-        # Also check for inline definitions in edges
-        if '-->' in line:
-            parts = line.split('-->')
-            for part in parts:
+        # Split by arrows
+        parts = re.split(r'\s*-->\s*', line)
+        
+        if len(parts) >= 2:
+            # Process chain of nodes
+            # A --> |label| B --> |label| C
+            
+            current_label = ''
+            result_parts = []
+            
+            for i, part in enumerate(parts):
                 part = part.strip()
-                # A[Label]
-                m = re.search(r'(\w+)\[(.+)\]', part)
-                if m:
-                    node_id = m.group(1)
-                    label = m.group(2)
-                    if node_id not in node_map:
-                        node_map[node_id] = label
-                        node_types[node_id] = 'rectangle'
-                # A{Decision}
-                m = re.search(r'(\w+)\{(.+)\}', part)
-                if m:
-                    node_id = m.group(1)
-                    label = m.group(2)
-                    if node_id not in node_map:
-                        node_map[node_id] = label
-                        node_types[node_id] = 'decision'
-    
-    # Build PlantUML
-    output = ['@startuml', f'title {title}', '']
-    
-    # Add nodes
-    for node_id, label in node_map.items():
-        if node_types.get(node_id) == 'decision':
-            output.append(f'({label})')
-        else:
-            output.append(f'rectangle "{label}"')
-    
-    output.append('')
-    
-    # Second pass: process edges
-    for line in all_lines:
-        if '-->' not in line:
-            continue
-        
-        parts = line.split('-->')
-        if len(parts) < 2:
-            continue
-        
-        # Process source
-        source_part = parts[0].strip()
-        source_id_match = re.match(r'^(\w+)', source_part)
-        source_id = source_id_match.group(1) if source_id_match else source_part
-        
-        # Get source label
-        if source_id in node_map:
-            if node_types.get(source_id) == 'decision':
-                source = f'({node_map[source_id]})'
-            else:
-                source = node_map[source_id]
-        else:
-            source = source_id
-        
-        # Process target
-        target_part = parts[1].strip()
-        
-        # Check for edge label
-        label_match = re.search(r'\|(.+)\|', target_part)
-        edge_label = label_match.group(1) if label_match else ''
-        
-        # Extract target ID
-        clean_target = re.sub(r'\|.+\|', '', target_part).strip()
-        target_id_match = re.match(r'^(\w+)', clean_target)
-        target_id = target_id_match.group(1) if target_id_match else clean_target
-        
-        # Get target label
-        if target_id in node_map:
-            if node_types.get(target_id) == 'decision':
-                target = f'({node_map[target_id]})'
-            else:
-                target = node_map[target_id]
-        else:
-            target = target_id
-        
-        # Build edge line
-        if edge_label:
-            output.append(f'{source} --> |{edge_label}| {target}')
-        else:
-            output.append(f'{source} --> {target}')
+                if not part:
+                    continue
+                
+                # Check for label at start: |label| B
+                label_match = re.match(r'^\|(.+)\|\s*(.+)', part)
+                if label_match:
+                    current_label = label_match.group(1)
+                    part = label_match.group(2).strip()
+                
+                # Replace node ID with actual label
+                for node_id, label in node_defs.items():
+                    part = re.sub(rf'\b{node_id}\b', label, part)
+                
+                # Clean up remaining
+                part = re.sub(r'\[.*?\]', '', part)
+                part = re.sub(r'\{.*?\}', '', part)
+                part = part.strip()
+                
+                if part:
+                    result_parts.append(part)
+            
+            # Build edges
+            if len(result_parts) >= 2:
+                # First node
+                result_parts[0] = re.sub(r'^(\S+)\s*.*', r'\1', result_parts[0])
+                
+                # Build connections
+                for i in range(len(result_parts) - 1):
+                    source = result_parts[i]
+                    target = result_parts[i + 1]
+                    
+                    # Extract labels from source/target
+                    s_match = re.search(r'^(\S+)(?:\s+(.+))?$', source)
+                    t_match = re.search(r'^(\S+)(?:\s+(.+))?$', target)
+                    
+                    if s_match and t_match:
+                        s_label = s_match.group(1)
+                        s_msg = s_match.group(2) or ''
+                        t_label = t_match.group(1)
+                        t_msg = t_match.group(2) or ''
+                        
+                        # Combine messages
+                        msg = t_msg if t_msg else current_label
+                        current_label = ''  # reset
+                        
+                        if msg:
+                            output.append(f'{s_label} --> {t_label}: {msg}')
+                        else:
+                            output.append(f'{s_label} --> {t_label}')
     
     output.append('@enduml')
     return '\n'.join(output)
