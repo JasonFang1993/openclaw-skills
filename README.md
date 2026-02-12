@@ -26,6 +26,7 @@
 | **http-client** | HTTP 客户端（配置文件、请求管理、历史追踪） | ⭐ |
 | **github-search** | GitHub 仓库搜索（API、Stars、详细信息） | ⭐ |
 | **skill-creator** | 创建新技能指南 | ⭐ |
+| **drawio-diagrams** | Draw.io 图表生成（Mermaid/CSV/XML） | ⭐ |
 
 ---
 
@@ -41,7 +42,7 @@ npx clawhub@latest install <skill-name>
 npx clawhub@latest install browser-use
 
 # 安装所有 skill
-for skill in pdf pptx docx xlsx canvas-design webapp-testing weather weixin-reader find-skills systematic-debugging browser-use browser-cash kesslerio-stealth-browser ddg-search jina-reader research-company http-client github-search skill-creator; do
+for skill in pdf pptx docx xlsx canvas-design webapp-testing weather weixin-reader find-skills systematic-debugging browser-use browser-cash kesslerio-stealth-browser ddg-search jina-reader research-company http-client github-search skill-creator drawio-diagrams; do
   npx clawhub@latest install $skill
 done
 ```
@@ -363,6 +364,10 @@ openclaw-skills/
 │   └── bin/
 ├── skill-creator/       # 技能创建指南
 │   └── SKILL.md
+├── drawio-diagrams/     # Draw.io 图表生成
+│   ├── SKILL.md
+│   ├── scripts/
+│   └── references/
 └── README.md            # 本文件
 ```
 
@@ -570,6 +575,16 @@ GitHub API 公共请求限制为 60 次/小时。如需更高限制：
 
 ## 📝 更新日志
 
+### v1.6.0 (2026-02-12)
+- 新增 drawio-diagrams (Draw.io 图表生成工具)
+  - Mermaid → Draw.io 流程图、架构图、时序图
+  - CSV → Draw.io 组织架构图、网络拓扑图
+  - XML → Draw.io 精细控制格式
+  - 纯 Python 实现，无外部依赖
+  - 本地压缩，保护隐私
+  - 自动浏览器打开 Draw.io 编辑器
+  - 完整使用指南 + 8个示例
+
 ### v1.5.0 (2026-02-09)
 - 新增 github-search (GitHub 仓库搜索工具)
   - 使用 GitHub API 搜索开源项目
@@ -619,6 +634,66 @@ GitHub API 公共请求限制为 60 次/小时。如需更高限制：
 - 初始版本
 - 添加 7 个核心技能
 - 完成中文文档
+
+---
+
+## 📦 drawio-diagrams（Draw.io 图表生成）
+
+### 简介
+
+使用 Draw.io 从 Mermaid、CSV 或 XML 输入生成专业图表。支持三种格式：Mermaid（流程图、架构图）、CSV（组织架构图、网络拓扑图）、XML（精细控制）。自动在浏览器打开 Draw.io 编辑器，支持导出 PNG/SVG/PDF。
+
+### 特点
+
+- ✅ **三种格式**：Mermaid/CSV/XML 全面支持
+- ✅ **纯 Python**：无外部依赖（zlib fallback）
+- ✅ **本地压缩**：保护隐私，数据不上传服务器
+- ✅ **自动打开**：浏览器直接加载 Draw.io 编辑器
+- ✅ **完整文档**：使用指南 + 8个示例
+
+### 使用方式
+
+```bash
+# 克隆项目
+git clone https://github.com/JasonFang1993/openclaw-skills.git
+cd openclaw-skills/drawio-diagrams
+```
+
+### 脚本说明
+
+| 脚本 | 功能 | 示例 |
+|------|------|------|
+| `mermaid2drawio.py` | Mermaid 代码转图表 | `python scripts/mermaid2drawio.py "graph TD; A-->B;"` |
+| `csv2drawio.py` | CSV 数据转图表 | `python scripts/csv2drawio.py "id,label,parent\nCEO,CEO,"` |
+| `xml2drawio.py` | XML 转 Draw.io | `python scripts/xml2drawio.py "<mxGraphModel>..."` |
+
+### 示例
+
+**Mermaid 流程图：**
+```bash
+python scripts/mermaid2drawio.py """
+graph TD
+    A[Start] --> B{Decision}
+    B -->|Yes| C[Continue]
+    B -->|No| D[Stop]
+"""
+```
+
+**CSV 组织架构图：**
+```bash
+python scripts/csv2drawio.py """
+id,label,parent,style
+CEO,CEO,,shape=rectangle
+VP1,VP Sales,CEO,shape=rectangle
+VP2,VP Eng,CEO,shape=rectangle
+""" --type tree --title "Org Chart"
+```
+
+### 文档
+
+- `SKILL.md` - 技能说明
+- `references/usage_guide.md` - 完整使用指南
+- `references/examples.md` - 8个详细示例
 
 ---
 
