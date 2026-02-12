@@ -574,15 +574,14 @@ GitHub API 公共请求限制为 60 次/小时。如需更高限制：
 
 ### 简介
 
-使用 Draw.io 从 Mermaid、CSV 或 XML 输入生成专业图表。支持三种格式：Mermaid（流程图、架构图）、CSV（组织架构图、网络拓扑图）、XML（精细控制）。自动在浏览器打开 Draw.io 编辑器，支持导出 PNG/SVG/PDF。
+使用 Draw.io 从 Mermaid、CSV 或 XML 输入生成专业图表。支持三种格式：Mermaid（流程图、时序图）、CSV（组织架构图、网络拓扑图）、XML（精细控制）。
 
 ### 特点
 
 - ✅ **三种格式**：Mermaid/CSV/XML 全面支持
-- ✅ **纯 Python**：无外部依赖（zlib fallback）
-- ✅ **本地压缩**：保护隐私，数据不上传服务器
-- ✅ **自动打开**：浏览器直接加载 Draw.io 编辑器
-- ✅ **完整文档**：使用指南 + 8个示例
+- ✅ **纯 Python**：无外部依赖
+- ✅ **PlantUML 输出**：Draw.io 原生支持
+- ✅ **完整文档**：使用指南 + 示例
 
 ### 使用方式
 
@@ -596,21 +595,22 @@ cd openclaw-skills/drawio-diagrams
 
 | 脚本 | 功能 | 示例 |
 |------|------|------|
-| `mermaid2drawio.py` | Mermaid 代码转图表 | `python scripts/mermaid2drawio.py "graph TD; A-->B;"` |
-| `csv2drawio.py` | CSV 数据转图表 | `python scripts/csv2drawio.py "id,label,parent\nCEO,CEO,"` |
-| `xml2drawio.py` | XML 转 Draw.io | `python scripts/xml2drawio.py "<mxGraphModel>..."` |
+| `mermaid2drawio.py` | Mermaid → PlantUML | `python scripts/mermaid2drawio.py "A[Start] --> B{Decision}"` |
+| `csv2drawio.py` | CSV → Draw.io URL | `python scripts/csv2drawio.py "id,label,parent\nCEO,CEO,"` |
+| `xml2drawio.py` | XML → Draw.io URL | `python scripts/xml2drawio.py "<mxGraphModel>..."` |
 
 ### 示例
 
 **Mermaid 流程图：**
 ```bash
 python scripts/mermaid2drawio.py """
-graph TD
-    A[Start] --> B{Decision}
-    B -->|Yes| C[Continue]
-    B -->|No| D[Stop]
+A[Start] --> B{Decision}
+B -->|Yes| C[Continue]
+B -->|No| D[Stop]
 """
 ```
+
+输出 PlantUML 格式，导入 Draw.io：**Arrange > Insert > Advanced > PlantUML (SVG)**
 
 **CSV 组织架构图：**
 ```bash
@@ -626,7 +626,7 @@ VP2,VP Eng,CEO,shape=rectangle
 
 - `SKILL.md` - 技能说明
 - `references/usage_guide.md` - 完整使用指南
-- `references/examples.md` - 8个详细示例
+- `references/examples.md` - 示例集合
 
 ---
 
