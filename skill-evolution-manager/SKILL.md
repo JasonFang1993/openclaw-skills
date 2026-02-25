@@ -2,6 +2,10 @@
 name: skill-evolution-manager
 description: 基于用户反馈和会话经验持续改进 Skills。分析 skill 表现，提取经验，将最佳实践写入 SKILL.md。
 license: MIT
+github_url: https://github.com/KKKKhazix/Khazix-Skills
+github_hash: fe15fea6cf7ac216027d11c2c64e87b462cc0427
+version: 1.0.0
+created_at: 2026-02-25
 ---
 
 # Skill Evolution Manager

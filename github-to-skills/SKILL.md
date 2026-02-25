@@ -2,6 +2,10 @@
 name: github-to-skills
 description: 将 GitHub 仓库自动转换为 AI Skills。当用户提供 GitHub URL 并想要"包装"或"创建"一个 skill 时使用此技能。
 license: MIT
+github_url: https://github.com/KKKKhazix/Khazix-Skills
+github_hash: fe15fea6cf7ac216027d11c2c64e87b462cc0427
+version: 1.0.0
+created_at: 2026-02-25
 ---
 
 # GitHub to Skills Factory

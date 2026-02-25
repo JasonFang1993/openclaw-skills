@@ -2,6 +2,10 @@
 name: skill-manager
 description: 管理 GitHub-based Skills 的生命周期。检查更新、列出列表、删除已安装的 skills。
 license: MIT
+github_url: https://github.com/KKKKhazix/Khazix-Skills
+github_hash: fe15fea6cf7ac216027d11c2c64e87b462cc0427
+version: 1.0.0
+created_at: 2026-02-25
 ---
 
 # Skill Manager
