@@ -5,19 +5,15 @@ RSS 解析模块
 """
 
 import re
-import xml.etree.ElementTree as ET
 from datetime import datetime
 from typing import List, Dict, Optional
-from pathlib import Path
+
 
 class RSSParser:
     """RSS 解析器"""
     
     def __init__(self):
-        self.namespaces = {
-            'media': 'http://search.yahoo.com/mrss/',
-            'content': 'http://purl.org/rss/1.0/modules/content/',
-        }
+        pass
     
     def parse_date(self, date_str: str) -> Optional[datetime]:
         """解析日期字符串"""
@@ -25,15 +21,14 @@ class RSSParser:
             return None
         
         formats = [
-            "%a, %d %b %Y %H:%M:%S %z",  # RFC 822
-            "%Y-%m-%dT%H:%M:%SZ",        # ISO 8601
+            "%a, %d %b %Y %H:%M:%S %z",
+            "%Y-%m-%dT%H:%M:%SZ",
             "%Y-%m-%d %H:%M:%S",
             "%Y-%m-%d",
         ]
         
         for fmt in formats:
             try:
-                # 移除时区部分（如果有）
                 if '+' in date_str:
                     date_str = date_str.split('+')[0].strip()
                 return datetime.strptime(date_str.strip(), fmt)
@@ -47,57 +42,61 @@ class RSSParser:
         news_items = []
         
         try:
-            # 替换 CDATA 标记为其内容
-            import re
+            # 替换 CDATA 标记
             rss_content = re.sub(r'<!\[CDATA\[', '<![CDATA[', rss_content)
             rss_content = re.sub(r'\]\]>', ']]>', rss_content)
             
-            # 使用正则表达式提取新闻，更可靠
-            # 匹配 item 标签
+            # 提取每个 item
             item_pattern = r'<item>(.*?)</item>'
             items = re.findall(item_pattern, rss_content, re.DOTALL)
             
             for item_content in items:
-                try:
-                    # 提取标题
-                    title_match = re.search(r'<title><!\[CDATA\[(.*?)\]\]></title>', item_content)
-                    if not title_match:
-                        title_match = re.search(r'<title>(.*?)</title>', item_content)
-                    title = title_match.group(1).strip() if title_match else ""
-                    
-                    if not title or len(title) < 5:
-                        continue
-                    
-                    # 提取链接
-                    link_match = re.search(r'<link>(.*?)</link>', item_content)
-                    link = link_match.group(1).strip() if link_match else ""
-                    
-                    # 提取描述
-                    desc_match = re.search(r'<description><!\[CDATA\[(.*?)\]\]></description>', item_content)
-                    if not desc_match:
-                        desc_match = re.search(r'<description>(.*?)</description>', item_content)
-                    description = desc_match.group(1).strip() if desc_match else ""
+                # 提取完整内容（如果有）
+                full_content = ""
+                content_match = re.search(r'<content:encoded><!\[CDATA\[(.*?)\]\]></content:encoded>', item_content, re.DOTALL)
+                if not content_match:
+                    content_match = re.search(r'<content:encoded>(.*?)</content:encoded>', item_content, re.DOTALL)
+                if content_match:
+                    full_content = content_match.group(1)
                     # 清理HTML
-                    description = re.sub(r'<[^>]+>', '', description)[:500]
-                    
-                    # 提取日期
-                    date_match = re.search(r'<pubDate>(.*?)</pubDate>', item_content)
-                    pub_date = None
-                    if date_match:
-                        pub_date = self.parse_date(date_match.group(1))
-                    
-                    news_items.append({
-                        "title": title,
-                        "url": link,
-                        "description": description,
-                        "source": source_name,
-                        "pub_date": pub_date.isoformat() if pub_date else None,
-                        "extracted_at": datetime.now().isoformat()
-                    })
-                except Exception:
+                    full_content = re.sub(r'<[^>]+>', '', full_content)
+                    full_content = re.sub(r'\s+', ' ', full_content).strip()[:800]
+                
+                # 提取标题
+                title_match = re.search(r'<title><!\[CDATA\[(.*?)\]\]></title>', item_content)
+                if not title_match:
+                    title_match = re.search(r'<title>(.*?)</title>', item_content)
+                title = title_match.group(1).strip() if title_match else ""
+                
+                if not title or len(title) < 5:
                     continue
-            
-            return news_items
+                
+                # 提取链接
+                link_match = re.search(r'<link>(.*?)</link>', item_content)
+                link = link_match.group(1).strip() if link_match else ""
+                
+                # 提取描述
+                desc_match = re.search(r'<description><!\[CDATA\[(.*?)\]\]></description>', item_content)
+                if not desc_match:
+                    desc_match = re.search(r'<description>(.*?)</description>', item_content)
+                description = desc_match.group(1).strip() if desc_match else ""
+                description = re.sub(r'<[^>]+>', '', description)[:500]
+                
+                # 提取日期
+                date_match = re.search(r'<pubDate>(.*?)</pubDate>', item_content)
+                pub_date = None
+                if date_match:
+                    pub_date = self.parse_date(date_match.group(1))
+                
+                news_items.append({
+                    "title": title,
+                    "url": link,
+                    "description": description,
+                    "full_content": full_content,  # 完整内容
+                    "source": source_name,
+                    "pub_date": pub_date.isoformat() if pub_date else None,
+                    "extracted_at": datetime.now().isoformat()
+                })
         
         except Exception as e:
             print(f"RSS解析错误 {source_name}: {e}")
@@ -107,7 +106,7 @@ class RSSParser:
     def is_recent(self, news: Dict, days: int = 1) -> bool:
         """判断新闻是否在最近几天内"""
         if not news.get("pub_date"):
-            return True  # 没有日期信息，默认保留
+            return True
         
         try:
             pub_date = datetime.fromisoformat(news["pub_date"])
@@ -137,7 +136,6 @@ class RSSParser:
             title = news.get("title", "").lower()
             desc = news.get("description", "").lower()
             
-            # 如果标题或描述包含关键词
             if any(kw in title or kw in desc for kw in keywords_lower):
                 filtered.append(news)
         
@@ -162,7 +160,6 @@ def main():
     """测试入口"""
     import sys
     
-    # 测试 RSS 解析
     test_rss = '''<?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0">
 <channel>
@@ -174,17 +171,11 @@ def main():
 <description>A major breakthrough in AI research</description>
 <pubDate>Tue, 24 Feb 2026 03:00:00 GMT</pubDate>
 </item>
-<item>
-<title>Machine Learning Update</title>
-<link>https://example.com/2</link>
-<description>New ML techniques announced</description>
-<pubDate>Mon, 23 Feb 2026 12:00:00 GMT</pubDate>
-</item>
 </channel>
 </rss>'''
     
     parser = RSSParser()
-    news = parser.process_rss_source(test_rss, "Test Source", ["AI", "ML"], days=1)
+    news = parser.process_rss_source(test_rss, "Test Source", ["AI"], days=1)
     
     print(f"解析到 {len(news)} 条新闻:")
     for n in news:
