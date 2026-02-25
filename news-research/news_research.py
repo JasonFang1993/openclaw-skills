@@ -4,6 +4,7 @@ News Research Skill 主入口
 整合所有模块，提供完整的新闻研究能力
 """
 
+import sys
 import json
 import asyncio
 import yaml
@@ -12,12 +13,12 @@ from datetime import datetime
 
 # 添加脚本目录到路径
 SCRIPT_DIR = Path(__file__).parent
-sys.path.insert(0, str(SCRIPT_DIR))
+sys.path.insert(0, str(SCRIPT_DIR / "scripts"))
 
-from init_task import TaskInitializer
-from dedup import DedupEngine
-from ranker import RankingEngine
-from formatter import ReportFormatter
+from scripts.init_task import TaskInitializer
+from scripts.dedup import DedupEngine
+from scripts.ranker import RankingEngine
+from scripts.formatter import ReportFormatter
 
 
 class NewsResearcher:
@@ -67,10 +68,31 @@ class NewsResearcher:
         
         # Step 2: Ralph Loop 搜索
         print("\n🔍 Step 2: 执行Ralph Loop搜索...")
-        from Ralph_loop import RalphLoop
+        from scripts.ralph_loop import RalphLoop
         
         loop = RalphLoop(task)
-        task = await loop.run()
+        task = loop.run()
+        
+        # 额外抓取36氪
+        print("\n🔍 Step 2.1: 抓取36氪...")
+        try:
+            from scripts.kr36 import fetch_36kr_news
+            kr36_news = fetch_36kr_news()
+            if kr36_news:
+                task["results"].extend(kr36_news)
+                print(f"   36氪: 获取到 {len(kr36_news)} 条")
+        except Exception as e:
+            print(f"   36氪抓取失败: {e}")
+        
+        # 额外抓取其他中文源
+        print("\n🔍 Step 2.2: 抓取其他中文源...")
+        try:
+            from scripts.chinese_news import fetch_chinese_news
+            chinese_news = fetch_chinese_news()
+            if chinese_news:
+                task["results"].extend(chinese_news)
+        except Exception as e:
+            print(f"   中文源抓取失败: {e}")
         news_list = task.get("results", [])
         
         print(f"   抓取到: {len(news_list)} 条新闻")
@@ -94,7 +116,7 @@ class NewsResearcher:
         news_list = self.ranker.process(
             news_list, 
             topic=task.get("topic"),
-            max_news=task.get("max_news", 15)
+            max_news=task.get("max_news", 30)
         )
         
         # Step 5: 生成报告

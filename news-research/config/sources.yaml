@@ -201,7 +201,7 @@ ranking:
 # 输出配置
 output:
   format: "markdown"
-  max_news: 15
+  max_news: 30
   include_summary: true
   include_highlights: true
   translate: true  # 默认开启中文翻译

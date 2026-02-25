@@ -45,11 +45,13 @@ class TaskInitializer:
             days = 7
         
         # 解析最大新闻数
-        max_news = 15
+        max_news = 30
         if "10条" in instruction or "10条" in instruction:
             max_news = 10
         elif "20条" in instruction or "20条" in instruction:
             max_news = 20
+        elif "50条" in instruction:
+            max_news = 50
             
         return {
             "topic": topic,

@@ -47,61 +47,57 @@ class RSSParser:
         news_items = []
         
         try:
-            # 解析 XML
-            root = ET.fromstring(rss_content)
+            # 替换 CDATA 标记为其内容
+            import re
+            rss_content = re.sub(r'<!\[CDATA\[', '<![CDATA[', rss_content)
+            rss_content = re.sub(r'\]\]>', ']]>', rss_content)
             
-            # 获取 channel
-            channel = root.find('channel')
-            if channel is None:
-                return news_items
+            # 使用正则表达式提取新闻，更可靠
+            # 匹配 item 标签
+            item_pattern = r'<item>(.*?)</item>'
+            items = re.findall(item_pattern, rss_content, re.DOTALL)
             
-            # 遍历所有 item
-            for item in channel.findall('item'):
+            for item_content in items:
                 try:
                     # 提取标题
-                    title_elem = item.find('title')
-                    title = title_elem.text if title_elem is not None and title_elem.text else ""
+                    title_match = re.search(r'<title><!\[CDATA\[(.*?)\]\]></title>', item_content)
+                    if not title_match:
+                        title_match = re.search(r'<title>(.*?)</title>', item_content)
+                    title = title_match.group(1).strip() if title_match else ""
                     
-                    # 提取链接
-                    link_elem = item.find('link')
-                    link = link_elem.text if link_elem is not None and link_elem.text else ""
-                    
-                    # 提取描述
-                    desc_elem = item.find('description')
-                    description = desc_elem.text if desc_elem is not None and desc_elem.text else ""
-                    
-                    # 清理 HTML 标签
-                    description = re.sub(r'<[^>]+>', '', description)
-                    description = description.strip()
-                    
-                    # 提取日期
-                    date_elem = item.find('pubDate')
-                    pub_date = None
-                    if date_elem is not None and date_elem.text:
-                        pub_date = self.parse_date(date_elem.text)
-                    
-                    # 提取来源
-                    source = source_name
-                    source_elem = item.find('source')
-                    if source_elem is not None and source_elem.text:
-                        source = source_elem.text
-                    
-                    # 跳过空标题
                     if not title or len(title) < 5:
                         continue
                     
+                    # 提取链接
+                    link_match = re.search(r'<link>(.*?)</link>', item_content)
+                    link = link_match.group(1).strip() if link_match else ""
+                    
+                    # 提取描述
+                    desc_match = re.search(r'<description><!\[CDATA\[(.*?)\]\]></description>', item_content)
+                    if not desc_match:
+                        desc_match = re.search(r'<description>(.*?)</description>', item_content)
+                    description = desc_match.group(1).strip() if desc_match else ""
+                    # 清理HTML
+                    description = re.sub(r'<[^>]+>', '', description)[:500]
+                    
+                    # 提取日期
+                    date_match = re.search(r'<pubDate>(.*?)</pubDate>', item_content)
+                    pub_date = None
+                    if date_match:
+                        pub_date = self.parse_date(date_match.group(1))
+                    
                     news_items.append({
-                        "title": title.strip(),
-                        "url": link.strip() if link else "",
-                        "description": description[:500] if description else "",
-                        "source": source,
+                        "title": title,
+                        "url": link,
+                        "description": description,
+                        "source": source_name,
                         "pub_date": pub_date.isoformat() if pub_date else None,
                         "extracted_at": datetime.now().isoformat()
                     })
-                    
-                except Exception as e:
-                    # 跳过解析错误的 item
+                except Exception:
                     continue
+            
+            return news_items
         
         except Exception as e:
             print(f"RSS解析错误 {source_name}: {e}")
@@ -122,8 +118,17 @@ class RSSParser:
     
     def filter_by_keywords(self, news_items: List[Dict], keywords: List[str]) -> List[Dict]:
         """根据关键词过滤新闻"""
+        # 非AI关键词需要过滤
+        non_ai_keywords = ["游艇", "汽车", "新车", "车型", "股价", "房地产", "房价", "宠物", "食品", "饮料", "酒店", "旅游", "航空", "足球", "篮球", "电影", "电视剧", "综艺", "明星", "八卦", "万科", "万达", "地产"]
+        
+        # 如果没有设置关键词，返回所有（但要过滤非AI）
         if not keywords:
-            return news_items
+            filtered = []
+            for news in news_items:
+                title = news.get("title", "")
+                if not any(kw in title for kw in non_ai_keywords):
+                    filtered.append(news)
+            return filtered
         
         filtered = []
         keywords_lower = [kw.lower() for kw in keywords]
