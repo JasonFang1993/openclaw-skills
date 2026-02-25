@@ -27,6 +27,9 @@
 | **skill-creator** | 创建新技能指南 | ⭐ |
 | **drawio-diagrams** | Draw.io 图表生成（Mermaid/CSV/XML） | ⭐ |
 | **vue-auto-tester** | Vue 3 自动测试（Vitest + Playwright） | ⭐ |
+| **github-to-skills** | 将 GitHub 仓库自动转换为 AI Skills | ⭐⭐ |
+| **skill-manager** | 管理 Skill 生命周期（检查更新、删除） | ⭐ |
+| **skill-evolution-manager** | 基于用户反馈持续改进 Skills | ⭐⭐ |
 
 ---
 
@@ -42,7 +45,7 @@ npx clawhub@latest install <skill-name>
 npx clawhub@latest install browser-use
 
 # 安装所有 skill
-for skill in pdf pptx docx xlsx canvas-design webapp-testing weather weixin-reader find-skills systematic-debugging browser-use browser-cash kesslerio-stealth-browser ddg-search jina-reader research-company http-client github-search skill-creator drawio-diagrams vue-auto-tester; do
+for skill in pdf pptx docx xlsx canvas-design webapp-testing weather weixin-reader find-skills systematic-debugging browser-use browser-cash kesslerio-stealth-browser ddg-search jina-reader research-company http-client github-search skill-creator drawio-diagrams vue-auto-tester github-to-skills skill-manager skill-evolution-manager; do
   npx clawhub@latest install $skill
 done
 ```
@@ -368,6 +371,19 @@ openclaw-skills/
 │   ├── SKILL.md
 │   ├── scripts/
 │   └── references/
+├── vue-auto-tester/     # Vue 3 自动测试
+│   ├── SKILL.md
+│   ├── scripts/
+│   └── references/
+├── github-to-skills/    # GitHub 仓库转 AI Skills
+│   ├── SKILL.md
+│   └── scripts/
+├── skill-manager/       # Skill 生命周期管理
+│   ├── SKILL.md
+│   └── scripts/
+├── skill-evolution-manager/  # Skill 持续改进
+│   ├── SKILL.md
+│   └── scripts/
 └── README.md            # 本文件
 ```
 
@@ -503,6 +519,205 @@ GitHub API 公共请求限制为 60 次/小时。如需更高限制：
 
 ---
 
+## 📦 github-to-skills（GitHub 仓库转 AI Skills）
+
+### 简介
+
+自动化工具，将 GitHub 仓库转换为可安装的 AI Skills。支持抓取仓库元数据（描述、README、最新 commit hash），创建标准化的 skill 目录结构，生成带扩展 frontmatter 的 SKILL.md，便于后续生命周期管理。
+
+### 特点
+
+- ✅ **自动抓取**：获取仓库描述、README、commit hash
+- ✅ **标准化结构**：创建统一的 skill 目录格式
+- ✅ **生命周期管理**：扩展元数据支持 skill-manager
+- ✅ **零依赖**：纯 Python 实现
+
+### 使用方式
+
+```bash
+# 进入 skill 目录
+cd openclaw-skills/github-to-skills
+
+# 抓取仓库信息
+python3 scripts/fetch_github_info.py "https://github.com/yt-dlp/yt-dlp"
+
+# 创建 skill（需要先分析仓库结构）
+python3 scripts/create_github_skill.py "https://github.com/yt-dlp/yt-dlp" ./output
+```
+
+### 触发方式
+
+在 OpenClaw 中直接使用：
+- `/github-to-skills <github_url>`
+- "Package this repo into a skill: <url>"
+
+### 生成的 SKILL.md 格式
+
+```yaml
+---
+name: yt-dlp
+description: Download videos from YouTube and other sites
+# 扩展元数据（生命周期管理必需）
+github_url: https://github.com/yt-dlp/yt-dlp
+github_hash: a1b2c3d4e5f6...
+version: 2023.12.30
+created_at: 2026-02-25
+entry_point: scripts/wrapper.py
+dependencies: ["yt-dlp"]
+---
+```
+
+### 脚本说明
+
+| 脚本 | 功能 |
+|------|------|
+| `fetch_github_info.py` | 抓取仓库信息（描述、README、hash） |
+| `create_github_skill.py` | 创建标准化 skill 目录结构 |
+
+### 文档
+
+- `SKILL.md` - 技能说明
+
+---
+
+## 📦 skill-manager（Skill 生命周期管理）
+
+### 简介
+
+管理已安装的 GitHub-based Skills。支持审计本地 skills、对比本地与远程 commit、检查更新、生成状态报告、引导式升级工作流。
+
+### 特点
+
+- ✅ **批量审计**：扫描本地 skills 文件夹
+- ✅ **版本对比**：对比本地与远程 commit hash
+- ✅ **状态报告**：生成 Stale/Current 状态报告
+- ✅ **引导更新**：一键升级过时 skills
+
+### 使用方式
+
+```bash
+# 进入 skill 目录
+cd openclaw-skills/skill-manager
+
+# 扫描 skills 目录
+python3 scripts/scan_and_check.py ~/.openclaw/workspace/skills
+
+# 列出所有 skills
+python3 scripts/list_skills.py ~/.openclaw/workspace/skills
+
+# 删除指定 skill
+python3 scripts/delete_skill.py ~/.openclaw/workspace/skills <skill-name>
+```
+
+### 触发方式
+
+在 OpenClaw 中直接使用：
+- `/skill-manager check` - 检查更新
+- `/skill-manager list` - 列出所有 skills
+- `/skill-manager delete <name>` - 删除 skill
+
+### 状态说明
+
+| 状态 | 说明 |
+|------|------|
+| **Current** | 与远程仓库同步 |
+| **Outdated** | 远程有新提交 |
+| **Error** | 无法连接远程仓库 |
+
+### 脚本说明
+
+| 脚本 | 功能 |
+|------|------|
+| `scan_and_check.py` | 扫描目录、解析 frontmatter、检查远程版本 |
+| `list_skills.py` | 列出已安装 skills 及元数据 |
+| `delete_skill.py` | 永久删除指定 skill |
+| `update_helper.py` | 更新前备份文件 |
+
+### 文档
+
+- `SKILL.md` - 技能说明
+
+---
+
+## 📦 skill-evolution-manager（Skill 持续改进）
+
+### 简介
+
+基于用户反馈持续改进 Skills。分析 skill 表现，将反馈转换为结构化 JSON，将最佳实践持久化到 SKILL.md。
+
+### 特点
+
+- ✅ **会话回顾**：分析 skill 表现
+- ✅ **经验提取**：将反馈转为结构化 JSON
+- ✅ **智能整合**：将最佳实践写入 SKILL.md
+- ✅ **批量更新**：批量重整所有 skills
+
+### 使用方式
+
+```bash
+# 进入 skill 目录
+cd openclaw-skills/skill-evolution-manager
+
+# 合并经验数据
+python3 scripts/merge_evolution.py <skill-dir> <feedback-json>
+
+# 智能整合到 SKILL.md
+python3 scripts/smart_stitch.py <skill-dir>
+
+# 批量重整所有 skills
+python3 scripts/align_all.py ~/.openclaw/workspace/skills
+```
+
+### 触发方式
+
+在 OpenClaw 中直接使用：
+- `/evolve` - 保存经验到 skill
+- "Save this experience to the skill"
+
+### 工作流
+
+1. **Review**: Agent 分析对话中什么有效/无效
+2. **Extract**: 创建结构化 JSON（偏好、修复、自定义提示）
+3. **Persist**: 合并到 evolution.json
+4. **Stitch**: 更新 SKILL.md 中的最佳实践
+
+### 经验数据格式
+
+```json
+{
+  "skill_name": "example-skill",
+  "experiences": [
+    {
+      "situation": "用户要求生成 PDF 报告",
+      "action": "使用 reportlab 生成",
+      "result": "成功生成专业格式报告",
+      "preference": "优先使用 reportlab 而非 weasyprint"
+    }
+  ],
+  "best_practices": [
+    "始终检查依赖是否安装",
+    "使用 JSON 输出便于解析"
+  ],
+  "custom_prompts": [
+    "当用户要求生成报告时，先询问格式偏好"
+  ]
+}
+```
+
+### 脚本说明
+
+| 脚本 | 功能 |
+|------|------|
+| `merge_evolution.py` | 增量合并新经验数据 |
+| `smart_stitch.py` | 生成/更新 SKILL.md 最佳实践 |
+| `align_all.py` | 批量重整所有 skills |
+
+### 文档
+
+- `SKILL.md` - 技能说明
+
+---
+
 ## 📞 支持
 
 - 遇到问题：查看各技能目录下的 `SKILL.md`
@@ -512,6 +727,22 @@ GitHub API 公共请求限制为 60 次/小时。如需更高限制：
 ---
 
 ## 📝 更新日志
+
+### v1.7.0 (2026-02-25)
+- 新增三个 GitHub Skills 管理工具（来自 KKKKhazix/Khazix-Skills）
+  - **github-to-skills**: 将 GitHub 仓库自动转换为 AI Skills
+    - 抓取仓库元数据（描述、README、commit hash）
+    - 创建标准化 skill 目录结构
+    - 生成带扩展 frontmatter 的 SKILL.md
+  - **skill-manager**: 管理 Skill 生命周期
+    - 审计：扫描本地 skills 文件夹
+    - 检查：对比本地与远程 commit
+    - 报告：生成 Stale/Current 状态
+    - 删除：移除不需要的 skills
+  - **skill-evolution-manager**: 基于反馈持续改进 Skills
+    - 回顾：分析 skill 表现
+    - 提取：反馈转为结构化 JSON
+    - 整合：最佳实践写入 SKILL.md
 
 ### v1.6.0 (2026-02-12)
 - 新增 drawio-diagrams (Draw.io 图表生成工具)
