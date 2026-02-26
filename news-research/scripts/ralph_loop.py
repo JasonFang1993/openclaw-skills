@@ -107,7 +107,9 @@ class RalphLoop:
         self.keywords = task.get("keywords", ["AI", "artificial intelligence", "人工智能"])
         self.days = task.get("days", 1)
         self.headers = {
-            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+            "Accept": "application/rss+xml, application/xml,text/xml,*/*",
+            "Accept-Language": "en-US,en;q=0.9,zh-CN;q=0.8",
         }
     
     def fetch_rss(self, source_name: str, source_config: dict) -> List[Dict]:
