@@ -25,12 +25,9 @@
 | **vue-auto-tester** | Vue 3 自动测试（Vitest + Playwright） | ⭐ |
 | **news-research** | AI 行业新闻研究（RSS 聚合 + 深度分析） | ⭐ |
 | **x-post-fetch** | X (Twitter) 帖子抓取（支持 auth_token） | ⭐ |
-| **browser-use** | 云端浏览器自动化（需 API Key） | ⭐⭐ |
-| **browser-cash** | 匿名浏览器 session，防检测 | ⭐⭐ |
 | **github-to-skills** | 将 GitHub 仓库自动转换为 AI Skills | ⭐⭐ |
 | **skill-manager** | 管理 Skill 生命周期（检查更新、删除） | ⭐⭐ |
 | **skill-evolution-manager** | 基于用户反馈持续改进 Skills | ⭐⭐ |
-| **kesslerio-stealth-browser** | 反机器人浏览器，绕过验证 | ⭐⭐⭐ |
 
 ---
 
@@ -42,11 +39,11 @@
 # 安装单个 skill
 npx clawhub@latest install <skill-name>
 
-# 示例：安装浏览器自动化
-npx clawhub@latest install browser-use
+# 示例：安装 PDF 处理
+npx clawhub@latest install pdf
 
 # 安装所有 skill
-for skill in pdf pptx docx xlsx canvas-design webapp-testing weather weixin-reader find-skills systematic-debugging ddg-search jina-reader github-search http-client skill-creator drawio-diagrams vue-auto-tester news-research x-post-fetch browser-use browser-cash github-to-skills skill-manager skill-evolution-manager kesslerio-stealth-browser; do
+for skill in pdf pptx docx xlsx canvas-design webapp-testing weather weixin-reader find-skills systematic-debugging ddg-search jina-reader github-search http-client skill-creator drawio-diagrams vue-auto-tester news-research x-post-fetch github-to-skills skill-manager skill-evolution-manager; do
   npx clawhub@latest install $skill
 done
 ```
@@ -348,44 +345,7 @@ npx playwright install chromium
 
 ---
 
-### 20. 🌍 browser-use（云端浏览器）
-
-**功能**：通过 API 控制云端浏览器，执行自动化任务
-
-**安装**：
-```bash
-npx clawhub@latest install browser-use
-```
-
-**配置**：
-```bash
-clawdbot config set skills.entries.browser-use.apiKey "your_api_key"
-```
-
-**文档**：
-- 官网：https://docs.cloud.browser-use.com
-- 定价：$0.06/小时（新用户送 $10）
-
----
-
-### 21. 🌐 browser-cash（匿名浏览器）
-
-**功能**：提供匿名浏览器 session，绕过 Cloudflare、DataDome 等反爬机制
-
-**安装**：
-```bash
-npx clawhub@latest install browser-cash
-```
-
-**配置**：
-```bash
-# 访问 https://dash.browser.cash 注册获取 API Key
-clawdbot config set skills.entries.browser-cash.apiKey "your_key"
-```
-
----
-
-### 22. 📦 github-to-skills（GitHub 仓库转 AI Skills）
+### 20. 📦 github-to-skills（GitHub 仓库转 AI Skills）
 
 **功能**：将 GitHub 仓库自动转换为可安装的 AI Skills
 
@@ -490,33 +450,6 @@ python3 scripts/smart_stitch.py <skill-dir>
 
 ---
 
-### 25. 🥷 kesslerio-stealth-browser（反机器人浏览器）
-
-**功能**：使用 Camoufox + Nodriver 绕过强反爬
-
-**安装**：
-```bash
-npx clawhub@latest install kesslerio-stealth-browser
-
-# 需要先安装 distrobox（Linux）
-curl -s https://raw.githubusercontent.com/89luca89/distrobox/main/install | sh
-```
-
-**使用**：
-```bash
-# 进入容器
-distrobox-enter pybox
-
-# 使用 Camoufox 抓取
-python3.14 scripts/camoufox-fetch.py "https://example.com" --headless
-```
-
-**注意**：
-- Airbnb/Yelp 等网站需要 **住宅代理**
-- 首次运行会自动下载 Camoufox 浏览器（~700MB）
-
----
-
 ## 📁 目录结构
 
 ```
@@ -540,12 +473,9 @@ openclaw-skills/
 ├── vue-auto-tester/        # Vue 3 自动测试
 ├── news-research/           # 新闻研究
 ├── x-post-fetch/           # X 帖子抓取
-├── browser-use/            # 云端浏览器
-├── browser-cash/           # 匿名浏览器
 ├── github-to-skills/       # GitHub 转 Skills
 ├── skill-manager/          # 生命周期管理
 ├── skill-evolution-manager/ # 持续改进
-├── kesslerio-stealth-browser/ # 反机器人
 └── README.md               # 本文件
 ```
 
