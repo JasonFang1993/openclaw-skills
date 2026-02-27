@@ -380,7 +380,7 @@ created_at: 2026-02-25
 
 ---
 
-### 23. ⚙️ skill-manager（Skill 生命周期管理）
+### 21. ⚙️ skill-manager（Skill 生命周期管理）
 
 **功能**：管理已安装的 GitHub-based Skills
 
@@ -416,7 +416,7 @@ python3 scripts/scan_and_check.py ~/.openclaw/workspace/skills
 
 ---
 
-### 24. 🔄 skill-evolution-manager（Skill 持续改进）
+### 22. 🔄 skill-evolution-manager（Skill 持续改进）
 
 **功能**：基于用户反馈持续改进 Skills
 
