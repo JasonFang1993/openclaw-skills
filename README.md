@@ -6,8 +6,6 @@
 
 | 技能名称 | 功能描述 | 安装难度 |
 |---------|---------|---------|
-| **x-post-fetch** | X (Twitter) 帖子抓取（支持 auth_token） | ⭐ |
-| **news-research** | AI 行业新闻研究（RSS 聚合 + 深度分析） | ⭐ |
 | **pdf** | PDF 处理（提取、合并、创建、水印） | ⭐ |
 | **pptx** | PPT 制作（幻灯片、模板、设计） | ⭐ |
 | **docx** | Word 文档（报告、合同、表格） | ⭐ |
@@ -18,20 +16,21 @@
 | **weixin-reader** | 微信文章读取（反爬虫破解） | ⭐ |
 | **find-skills** | 搜索 skills 库 | ⭐ |
 | **systematic-debugging** | 系统化调试方法 | ⭐ |
-| **browser-use** | 云端浏览器自动化（需 API Key） | ⭐⭐ |
-| **browser-cash** | 匿名浏览器 session，防检测 | ⭐⭐ |
-| **kesslerio-stealth-browser** | 反机器人浏览器，绕过验证 | ⭐⭐⭐ |
 | **ddg-search** | DuckDuckGo 免费网页搜索 | ⭐ |
 | **jina-reader** | 网页内容提取（Jina AI） | ⭐ |
-| **research-company** | 公司调研，生成 PDF 报告 | ⭐ |
-| **http-client** | HTTP 客户端（配置文件、请求管理、历史追踪） | ⭐ |
 | **github-search** | GitHub 仓库搜索（API、Stars、详细信息） | ⭐ |
+| **http-client** | HTTP 客户端（配置文件、请求管理、历史追踪） | ⭐ |
 | **skill-creator** | 创建新技能指南 | ⭐ |
 | **drawio-diagrams** | Draw.io 图表生成（Mermaid/CSV/XML） | ⭐ |
 | **vue-auto-tester** | Vue 3 自动测试（Vitest + Playwright） | ⭐ |
+| **news-research** | AI 行业新闻研究（RSS 聚合 + 深度分析） | ⭐ |
+| **x-post-fetch** | X (Twitter) 帖子抓取（支持 auth_token） | ⭐ |
+| **browser-use** | 云端浏览器自动化（需 API Key） | ⭐⭐ |
+| **browser-cash** | 匿名浏览器 session，防检测 | ⭐⭐ |
 | **github-to-skills** | 将 GitHub 仓库自动转换为 AI Skills | ⭐⭐ |
-| **skill-manager** | 管理 Skill 生命周期（检查更新、删除） | ⭐ |
+| **skill-manager** | 管理 Skill 生命周期（检查更新、删除） | ⭐⭐ |
 | **skill-evolution-manager** | 基于用户反馈持续改进 Skills | ⭐⭐ |
+| **kesslerio-stealth-browser** | 反机器人浏览器，绕过验证 | ⭐⭐⭐ |
 
 ---
 
@@ -47,7 +46,7 @@ npx clawhub@latest install <skill-name>
 npx clawhub@latest install browser-use
 
 # 安装所有 skill
-for skill in pdf pptx docx xlsx canvas-design webapp-testing weather weixin-reader find-skills systematic-debugging browser-use browser-cash kesslerio-stealth-browser ddg-search jina-reader research-company http-client github-search skill-creator drawio-diagrams vue-auto-tester github-to-skills skill-manager skill-evolution-manager; do
+for skill in pdf pptx docx xlsx canvas-design webapp-testing weather weixin-reader find-skills systematic-debugging ddg-search jina-reader github-search http-client skill-creator drawio-diagrams vue-auto-tester news-research x-post-fetch browser-use browser-cash github-to-skills skill-manager skill-evolution-manager kesslerio-stealth-browser; do
   npx clawhub@latest install $skill
 done
 ```
@@ -70,91 +69,87 @@ cp -r <skill-folder> <project>/skills/
 
 ## 📖 详细使用说明
 
-### 1. 🌍 browser-use（云端浏览器）
+### 1. 📄 pdf（PDF 处理）
 
-**功能**：通过 API 控制云端浏览器，执行自动化任务
+**功能**：PDF 提取、合并、创建、水印
 
-**安装**：
-```bash
-npm install -g clawdbot  # 如果使用 Clawdbot
-# 或配置 API Key
-clawdbot config set skills.entries.browser-use.apiKey "your_api_key"
-```
-
-**使用**：
-```bash
-# 创建浏览器会话
-npx clawhub@latest install browser-use
-
-# 在 OpenClaw 中直接使用
-# agent 会自动调用 browser 工具
-```
-
-**文档**：
-- 官网：https://docs.cloud.browser-use.com
-- 定价：$0.06/小时（新用户送 $10）
+**使用**：查看 `pdf/SKILL.md`
 
 ---
 
-### 2. 🌐 browser-cash（匿名浏览器）
+### 2. 📊 pptx（PPT 制作）
 
-**功能**：提供匿名浏览器 session，绕过 Cloudflare、DataDome 等反爬机制
+**功能**：幻灯片制作、模板、设计
 
-**安装**：
-```bash
-npx clawhub@latest install browser-cash
-```
-
-**配置**：
-```bash
-# 获取 API Key
-# 访问 https://dash.browser.cash 注册
-
-# 配置
-clawdbot config set skills.entries.browser-cash.apiKey "your_key"
-```
-
-**使用**：
-```bash
-# 创建 session
-curl -X POST "https://api.browser.cash/v1/browser/session" \
-  -H "Authorization: Bearer $API_KEY" \
-  -d '{"country": "US", "windowSize": "1920x1080"}'
-```
+**使用**：查看 `pptx/SKILL.md`
 
 ---
 
-### 3. 🥷 kesslerio-stealth-browser（反机器人浏览器）
+### 3. 📝 docx（Word 文档）
 
-**功能**：使用 Camoufox + Nodriver 绕过强反爬（Cloudflare Turnstile、Datadome 等）
+**功能**：报告、合同、表格处理
 
-**安装**：
-```bash
-npx clawhub@latest install kesslerio-stealth-browser
-
-# 需要先安装 distrobox（Linux）
-curl -s https://raw.githubusercontent.com/89luca89/distrobox/main/install | sh
-```
-
-**使用**：
-```bash
-# 进入容器
-distrobox-enter pybox
-
-# 使用 Camoufox 抓取
-python3.14 scripts/camoufox-fetch.py "https://example.com" --headless
-
-# 或使用 curl_cffi（纯 API）
-python3.14 scripts/curl-api.py "https://api.example.com/endpoint"
-```
-
-**注意**：
-- Airbnb/Yelp 等网站需要 **住宅代理**
-- 首次运行会自动下载 Camoufox 浏览器（~700MB）
+**使用**：查看 `docx/SKILL.md`
 
 ---
 
-### 4. 🔍 ddg-search（DuckDuckGo 搜索）
+### 4. 📈 xlsx（Excel 数据）
+
+**功能**：表格、公式、图表处理
+
+**使用**：查看 `xlsx/SKILL.md`
+
+---
+
+### 5. 🎨 canvas-design（视觉设计）
+
+**功能**：海报、艺术创作
+
+**使用**：查看 `canvas-design/SKILL.md`
+
+---
+
+### 6. 🧪 webapp-testing（Web 应用测试）
+
+**功能**：使用 Playwright 进行 Web 测试
+
+**使用**：查看 `webapp-testing/SKILL.md`
+
+---
+
+### 7. 🌤️ weather（天气查询）
+
+**功能**：免费天气查询，无需 API Key
+
+**使用**：查看 `weather/SKILL.md`
+
+---
+
+### 8. 📱 weixin-reader（微信文章读取）
+
+**功能**：解决微信反爬虫，读取微信文章
+
+**使用**：查看 `weixin-reader/SKILL.md`
+
+---
+
+### 9. 🔎 find-skills（搜索 Skills）
+
+**功能**：搜索 skills 库
+
+**使用**：查看 `find-skills/SKILL.md`
+
+---
+
+### 10. 🔧 systematic-debugging（系统化调试）
+
+**功能**：系统化调试方法
+
+**使用**：查看 `systematic-debugging/SKILL.md`
+
+---
+
+### 11. 🔍 ddg-search（DuckDuckGo 搜索）
 
 **功能**：免费网页搜索，无需 API Key
 
@@ -165,14 +160,13 @@ npx clawhub@latest install ddg-search
 
 **使用**：
 ```bash
-# 搜索脚本
 cd skills/ddg-search
 bash scripts/search.sh "your search query"
 ```
 
 ---
 
-### 5. 📖 jina-reader（Jina AI 网页提取）
+### 12. 📖 jina-reader（Jina AI 网页提取）
 
 **功能**：提取网页内容，支持三种模式
 
@@ -211,98 +205,66 @@ cd skills/jina-reader/scripts
 
 ---
 
-### 6. 📊 research-company（公司调研）
+### 13. 🐙 github-search（GitHub 仓库搜索）
 
-**功能**：自动调研公司，生成专业 PDF 报告
+**功能**：使用 GitHub API 搜索开源仓库，比较项目质量
 
 **安装**：
 ```bash
-npx clawhub@latest install research-company
-
-# 安装 PDF 生成依赖
-pip install reportlab
+npx clawhub@latest install github-search
 ```
 
 **使用**：
 ```bash
-# 1. 研究阶段
-# agent 会自动并行抓取：
-# - 公司官网
-# - 融资新闻
-# - 竞争对手分析
-# - 领导层信息
+cd openclaw-skills/github-search
 
-# 2. 生成 JSON 数据
-cat > /tmp/research_data.json << 'EOF'
-{
-  "company_name": "Example Corp",
-  "executive_summary": "...",
-  "profile": { ... },
-  "products": { ... },
-  ...
-}
-EOF
+# 搜索仓库
+python3 scripts/github_search.py search "whatsapp bot automation"
 
-# 3. 生成 PDF
-python3 scripts/generate_report.py /tmp/research_data.json report.pdf
+# 按语言筛选
+python3 scripts/github_search.py search "machine learning" --language python
+
+# 获取仓库详情
+python3 scripts/github_search.py details aldinokemal go-whatsapp-web-multidevice
 ```
 
-**输出**：专业格式的 PDF 报告，包含执行摘要、公司简介、产品/服务、目标市场、竞争对手、行业分析等章节。
+**特点**：
+- ✅ 免费无需 API Key（60次/小时）
+- ✅ 支持关键词、语言、排序筛选
+- ✅ 纯 Python 实现，无外部依赖
 
 ---
 
-### 7. 🌐 http-client（HTTP 客户端）
+### 14. 🌐 http-client（HTTP 客户端）
 
-**功能**：功能完整的命令行 HTTP 客户端，支持配置文件、请求保存/加载、历史追踪、认证、自动重试、抗爬虫保护
+**功能**：命令行 HTTP 客户端，支持配置文件、请求保存/加载、历史追踪
 
 **安装**：
 ```bash
 npx clawhub@latest install http-client
-
-# 或手动安装
-cp -r http-client ~/.openclaw/skills/
 ```
 
 **使用**：
 ```bash
-# 基础 GET 请求
 cd http-client
 node bin/http-client.js -u https://httpbin.org/get --pretty
 
-# POST 请求
-node bin/http-client.js -u https://httpbin.org/post \
-  -m POST \
-  -d '{"name":"test"}' \
-  --pretty
-
 # 保存请求
-node bin/http-client.js -u https://api.example.com/users \
-  -m POST \
-  --save my-api
+node bin/http-client.js -u https://api.example.com/users -m POST --save my-api
 
-# 加载已保存的请求
+# 加载请求
 node bin/http-client.js --load my-api --pretty
-
-# 查看历史
-node bin/http-client.js --history
 ```
 
 **功能特性**：
-| 功能 | 描述 |
-|------|------|
-| HTTP 方法 | GET/POST/PUT/PATCH/DELETE |
-| 认证 | Bearer、Basic Auth |
-| 自动重试 | 指数退避重试 |
-| 抗爬虫 | 随机 UA + 延迟 |
-| 配置文件 | 保存/加载请求 |
-| 历史追踪 | 自动记录历史 |
-| 请求脱敏 | 敏感信息自动掩码 |
-
-**文档**：`http-client/SKILL.md`
+- HTTP 方法：GET/POST/PUT/PATCH/DELETE
+- 认证：Bearer、Basic Auth
+- 自动重试 + 指数退避
+- 抗爬虫：随机 UA + 延迟
 
 ---
 
-### 8. 🛠️ skill-creator（创建新技能指南）
+### 15. 🛠️ skill-creator（创建新技能指南）
 
 **功能**：学习如何创建自定义技能
 
@@ -311,7 +273,247 @@ node bin/http-client.js --history
 npx clawhub@latest install skill-creator
 ```
 
-**使用**：查看 `SKILL.md` 学习技能开发规范。
+**使用**：查看 `skill-creator/SKILL.md`
+
+---
+
+### 16. 📐 drawio-diagrams（Draw.io 图表生成）
+
+**功能**：从 Mermaid、CSV、XML 生成 Draw.io 图表
+
+**安装**：
+```bash
+npx clawhub@latest install drawio-diagrams
+```
+
+**使用**：
+```bash
+cd openclaw-skills/drawio-diagrams
+
+# Mermaid → PlantUML
+python scripts/mermaid2drawio.py "A[Start] --> B[End]"
+
+# CSV → 组织架构图
+python scripts/csv2drawio.py "id,label,parent\nCEO,CEO,\nVP1,VP Sales,CEO"
+```
+
+**特点**：
+- ✅ 三种格式：Mermaid/CSV/XML
+- ✅ 纯 Python，无外部依赖
+- ✅ 自动打开 Draw.io 编辑器
+
+---
+
+### 17. 🧬 vue-auto-tester（Vue 3 自动测试）
+
+**功能**：自动测试和调试 Vue 3 项目
+
+**安装**：
+```bash
+npx clawhub@latest install vue-auto-tester
+```
+
+**使用**：
+```bash
+cd openclaw-skills/vue-auto-tester
+
+# 完整测试
+python scripts/auto_test_vue_project.py ./my-vue-app
+
+# 带截图对比
+python scripts/auto_test_vue_project.py ./my-vue-app --screenshot
+```
+
+**依赖**：
+```bash
+npm install -D vitest @vue/test-utils @playwright/test
+npx playwright install chromium
+```
+
+---
+
+### 18. 📰 news-research（行业新闻研究）
+
+**功能**：AI 行业新闻 RSS 聚合 + 深度分析
+
+**使用**：查看 `news-research/SKILL.md`
+
+---
+
+### 19. 🐦 x-post-fetch（X 帖子抓取）
+
+**功能**：X (Twitter) 帖子抓取，支持 auth_token
+
+**使用**：查看 `x-post-fetch/SKILL.md`
+
+---
+
+### 20. 🌍 browser-use（云端浏览器）
+
+**功能**：通过 API 控制云端浏览器，执行自动化任务
+
+**安装**：
+```bash
+npx clawhub@latest install browser-use
+```
+
+**配置**：
+```bash
+clawdbot config set skills.entries.browser-use.apiKey "your_api_key"
+```
+
+**文档**：
+- 官网：https://docs.cloud.browser-use.com
+- 定价：$0.06/小时（新用户送 $10）
+
+---
+
+### 21. 🌐 browser-cash（匿名浏览器）
+
+**功能**：提供匿名浏览器 session，绕过 Cloudflare、DataDome 等反爬机制
+
+**安装**：
+```bash
+npx clawhub@latest install browser-cash
+```
+
+**配置**：
+```bash
+# 访问 https://dash.browser.cash 注册获取 API Key
+clawdbot config set skills.entries.browser-cash.apiKey "your_key"
+```
+
+---
+
+### 22. 📦 github-to-skills（GitHub 仓库转 AI Skills）
+
+**功能**：将 GitHub 仓库自动转换为可安装的 AI Skills
+
+**安装**：
+```bash
+npx clawhub@latest install github-to-skills
+```
+
+**使用**：
+```bash
+# 在 OpenClaw 中直接使用
+/github-to-skills https://github.com/yt-dlp/yt-dlp
+```
+
+**或手动**：
+```bash
+cd openclaw-skills/github-to-skills
+python3 scripts/fetch_github_info.py "https://github.com/yt-dlp/yt-dlp"
+```
+
+**生成的 SKILL.md 格式**：
+```yaml
+---
+name: yt-dlp
+description: Download videos from YouTube
+github_url: https://github.com/yt-dlp/yt-dlp
+github_hash: a1b2c3d4e5f6...
+version: 2023.12.30
+created_at: 2026-02-25
+---
+```
+
+---
+
+### 23. ⚙️ skill-manager（Skill 生命周期管理）
+
+**功能**：管理已安装的 GitHub-based Skills
+
+**安装**：
+```bash
+npx clawhub@latest install skill-manager
+```
+
+**使用**：
+```bash
+# 检查更新
+/skill-manager check
+
+# 列出所有 skills
+/skill-manager list
+
+# 删除 skill
+/skill-manager delete <name>
+```
+
+**或手动**：
+```bash
+cd openclaw-skills/skill-manager
+python3 scripts/scan_and_check.py ~/.openclaw/workspace/skills
+```
+
+**状态说明**：
+| 状态 | 说明 |
+|------|------|
+| Current | 与远程仓库同步 |
+| Outdated | 远程有新提交 |
+| Error | 无法连接远程仓库 |
+
+---
+
+### 24. 🔄 skill-evolution-manager（Skill 持续改进）
+
+**功能**：基于用户反馈持续改进 Skills
+
+**安装**：
+```bash
+npx clawhub@latest install skill-evolution-manager
+```
+
+**使用**：
+```bash
+# 保存经验到 skill
+/evolve
+```
+
+**或手动**：
+```bash
+cd openclaw-skills/skill-evolution-manager
+python3 scripts/merge_evolution.py <skill-dir> '<json-data>'
+python3 scripts/smart_stitch.py <skill-dir>
+```
+
+**经验数据格式**：
+```json
+{
+  "skill_name": "example-skill",
+  "experiences": [{"situation": "...", "action": "...", "result": "..."}],
+  "best_practices": ["始终检查依赖是否安装"],
+  "custom_prompts": ["当用户要求生成报告时，先询问格式偏好"]
+}
+```
+
+---
+
+### 25. 🥷 kesslerio-stealth-browser（反机器人浏览器）
+
+**功能**：使用 Camoufox + Nodriver 绕过强反爬
+
+**安装**：
+```bash
+npx clawhub@latest install kesslerio-stealth-browser
+
+# 需要先安装 distrobox（Linux）
+curl -s https://raw.githubusercontent.com/89luca89/distrobox/main/install | sh
+```
+
+**使用**：
+```bash
+# 进入容器
+distrobox-enter pybox
+
+# 使用 Camoufox 抓取
+python3.14 scripts/camoufox-fetch.py "https://example.com" --headless
+```
+
+**注意**：
+- Airbnb/Yelp 等网站需要 **住宅代理**
+- 首次运行会自动下载 Camoufox 浏览器（~700MB）
 
 ---
 
@@ -320,73 +522,31 @@ npx clawhub@latest install skill-creator
 ```
 openclaw-skills/
 ├── pdf/                    # PDF 处理
-│   ├── SKILL.md
-│   └── scripts/
 ├── pptx/                   # PPT 制作
-│   ├── SKILL.md
-│   └── scripts/
 ├── docx/                   # Word 文档
-│   ├── SKILL.md
-│   └── scripts/
 ├── xlsx/                   # Excel 数据
-│   ├── SKILL.md
-│   └── scripts/
 ├── canvas-design/          # 视觉设计
-│   └── SKILL.md
 ├── webapp-testing/         # Web 测试
-│   ├── SKILL.md
-│   └── scripts/
 ├── weather/                # 天气查询
-│   └── SKILL.md
-├── weixin-reader/         # 微信文章读取
-│   ├── SKILL.md
-│   └── scripts/
-├── find-skills/           # 搜索 skills
-│   └── SKILL.md
-├── systematic-debugging/    # 调试方法
-│   └── SKILL.md
-├── browser-use/           # 云端浏览器
-│   ├── SKILL.md
-│   └── references/
-├── browser-cash/         # 匿名浏览器
-│   └── SKILL.md
-├── kesslerio-stealth-browser/  # 反机器人
-│   ├── SKILL.md
-│   ├── scripts/
-│   └── references/
-├── ddg-search/          # DuckDuckGo 搜索
-│   ├── SKILL.md
-│   └── scripts/
-├── jina-reader/          # 网页内容提取
-│   ├── SKILL.md
-│   └── scripts/
-├── research-company/     # 公司调研
-│   ├── SKILL.md
-│   ├── scripts/
-│   └── references/
-├── http-client/         # HTTP 客户端
-│   ├── SKILL.md
-│   └── bin/
-├── skill-creator/       # 技能创建指南
-│   └── SKILL.md
-├── drawio-diagrams/     # Draw.io 图表生成
-│   ├── SKILL.md
-│   ├── scripts/
-│   └── references/
-├── vue-auto-tester/     # Vue 3 自动测试
-│   ├── SKILL.md
-│   ├── scripts/
-│   └── references/
-├── github-to-skills/    # GitHub 仓库转 AI Skills
-│   ├── SKILL.md
-│   └── scripts/
-├── skill-manager/       # Skill 生命周期管理
-│   ├── SKILL.md
-│   └── scripts/
-├── skill-evolution-manager/  # Skill 持续改进
-│   ├── SKILL.md
-│   └── scripts/
-└── README.md            # 本文件
+├── weixin-reader/          # 微信文章读取
+├── find-skills/            # 搜索 skills
+├── systematic-debugging/   # 调试方法
+├── ddg-search/             # DuckDuckGo 搜索
+├── jina-reader/            # 网页内容提取
+├── github-search/          # GitHub 仓库搜索
+├── http-client/            # HTTP 客户端
+├── skill-creator/          # 技能创建指南
+├── drawio-diagrams/        # Draw.io 图表
+├── vue-auto-tester/        # Vue 3 自动测试
+├── news-research/           # 新闻研究
+├── x-post-fetch/           # X 帖子抓取
+├── browser-use/            # 云端浏览器
+├── browser-cash/           # 匿名浏览器
+├── github-to-skills/       # GitHub 转 Skills
+├── skill-manager/          # 生命周期管理
+├── skill-evolution-manager/ # 持续改进
+├── kesslerio-stealth-browser/ # 反机器人
+└── README.md               # 本文件
 ```
 
 ---
@@ -405,19 +565,16 @@ curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh | bash
 nvm install --lts
 
 # Python 3.10+
-sudo apt install -y python3 python3-pip
+sudo apt install -y python3 python3-pip python3-yaml
 pip install --upgrade pip
 ```
 
 ### 浏览器依赖
 
 ```bash
-# Playwright（如果需要本地浏览器）
+# Playwright
 npm install -g playwright
 playwright install
-
-# 或 Puppeteer
-npm install -g puppeteer
 ```
 
 ---
@@ -428,295 +585,6 @@ npm install -g puppeteer
 2. **成本控制**：云端浏览器服务可能产生费用，请关注使用量
 3. **代理要求**：某些网站（如 Airbnb、Yelp）需要住宅代理
 4. **遵守规则**：自动化操作请遵守网站使用条款
-
----
-
-## 📦 github-search（GitHub 仓库搜索）
-
-### 简介
-
-使用 GitHub API 搜索开源仓库，比较项目质量，收集技术研究数据。支持关键词搜索、语言筛选、排序选项（Stars、Forks、更新时间），以及获取仓库详细信息。
-
-### 特点
-
-- ✅ **免费无需 API Key**：使用 GitHub 公共 API
-- ✅ **多功能搜索**：关键词、语言、排序、过滤
-- ✅ **详细信息获取**：仓库详情、Topics、统计数据
-- ✅ **纯 Python 实现**：无外部依赖
-- ✅ **JSON 输出**：方便程序解析
-
-### 使用方式
-
-```bash
-# 进入 skill 目录
-cd openclaw-skills/github-search
-
-# 搜索仓库
-python3 scripts/github_search.py search "whatsapp bot automation"
-
-# 按语言筛选
-python3 scripts/github_search.py search "machine learning" --language python
-
-# 获取仓库详情
-python3 scripts/github_search.py details aldinokemal go-whatsapp-web-multidevice
-
-# 获取仓库 Topics
-python3 scripts/github_search.py topics pedroslopez whatsapp-web.js
-```
-
-### 搜索示例
-
-```bash
-# 搜索 WhatsApp 相关项目
-python3 scripts/github_search.py search "whatsapp bot automation" --per-page 10 --sort stars
-
-# 搜索 Go 语言项目
-python3 scripts/github_search.py search "docker orchestration" --language go --per-page 20
-
-# 搜索最近更新的项目
-python3 scripts/github_search.py search "api server" --sort updated --order desc
-```
-
-### 输出格式
-
-所有命令返回 JSON 格式输出：
-
-```json
-{
-  "success": true,
-  "total_count": 27731,
-  "items": [
-    {
-      "full_name": "owner/repo",
-      "description": "项目描述",
-      "stars": 1000,
-      "forks": 100,
-      "language": "JavaScript",
-      "updated_at": "2026-02-09T12:00:00Z",
-      "html_url": "https://github.com/owner/repo",
-      "open_issues": 10,
-      "license": "MIT"
-    }
-  ]
-}
-```
-
-### 命令参数
-
-| 参数 | 说明 | 示例 |
-|------|------|------|
-| `search` | 搜索仓库 | `search "whatsapp bot"` |
-| `--language` | 按语言筛选 | `--language python` |
-| `--sort` | 排序方式 | `--sort stars\|forks\|updated` |
-| `--order` | 排序顺序 | `--order desc\|asc` |
-| `--per-page` | 结果数量 | `--per-page 20` |
-| `details` | 仓库详情 | `details owner repo` |
-| `topics` | 仓库标签 | `topics owner repo` |
-
-### 速率限制
-
-GitHub API 公共请求限制为 60 次/小时。如需更高限制：
-- 使用认证请求（添加 `--token` header）
-- 设置环境变量：`GITHUB_TOKEN`
-
----
-
-## 📦 github-to-skills（GitHub 仓库转 AI Skills）
-
-### 简介
-
-自动化工具，将 GitHub 仓库转换为可安装的 AI Skills。支持抓取仓库元数据（描述、README、最新 commit hash），创建标准化的 skill 目录结构，生成带扩展 frontmatter 的 SKILL.md，便于后续生命周期管理。
-
-### 特点
-
-- ✅ **自动抓取**：获取仓库描述、README、commit hash
-- ✅ **标准化结构**：创建统一的 skill 目录格式
-- ✅ **生命周期管理**：扩展元数据支持 skill-manager
-- ✅ **零依赖**：纯 Python 实现
-
-### 使用方式
-
-```bash
-# 进入 skill 目录
-cd openclaw-skills/github-to-skills
-
-# 抓取仓库信息
-python3 scripts/fetch_github_info.py "https://github.com/yt-dlp/yt-dlp"
-
-# 创建 skill（需要先分析仓库结构）
-python3 scripts/create_github_skill.py "https://github.com/yt-dlp/yt-dlp" ./output
-```
-
-### 触发方式
-
-在 OpenClaw 中直接使用：
-- `/github-to-skills <github_url>`
-- "Package this repo into a skill: <url>"
-
-### 生成的 SKILL.md 格式
-
-```yaml
----
-name: yt-dlp
-description: Download videos from YouTube and other sites
-# 扩展元数据（生命周期管理必需）
-github_url: https://github.com/yt-dlp/yt-dlp
-github_hash: a1b2c3d4e5f6...
-version: 2023.12.30
-created_at: 2026-02-25
-entry_point: scripts/wrapper.py
-dependencies: ["yt-dlp"]
----
-```
-
-### 脚本说明
-
-| 脚本 | 功能 |
-|------|------|
-| `fetch_github_info.py` | 抓取仓库信息（描述、README、hash） |
-| `create_github_skill.py` | 创建标准化 skill 目录结构 |
-
-### 文档
-
-- `SKILL.md` - 技能说明
-
----
-
-## 📦 skill-manager（Skill 生命周期管理）
-
-### 简介
-
-管理已安装的 GitHub-based Skills。支持审计本地 skills、对比本地与远程 commit、检查更新、生成状态报告、引导式升级工作流。
-
-### 特点
-
-- ✅ **批量审计**：扫描本地 skills 文件夹
-- ✅ **版本对比**：对比本地与远程 commit hash
-- ✅ **状态报告**：生成 Stale/Current 状态报告
-- ✅ **引导更新**：一键升级过时 skills
-
-### 使用方式
-
-```bash
-# 进入 skill 目录
-cd openclaw-skills/skill-manager
-
-# 扫描 skills 目录
-python3 scripts/scan_and_check.py ~/.openclaw/workspace/skills
-
-# 列出所有 skills
-python3 scripts/list_skills.py ~/.openclaw/workspace/skills
-
-# 删除指定 skill
-python3 scripts/delete_skill.py ~/.openclaw/workspace/skills <skill-name>
-```
-
-### 触发方式
-
-在 OpenClaw 中直接使用：
-- `/skill-manager check` - 检查更新
-- `/skill-manager list` - 列出所有 skills
-- `/skill-manager delete <name>` - 删除 skill
-
-### 状态说明
-
-| 状态 | 说明 |
-|------|------|
-| **Current** | 与远程仓库同步 |
-| **Outdated** | 远程有新提交 |
-| **Error** | 无法连接远程仓库 |
-
-### 脚本说明
-
-| 脚本 | 功能 |
-|------|------|
-| `scan_and_check.py` | 扫描目录、解析 frontmatter、检查远程版本 |
-| `list_skills.py` | 列出已安装 skills 及元数据 |
-| `delete_skill.py` | 永久删除指定 skill |
-| `update_helper.py` | 更新前备份文件 |
-
-### 文档
-
-- `SKILL.md` - 技能说明
-
----
-
-## 📦 skill-evolution-manager（Skill 持续改进）
-
-### 简介
-
-基于用户反馈持续改进 Skills。分析 skill 表现，将反馈转换为结构化 JSON，将最佳实践持久化到 SKILL.md。
-
-### 特点
-
-- ✅ **会话回顾**：分析 skill 表现
-- ✅ **经验提取**：将反馈转为结构化 JSON
-- ✅ **智能整合**：将最佳实践写入 SKILL.md
-- ✅ **批量更新**：批量重整所有 skills
-
-### 使用方式
-
-```bash
-# 进入 skill 目录
-cd openclaw-skills/skill-evolution-manager
-
-# 合并经验数据
-python3 scripts/merge_evolution.py <skill-dir> <feedback-json>
-
-# 智能整合到 SKILL.md
-python3 scripts/smart_stitch.py <skill-dir>
-
-# 批量重整所有 skills
-python3 scripts/align_all.py ~/.openclaw/workspace/skills
-```
-
-### 触发方式
-
-在 OpenClaw 中直接使用：
-- `/evolve` - 保存经验到 skill
-- "Save this experience to the skill"
-
-### 工作流
-
-1. **Review**: Agent 分析对话中什么有效/无效
-2. **Extract**: 创建结构化 JSON（偏好、修复、自定义提示）
-3. **Persist**: 合并到 evolution.json
-4. **Stitch**: 更新 SKILL.md 中的最佳实践
-
-### 经验数据格式
-
-```json
-{
-  "skill_name": "example-skill",
-  "experiences": [
-    {
-      "situation": "用户要求生成 PDF 报告",
-      "action": "使用 reportlab 生成",
-      "result": "成功生成专业格式报告",
-      "preference": "优先使用 reportlab 而非 weasyprint"
-    }
-  ],
-  "best_practices": [
-    "始终检查依赖是否安装",
-    "使用 JSON 输出便于解析"
-  ],
-  "custom_prompts": [
-    "当用户要求生成报告时，先询问格式偏好"
-  ]
-}
-```
-
-### 脚本说明
-
-| 脚本 | 功能 |
-|------|------|
-| `merge_evolution.py` | 增量合并新经验数据 |
-| `smart_stitch.py` | 生成/更新 SKILL.md 最佳实践 |
-| `align_all.py` | 批量重整所有 skills |
-
-### 文档
-
-- `SKILL.md` - 技能说明
 
 ---
 
@@ -731,227 +599,35 @@ python3 scripts/align_all.py ~/.openclaw/workspace/skills
 ## 📝 更新日志
 
 ### v1.7.0 (2026-02-25)
-- 新增三个 GitHub Skills 管理工具（来自 KKKKhazix/Khazix-Skills）
+- 新增三个 GitHub Skills 管理工具
   - **github-to-skills**: 将 GitHub 仓库自动转换为 AI Skills
-    - 抓取仓库元数据（描述、README、commit hash）
-    - 创建标准化 skill 目录结构
-    - 生成带扩展 frontmatter 的 SKILL.md
   - **skill-manager**: 管理 Skill 生命周期
-    - 审计：扫描本地 skills 文件夹
-    - 检查：对比本地与远程 commit
-    - 报告：生成 Stale/Current 状态
-    - 删除：移除不需要的 skills
   - **skill-evolution-manager**: 基于反馈持续改进 Skills
-    - 回顾：分析 skill 表现
-    - 提取：反馈转为结构化 JSON
-    - 整合：最佳实践写入 SKILL.md
+- 新增 x-post-fetch (X 帖子抓取)
+- 新增 news-research (行业新闻研究)
+- 整理 README 顺序
 
 ### v1.6.0 (2026-02-12)
-- 新增 drawio-diagrams (Draw.io 图表生成工具)
-  - Mermaid → Draw.io 流程图、架构图、时序图
-  - CSV → Draw.io 组织架构图、网络拓扑图
-  - XML → Draw.io 精细控制格式
-  - 纯 Python 实现，无外部依赖
-  - 本地压缩，保护隐私
-  - 自动浏览器打开 Draw.io 编辑器
-  - 完整使用指南 + 8个示例
+- 新增 drawio-diagrams (Draw.io 图表生成)
+- 新增 vue-auto-tester (Vue 3 自动测试)
 
 ### v1.5.0 (2026-02-09)
-- 新增 github-search (GitHub 仓库搜索工具)
-  - 使用 GitHub API 搜索开源项目
-  - 支持关键词、语言筛选、排序
-  - 获取仓库详细信息和 Topics
-  - 纯 Python 实现，无外部依赖
-  - 成功测试 WhatsApp 项目搜索（21k+ stars）
+- 新增 github-search (GitHub 仓库搜索)
 
 ### v1.4.0 (2026-02-06)
-- 新增 http-client (HTTP 客户端工具)
-  - 支持配置文件 (.http-client.json)
-  - 支持保存/加载/管理请求
-  - 自动追踪请求历史
-  - 请求脱敏，保护敏感数据
-  - 支持 Bearer/Basic 认证
-  - 自动重试 + 指数退避
-  - 抗爬虫模式 (随机 UA)
-  - 彩色输出 + JSON 格式化
-  - 零依赖，原生 Node.js
+- 新增 http-client (HTTP 客户端)
 
 ### v1.3.0 (2026-02-05)
 - 新增 weixin-reader (微信文章读取)
 
-### v1.2.0 (2026-02-05)
-- 新增 weixin-reader (微信文章读取)
-  - 解决微信反爬虫保护
-  - iPhone User-Agent 伪装
-  - HTML 文本提取
-
 ### v1.1.0 (2026-02-05)
 - 新增 9 个免费实用技能
-  - pdf (PDF 处理)
-  - pptx (PPT 制作)
-  - docx (Word 文档)
-  - xlsx (Excel 数据)
-  - canvas-design (视觉设计)
-  - webapp-testing (Web 测试)
-  - weather (天气查询)
-  - find-skills (搜索 skills)
-  - systematic-debugging (调试方法)
+  - pdf, pptx, docx, xlsx, canvas-design
+  - webapp-testing, weather, find-skills
+  - systematic-debugging
 
 ### v1.0.0 (2026-02-03)
-- 初始版本
-- 添加 7 个核心技能
-- 完成中文文档
-
----
-
-## 📦 drawio-diagrams（Draw.io 图表生成）
-
-### 简介
-
-使用 Draw.io 从 Mermaid、CSV 或 XML 输入生成专业图表。支持三种格式：Mermaid（流程图、时序图）、CSV（组织架构图、网络拓扑图）、XML（精细控制）。
-
-### 特点
-
-- ✅ **三种格式**：Mermaid/CSV/XML 全面支持
-- ✅ **纯 Python**：无外部依赖
-- ✅ **PlantUML 输出**：Draw.io 原生支持
-- ✅ **完整文档**：使用指南 + 示例
-
-### 使用方式
-
-```bash
-# 克隆项目
-git clone https://github.com/JasonFang1993/openclaw-skills.git
-cd openclaw-skills/drawio-diagrams
-```
-
-### 脚本说明
-
-| 脚本 | 功能 | 示例 |
-|------|------|------|
-| `mermaid2drawio.py` | Mermaid → PlantUML | `python scripts/mermaid2drawio.py "A[Start] --> B{Decision}"` |
-| `csv2drawio.py` | CSV → Draw.io URL | `python scripts/csv2drawio.py "id,label,parent\nCEO,CEO,"` |
-| `xml2drawio.py` | XML → Draw.io URL | `python scripts/xml2drawio.py "<mxGraphModel>..."` |
-
-### 示例
-
-**Mermaid 流程图：**
-```bash
-python scripts/mermaid2drawio.py """
-A[Start] --> B{Decision}
-B -->|Yes| C[Continue]
-B -->|No| D[Stop]
-"""
-```
-
-输出 PlantUML 格式，导入 Draw.io：**Arrange > Insert > Advanced > PlantUML (SVG)**
-
-**CSV 组织架构图：**
-```bash
-python scripts/csv2drawio.py """
-id,label,parent,style
-CEO,CEO,,shape=rectangle
-VP1,VP Sales,CEO,shape=rectangle
-VP2,VP Eng,CEO,shape=rectangle
-""" --type tree --title "Org Chart"
-```
-
-### 文档
-
-- `SKILL.md` - 技能说明
-- `references/usage_guide.md` - 完整使用指南
-
----
-
-## 📦 vue-auto-tester（Vue 3 自动测试）
-
-### 简介
-
-自动测试和调试 Vue 3 项目。使用 Vitest + Playwright，自动启动 dev server、检查控制台错误、运行测试、截图对比。
-
-### 特点
-
-- ✅ **完整测试**：控制台错误检查 + Vitest + 截图对比
-- ✅ **自动修复**：自动安装缺失的 npm 包
-- ✅ **组件检查**：验证 Vue 组件结构
-- ✅ **截图对比**：检测视觉回归
-
-### 使用方式
-
-```bash
-# 克隆项目
-git clone https://github.com/JasonFang1993/openclaw-skills.git
-cd openclaw-skills/vue-auto-tester
-```
-
-### 脚本说明
-
-| 命令 | 功能 | 示例 |
-|------|------|------|
-| `auto_test_vue_project.py` | 完整测试套件 | `python scripts/auto_test_vue_project.py ./my-vue-app --screenshot --fix` |
-| `check_console_errors.py` | 检查控制台错误 | `python scripts/check_console_errors.py ./my-vue-app` |
-| `compare_screenshots.py` | 截图对比 | `python scripts/compare_screenshots.py ./my-vue-app --baseline` |
-| `auto_fix_errors.py` | 自动修复错误 | `python scripts/auto_fix_errors.py ./my-vue-app --fix` |
-
-### 快速开始
-
-```bash
-# 完整测试
-python scripts/auto_test_vue_project.py ./my-vue-app
-
-# 带截图对比
-python scripts/auto_test_vue_project.py ./my-vue-app --screenshot
-
-# 保存 baseline（首次或更新）
-python scripts/auto_test_vue_project.py ./my-vue-app --baseline
-
-# 自动修复错误
-python scripts/auto_test_vue_project.py ./my-vue-app --fix
-```
-
-### 依赖
-
-```bash
-# 安装测试依赖
-npm install -D vitest @vue/test-utils @playwright/test
-
-# 安装 Playwright 浏览器
-npx playwright install chromium
-```
-
-### 输出示例
-
-```json
-{
-  "project": "/path/to/project",
-  "timestamp": "2026-02-12T17:30:00",
-  "dev_server": {
-    "status": "ready",
-    "port": 5173
-  },
-  "console_errors": [
-    {
-      "text": "Uncaught ReferenceError: axios is not defined",
-      "location": "{\"url\":\"http://localhost:5173/src/api.js\",\"lineNumber\":10}"
-    }
-  ],
-  "vitest_results": {
-    "status": "completed",
-    "returncode": 0,
-    "tests": 15,
-    "passed": 15
-  },
-  "screenshot_comparison": {
-    "match": true
-  },
-  "success": true
-}
-```
-
-### 文档
-
-- `SKILL.md` - 技能说明
-- `references/examples.md` - 示例集合
+- 初始版本，添加 7 个核心技能
 
 ---
 
