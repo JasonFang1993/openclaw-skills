@@ -8,6 +8,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- (2026-02-27) Added local skills: notion, obsidian, summarize, tavily-search
+- (2026-02-27) Added tech-news-digest
 - (2026-02-27) Added Khazix-Skills: github-to-skills, skill-manager, skill-evolution-manager
 
 ### Removed

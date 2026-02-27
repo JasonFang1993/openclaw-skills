@@ -29,6 +29,14 @@
 | **skill-manager** | 管理 Skill 生命周期（检查更新、删除） | ⭐⭐ |
 | **skill-evolution-manager** | 基于用户反馈持续改进 Skills | ⭐⭐ |
 | **memory-manager** | 知识记忆管理（Obsidian 集成） | ⭐⭐ |
+| **link-to-knowledge** | 链接转为知识库条目 | ⭐ |
+| **notion** | Notion API（页面、数据库、块管理） | ⭐⭐ |
+| **obsidian** | Obsidian 笔记（vault 管理、搜索、创建） | ⭐ |
+| **summarize** | 摘要 URL/文件/YouTube | ⭐ |
+| **tavily-search** | Tavily AI 搜索（专为 AI 设计） | ⭐ |
+| **skill-audit** | Skill 审计与质量检查 | ⭐ |
+| **research-company** | 公司调研，生成 PDF 报告 | ⭐ |
+| **tech-news-digest** | 技术新闻每日摘要 | ⭐ |
 
 ---
 
@@ -44,7 +52,7 @@ npx clawhub@latest install <skill-name>
 npx clawhub@latest install pdf
 
 # 安装所有 skill
-for skill in pdf pptx docx xlsx canvas-design webapp-testing weather weixin-reader find-skills systematic-debugging ddg-search jina-reader github-search http-client skill-creator drawio-diagrams vue-auto-tester news-research x-post-fetch github-to-skills skill-manager skill-evolution-manager; do
+for skill in pdf pptx docx xlsx canvas-design webapp-testing weather weixin-reader find-skills systematic-debugging ddg-search jina-reader github-search http-client skill-creator drawio-diagrams vue-auto-tester news-research x-post-fetch github-to-skills skill-manager skill-evolution-manager memory-manager link-to-knowledge notion obsidian summarize tavily-search skill-audit research-company tech-news-digest; do
   npx clawhub@latest install $skill
 done
 ```
@@ -451,9 +459,9 @@ python3 scripts/smart_stitch.py <skill-dir>
 
 ---
 
-### 23. 🧠 memory管理）
+### 23. 🧠 memory-manager（知识记忆管理）
 
-**功能-manager（知识记忆**：管理 OpenClaw 的长期记忆系统，与 Obsidian vault 集成
+**功能**：管理 OpenClaw 的长期记忆系统，与 Obsidian vault 集成
 
 **安装**：
 ```bash
@@ -471,6 +479,178 @@ npx clawhub@latest install memory-manager
 - MCP 服务器：@mauricio.wolff/mcp-obsidian
 
 **使用**：查看 `memory-manager/SKILL.md`
+
+---
+
+### 24. 🔗 link-to-knowledge（链接转知识条目）
+
+**功能**：将 URL 转换为知识库条目
+
+**使用**：查看 `link-to-knowledge/SKILL.md`
+
+---
+
+### 25. 📝 notion（Notion API）
+
+**功能**：Notion 页面、数据库、块管理
+
+**安装**：
+```bash
+npx clawhub@latest install notion
+```
+
+**配置**：
+```bash
+mkdir -p ~/.config/notion
+echo "ntn_your_key_here" > ~/.config/notion/api_key
+```
+
+**使用**：
+```bash
+# 搜索页面
+curl -X POST "https://api.notion.com/v1/search" ...
+
+# 创建页面
+curl -X POST "https://api.notion.com/v1/pages" ...
+
+# 查询数据库
+curl -X POST "https://api.notion.com/v1/databases/{id}/query" ...
+```
+
+**依赖**：
+- Notion API Key (从 https://notion.so/my-integrations 获取)
+
+**文档**：查看 `notion/SKILL.md`
+
+---
+
+### 26. 💎 obsidian（Obsidian 笔记）
+
+**功能**：管理 Obsidian vault - 搜索、创建、移动笔记
+
+**安装**：
+```bash
+npx clawhub@latest install obsidian
+
+# 安装 obsidian-cli
+brew install yakitrak/yakitrak/obsidian-cli
+```
+
+**使用**：
+```bash
+# 设置默认 vault
+obsidian-cli set-default "my-vault"
+
+# 搜索笔记
+obsidian-cli search "query"
+
+# 创建笔记
+obsidian-cli create "Folder/New note" --content "..."
+
+# 移动/重命名
+obsidian-cli move "old/path" "new/path"
+```
+
+**文档**：查看 `obsidian/SKILL.md`
+
+---
+
+### 27. 🧾 summarize（摘要工具）
+
+**功能**：快速摘要 URL、本地文件、YouTube 视频
+
+**安装**：
+```bash
+npx clawhub@latest install summarize
+
+# 安装 summarize CLI
+brew install steipete/tap/summarize
+```
+
+**使用**：
+```bash
+summarize "https://example.com" --model google/gemini-3-flash-preview
+summarize "/path/to/file.pdf"
+summarize "https://youtu.be/xxx" --youtube auto
+```
+
+**选项**：
+- `--length short|medium|long|xl|xxl` - 摘要长度
+- `--json` - JSON 格式输出
+- `--firecrawl auto|off|always` - 备用提取
+
+**环境变量**：
+- `OPENAI_API_KEY` / `ANTHROPIC_API_KEY` / `GEMINI_API_KEY`
+
+**文档**：查看 `summarize/SKILL.md`
+
+---
+
+### 28. 🔍 tavily-search（Tavily AI 搜索）
+
+**功能**：专为 AI 优化的网页搜索
+
+**安装**：
+```bash
+npx clawhub@latest install tavily-search
+```
+
+**配置**：
+```bash
+export TAVILY_API_KEY="your_api_key"
+```
+
+**使用**：
+```bash
+node scripts/search.mjs "query"
+node scripts/search.mjs "query" -n 10 --deep
+node scripts/search.mjs "query" --topic news --days 7
+```
+
+**选项**：
+- `-n <count>` - 结果数量（默认 5，最多 20）
+- `--deep` - 深度搜索
+- `--topic news` - 新闻主题
+- `--days <n>` - 最近 n 天
+
+**文档**：查看 `tavily-search/SKILL.md`
+
+---
+
+### 29. 📊 skill-audit（Skill 审计）
+
+**功能**：审计检查 Skill 质量
+
+**使用**：查看 `skill-audit/SKILL.md`
+
+---
+
+### 30. 🏢 research-company（公司调研）
+
+**功能**：自动调研公司，生成 PDF 报告
+
+**安装**：
+```bash
+npx clawhub@latest install research-company
+
+# 安装 PDF 生成依赖
+pip install reportlab
+```
+
+**使用**：查看 `research-company/SKILL.md`
+
+---
+
+### 31. 📰 tech-news-digest（技术新闻每日摘要）
+
+**功能**：每日技术新闻摘要和追踪
+
+**安装**：
+```bash
+npx clawhub@latest install tech-news-digest
+```
+
+**使用**：查看 `tech-news-digest/SKILL.md`
 
 ---
 
@@ -501,7 +681,15 @@ openclaw-skills/
 ├── skill-manager/          # 生命周期管理
 ├── skill-evolution-manager/ # 持续改进
 ├── memory-manager/          # 知识记忆管理
-└── README.md                # 本文件
+├── link-to-knowledge/      # 链接转知识条目
+├── notion/                 # Notion API
+├── obsidian/               # Obsidian 笔记
+├── summarize/             # 摘要工具
+├── tavily-search/          # Tavily AI 搜索
+├── skill-audit/           # Skill 审计
+├── research-company/      # 公司调研
+├── tech-news-digest/     # 技术新闻每日摘要
+└── README.md             # 本文件
 ```
 
 ---
@@ -552,6 +740,11 @@ playwright install
 ---
 
 ## 📝 更新日志
+
+### v1.9.0 (2026-02-27)
+- 新增本地技能：notion, obsidian, summarize, tavily-search
+- 新增 tech-news-digest
+- 新增 link-to-knowledge, skill-audit, research-company
 
 ### v1.8.0 (2026-02-27)
 - 删除付费浏览器技能：browser-use, browser-cash, kesslerio-stealth-browser
