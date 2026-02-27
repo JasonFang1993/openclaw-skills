@@ -28,6 +28,7 @@
 | **github-to-skills** | 将 GitHub 仓库自动转换为 AI Skills | ⭐⭐ |
 | **skill-manager** | 管理 Skill 生命周期（检查更新、删除） | ⭐⭐ |
 | **skill-evolution-manager** | 基于用户反馈持续改进 Skills | ⭐⭐ |
+| **memory-manager** | 知识记忆管理（Obsidian 集成） | ⭐⭐ |
 
 ---
 
@@ -450,6 +451,29 @@ python3 scripts/smart_stitch.py <skill-dir>
 
 ---
 
+### 23. 🧠 memory管理）
+
+**功能-manager（知识记忆**：管理 OpenClaw 的长期记忆系统，与 Obsidian vault 集成
+
+**安装**：
+```bash
+npx clawhub@latest install memory-manager
+```
+
+**功能**：
+- 读取记忆 - 从 Obsidian 读取笔记
+- 写入记忆 - 创建新记忆记录
+- 搜索记忆 - 搜索记忆库内容
+- 关联发现 - 查找相关记忆
+
+**依赖**：
+- MCP 插件：openclaw-mcp-adapter
+- MCP 服务器：@mauricio.wolff/mcp-obsidian
+
+**使用**：查看 `memory-manager/SKILL.md`
+
+---
+
 ## 📁 目录结构
 
 ```
@@ -476,7 +500,8 @@ openclaw-skills/
 ├── github-to-skills/       # GitHub 转 Skills
 ├── skill-manager/          # 生命周期管理
 ├── skill-evolution-manager/ # 持续改进
-└── README.md               # 本文件
+├── memory-manager/          # 知识记忆管理
+└── README.md                # 本文件
 ```
 
 ---
