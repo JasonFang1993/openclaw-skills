@@ -1,39 +1,108 @@
 ---
 name: link-to-knowledge
-description: 将网页链接转换为 Obsidian 笔记，自动提取 AI 总结。使用 OpenCode (minimax) 进行 AI 分析。
+description: 将网页链接自动转换为 Obsidian 笔记，包含原文和 AI 总结。使用 OpenCode (minimax) 进行 AI 分析。适用于知识收集场景。
 ---
 
 # link-to-knowledge
 
-将网页链接转换为 Obsidian 笔记的 skill。
+将网页链接转换为 Obsidian 笔记的 skill。自动抓取网页内容并用 AI 提取关键信息。
 
 ## 功能
 
-1. 检测用户消息中的 URL
-2. 使用 jina-reader 抓取网页内容
-3. 使用 OpenCode (minimax) 提取关键信息（标题、核心观点、结论、标签）
-4. 写入 Obsidian vault：
-   - 原文 → `articles/年份/月份/标题.md`
-   - 总结 → `summaries/年份/月份/标题-summary.md`
+| 功能 | 说明 |
+|------|------|
+| 🔗 URL 识别 | 自动从消息中提取 URL |
+| 📥 网页抓取 | 使用 jina-reader 抓取完整内容 |
+| 🤖 AI 总结 | 用 OpenCode (minimax) 提取标题、核心观点、结论、标签 |
+| 📝 双文件输出 | 原文 + 总结分开存储 |
+| 🏷️ 自动标签 | AI 自动生成标签 |
 
-## 前置要求
+## 输出结构
 
-- `curl` 命令
-- `opencode` (用于 AI 总结)
-- Obsidian vault 目录
+```
+Obsidian Vault/
+├── articles/
+│   └── {年份}/
+│       └── {月份}/
+│           └── {标题}.md      # 原文
+└── summaries/
+    └── {年份}/
+        └── {月份}/
+            └── {标题}-summary.md  # AI 总结
+```
+
+## Frontmatter 格式
+
+```yaml
+---
+title: "文章标题"
+source: "原始URL"
+tags: ["标签1", "标签2"]
+date: "2026-02-28"
+---
+```
 
 ## 使用方法
 
+### 命令行
+
 ```bash
 # 基本用法
-./scripts/link-to-knowledge.sh <URL>
+link-to-knowledge.sh "https://example.com/article"
 
 # 指定 vault 路径
-./scripts/link-to-knowledge.sh <URL> --vault ~/MyNotes
+link-to-knowledge.sh "https://example.com" --vault ~/Obsidian/MyVault
 ```
 
-## 环境变量
+### 环境变量
 
 ```bash
+# 设置默认 vault 路径
 export OBSIDIAN_VAULT="/path/to/your/vault"
+
+# 然后直接运行
+link-to-knowledge.sh "https://example.com"
+```
+
+## 依赖
+
+| 依赖 | 说明 |
+|------|------|
+| curl | 网页抓取 |
+| opencode | AI 总结（需要配置 minimax 模型）|
+| python3 | JSON 解析 |
+
+## 注意事项
+
+1. **API 配置**: 确保 opencode 已配置 minimax 或其他模型
+2. **vault 路径**: 首次使用需设置 `OBSIDIAN_VAULT` 环境变量
+3. **内容长度**: 原文限制 20000 字符
+4. **文件名**: 自动 sanitized，确保兼容文件系统
+
+## 示例输出
+
+### 原文笔记 (articles/2026/02/example.md)
+```markdown
+---
+title: "Example Article"
+source: "https://example.com/article"
+tags: ["科技", "AI"]
+date: "2026-02-28"
+---
+
+# Example Article
+
+...原文内容...
+```
+
+### 总结笔记 (summaries/2026/02/example-summary.md)
+```markdown
+---
+title: "Example Article - 总结"
+source: "https://example.com/article"
+tags: ["科技", "AI"]
+date: "2026-02-28"
+---
+
+本文主要讨论了 AI 的发展趋势和未来影响。核心观点包括...
 ```
