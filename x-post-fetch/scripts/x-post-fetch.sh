@@ -1,10 +1,13 @@
 #!/bin/bash
 #
 # X Post Fetch - Fetch X/Twitter posts using Jina AI Reader
-# 
-# Usage: 
+#
+# Usage:
 #   x-post-fetch "https://x.com/username/status/1234567890"
-#   x-post-fetch "https://x.com/username" [auth_token]
+#   x-post-fetch "https://x.com/username" [auth_token] [ct0]
+#
+# Note: auth_token alone may not be sufficient. X often requires both
+# auth_token and ct0 cookies for authenticated requests.
 #
 
 # Colors
@@ -16,16 +19,17 @@ NC='\033[0m' # No Color
 
 # Check if URL is provided
 if [ -z "$1" ]; then
-    echo -e "${RED}Usage: $0 <X/Twitter post URL> [auth_token]${NC}"
+    echo -e "${RED}Usage: $0 <X/Twitter post URL> [auth_token] [ct0]${NC}"
     echo -e "${YELLOW}Examples:${NC}"
     echo "  $0 https://x.com/username/status/1234567890"
     echo "  $0 https://x.com/username"
-    echo "  $0 https://x.com/username/status/1234567890 your_auth_token"
+    echo "  $0 https://x.com/username/status/1234567890 your_auth_token your_ct0"
     exit 1
 fi
 
 URL="$1"
 AUTH_TOKEN="$2"
+CT0="$3"
 
 # Validate URL contains x.com or twitter.com
 if ! echo "$URL" | grep -qE "(x\.com|twitter\.com)"; then
@@ -38,10 +42,14 @@ URL=$(echo "$URL" | sed 's/twitter\.com/x.com/g')
 
 echo -e "${BLUE}🔍 Fetching: $URL${NC}"
 
-# Build curl headers if auth_token provided
-HEADERS=""
+# Build cookie header
+COOKIE=""
 if [ -n "$AUTH_TOKEN" ]; then
-    HEADERS="-H \"Cookie: auth_token=$AUTH_TOKEN\""
+    COOKIE="auth_token=$AUTH_TOKEN"
+    if [ -n "$CT0" ]; then
+        COOKIE="${COOKIE}; ct0=$CT0"
+    fi
+    echo -e "${YELLOW}🔐 Using auth cookie (may not work for all content)${NC}"
 fi
 
 # Try multiple endpoints with fallbacks
@@ -58,12 +66,12 @@ success=false
 for endpoint in "${endpoints[@]}"; do
     full_url="${endpoint}${URL}"
     
-    if [ -n "$HEADERS" ]; then
-        result=$(curl -sL --max-time 30 -H "Cookie: auth_token=$AUTH_TOKEN" "$full_url" 2>/dev/null)
+    if [ -n "$COOKIE" ]; then
+        result=$(curl -sL --max-time 30 -H "Cookie: $COOKIE" "$full_url" 2>/dev/null)
     else
         result=$(curl -sL --max-time 30 "$full_url" 2>/dev/null)
     fi
-    
+
     # Check if we got valid content (not an error page)
     if [ -n "$result" ] && \
        ! echo "$result" | grep -qi "error\|not found\|blocked\|login required\|Hmm.*this page doesn't exist" && \
