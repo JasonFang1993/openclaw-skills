@@ -2,47 +2,89 @@
 #
 # X Post Fetch - Fetch X/Twitter posts using Jina AI Reader
 # 
-# Usage: x-post-fetch "https://x.com/username/status/1234567890"
+# Usage: 
+#   x-post-fetch "https://x.com/username/status/1234567890"
+#   x-post-fetch "https://x.com/username" [auth_token]
 #
+
+# Colors
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+BLUE='\033[0;34m'
+NC='\033[0m' # No Color
 
 # Check if URL is provided
 if [ -z "$1" ]; then
-    echo "Usage: $0 <X/Twitter post URL>"
-    echo "Example: $0 https://x.com/username/status/1234567890"
+    echo -e "${RED}Usage: $0 <X/Twitter post URL> [auth_token]${NC}"
+    echo -e "${YELLOW}Examples:${NC}"
+    echo "  $0 https://x.com/username/status/1234567890"
+    echo "  $0 https://x.com/username"
+    echo "  $0 https://x.com/username/status/1234567890 your_auth_token"
     exit 1
 fi
 
 URL="$1"
+AUTH_TOKEN="$2"
 
 # Validate URL contains x.com or twitter.com
 if ! echo "$URL" | grep -qE "(x\.com|twitter\.com)"; then
-    echo "Error: Invalid X/Twitter URL. Please provide a valid X.com or Twitter.com URL"
+    echo -e "${RED}Error: Invalid X/Twitter URL. Please provide a valid X.com or Twitter.com URL${NC}"
     exit 1
 fi
 
 # Convert twitter.com to x.com for consistency
 URL=$(echo "$URL" | sed 's/twitter\.com/x.com/g')
 
+echo -e "${BLUE}🔍 Fetching: $URL${NC}"
+
+# Build curl headers if auth_token provided
+HEADERS=""
+if [ -n "$AUTH_TOKEN" ]; then
+    HEADERS="-H \"Cookie: auth_token=$AUTH_TOKEN\""
+fi
+
 # Try multiple endpoints with fallbacks
 endpoints=(
     "https://r.jina.ai/http://"
     "https://r.jina.ai/https://"
+    "https://r.jina.ai/http://x.com/"
+    "https://r.jina.ai/http://www.x.com/"
 )
 
 result=""
+success=false
+
 for endpoint in "${endpoints[@]}"; do
     full_url="${endpoint}${URL}"
-    result=$(curl -sL --max-time 30 "$full_url" 2>/dev/null)
     
-    # Check if we got valid content
-    if [ -n "$result" ] && ! echo "$result" | grep -qi "error\|not found\|blocked\|login required"; then
+    if [ -n "$HEADERS" ]; then
+        result=$(curl -sL --max-time 30 -H "Cookie: auth_token=$AUTH_TOKEN" "$full_url" 2>/dev/null)
+    else
+        result=$(curl -sL --max-time 30 "$full_url" 2>/dev/null)
+    fi
+    
+    # Check if we got valid content (not an error page)
+    if [ -n "$result" ] && \
+       ! echo "$result" | grep -qi "error\|not found\|blocked\|login required\|Hmm.*this page doesn't exist" && \
+       echo "$result" | grep -q "Title:"; then
+        success=true
         break
     fi
 done
 
 # Check final result
-if [ -z "$result" ] || echo "$result" | grep -qi "error\|not found\|blocked\|login required"; then
-    echo "Error: Failed to fetch post. The post may be private, deleted, or access is blocked."
+if [ -z "$result" ] || ! echo "$result" | grep -q "Title:"; then
+    echo -e "${RED}Error: Failed to fetch post.${NC}"
+    echo -e "${YELLOW}Possible reasons:${NC}"
+    echo "  - The post is private or deleted"
+    echo "  - The post requires login to view"
+    echo "  - X has blocked the Jina IP range"
+    echo ""
+    echo -e "${YELLOW}Try:${NC}"
+    echo "  1. Use auth_token: x-post-fetch \"URL\" \"your_token\""
+    echo "  2. Check if the URL is correct"
+    echo "  3. Try again later if rate limited"
     exit 1
 fi
 
@@ -55,17 +97,32 @@ post_content=$(echo "$result" | sed -n '/^Markdown Content:/,/^===============$/
 # Get published time
 pub_time=$(echo "$result" | grep "^Published Time:" | sed 's/Published Time: //')
 
+# Get URL from result
+original_url=$(echo "$result" | grep "^URL Source:" | sed 's/URL Source: //')
+
 # Output with nice formatting
+echo ""
 echo "============================================"
 echo ""
-echo "👤 $author"
-echo ""
-echo "📝 $post_content"
-echo ""
-if [ -n "$pub_time" ]; then
-    echo "🕐 $pub_time"
+if [ -n "$author" ]; then
+    echo -e "${GREEN}👤 $author${NC}"
 fi
-echo ""
-echo "🔗 $URL"
+
+if [ -n "$post_content" ]; then
+    echo -e "${NC}📝 $post_content${NC}"
+fi
+
+if [ -n "$pub_time" ]; then
+    echo ""
+    echo -e "${YELLOW}🕐 $pub_time${NC}"
+fi
+
+if [ -n "$original_url" ]; then
+    echo ""
+    echo -e "${BLUE}🔗 $original_url${NC}"
+fi
+
 echo ""
 echo "============================================"
+echo ""
+echo -e "${GREEN}✅ Successfully fetched!${NC}"
