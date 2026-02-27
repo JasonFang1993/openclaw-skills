@@ -528,6 +528,11 @@ playwright install
 
 ## 📝 更新日志
 
+### v1.8.0 (2026-02-27)
+- 删除付费浏览器技能：browser-use, browser-cash, kesslerio-stealth-browser
+- 整理 README 顺序
+- 添加 CHANGELOG.md
+
 ### v1.7.0 (2026-02-25)
 - 新增三个 GitHub Skills 管理工具
   - **github-to-skills**: 将 GitHub 仓库自动转换为 AI Skills
