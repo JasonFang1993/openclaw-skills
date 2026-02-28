@@ -13,6 +13,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - (2026-02-27) Added Khazix-Skills: github-to-skills, skill-manager, skill-evolution-manager
 
 ### Removed
+- (2026-02-27) Removed low-usage skills: skill-audit, skill-creator, find-skills, systematic-debugging
+
+### Added
 - (2026-02-27) Removed paid browser skills: browser-use, browser-cash, kesslerio-stealth-browser
 
 ### Changed

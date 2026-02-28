@@ -14,13 +14,10 @@
 | **webapp-testing** | Web 应用测试（Playwright） | ⭐ |
 | **weather** | 天气查询（免费无需 API） | ⭐ |
 | **weixin-reader** | 微信文章读取（反爬虫破解） | ⭐ |
-| **find-skills** | 搜索 skills 库 | ⭐ |
-| **systematic-debugging** | 系统化调试方法 | ⭐ |
 | **ddg-search** | DuckDuckGo 免费网页搜索 | ⭐ |
 | **jina-reader** | 网页内容提取（Jina AI） | ⭐ |
 | **github-search** | GitHub 仓库搜索（API、Stars、详细信息） | ⭐ |
 | **http-client** | HTTP 客户端（配置文件、请求管理、历史追踪） | ⭐ |
-| **skill-creator** | 创建新技能指南 | ⭐ |
 | **drawio-diagrams** | Draw.io 图表生成（Mermaid/CSV/XML） | ⭐ |
 | **vue-auto-tester** | Vue 3 自动测试（Vitest + Playwright） | ⭐ |
 | **news-research** | AI 行业新闻研究（RSS 聚合 + 深度分析） | ⭐ |
@@ -34,7 +31,6 @@
 | **obsidian** | Obsidian 笔记（vault 管理、搜索、创建） | ⭐ |
 | **summarize** | 摘要 URL/文件/YouTube | ⭐ |
 | **tavily-search** | Tavily AI 搜索（专为 AI 设计） | ⭐ |
-| **skill-audit** | Skill 审计与质量检查 | ⭐ |
 | **research-company** | 公司调研，生成 PDF 报告 | ⭐ |
 | **tech-news-digest** | 技术新闻每日摘要 | ⭐ |
 
@@ -52,7 +48,7 @@ npx clawhub@latest install <skill-name>
 npx clawhub@latest install pdf
 
 # 安装所有 skill
-for skill in pdf pptx docx xlsx canvas-design webapp-testing weather weixin-reader find-skills systematic-debugging ddg-search jina-reader github-search http-client skill-creator drawio-diagrams vue-auto-tester news-research x-post-fetch github-to-skills skill-manager skill-evolution-manager memory-manager link-to-knowledge notion obsidian summarize tavily-search skill-audit research-company tech-news-digest; do
+for skill in pdf pptx docx xlsx canvas-design webapp-testing weather weixin-reader ddg-search jina-reader github-search http-client drawio-diagrams vue-auto-tester news-research x-post-fetch github-to-skills skill-manager skill-evolution-manager memory-manager link-to-knowledge notion obsidian summarize tavily-search research-company tech-news-digest; do
   npx clawhub@latest install $skill
 done
 ```
@@ -139,23 +135,7 @@ cp -r <skill-folder> <project>/skills/
 
 ---
 
-### 9. 🔎 find-skills（搜索 Skills）
-
-**功能**：搜索 skills 库
-
-**使用**：查看 `find-skills/SKILL.md`
-
----
-
-### 10. 🔧 systematic-debugging（系统化调试）
-
-**功能**：系统化调试方法
-
-**使用**：查看 `systematic-debugging/SKILL.md`
-
----
-
-### 11. 🔍 ddg-search（DuckDuckGo 搜索）
+### 9. 🔍 ddg-search（DuckDuckGo 搜索）
 
 **功能**：免费网页搜索，无需 API Key
 
@@ -172,7 +152,7 @@ bash scripts/search.sh "your search query"
 
 ---
 
-### 12. 📖 jina-reader（Jina AI 网页提取）
+### 10. 📖 jina-reader（Jina AI 网页提取）
 
 **功能**：提取网页内容，支持三种模式
 
@@ -211,7 +191,7 @@ cd skills/jina-reader/scripts
 
 ---
 
-### 13. 🐙 github-search（GitHub 仓库搜索）
+### 11. 🐙 github-search（GitHub 仓库搜索）
 
 **功能**：使用 GitHub API 搜索开源仓库，比较项目质量
 
@@ -241,7 +221,7 @@ python3 scripts/github_search.py details aldinokemal go-whatsapp-web-multidevice
 
 ---
 
-### 14. 🌐 http-client（HTTP 客户端）
+### 12. 🌐 http-client（HTTP 客户端）
 
 **功能**：命令行 HTTP 客户端，支持配置文件、请求保存/加载、历史追踪
 
@@ -270,20 +250,7 @@ node bin/http-client.js --load my-api --pretty
 
 ---
 
-### 15. 🛠️ skill-creator（创建新技能指南）
-
-**功能**：学习如何创建自定义技能
-
-**安装**：
-```bash
-npx clawhub@latest install skill-creator
-```
-
-**使用**：查看 `skill-creator/SKILL.md`
-
----
-
-### 16. 📐 drawio-diagrams（Draw.io 图表生成）
+### 13. 📐 drawio-diagrams（Draw.io 图表生成）
 
 **功能**：从 Mermaid、CSV、XML 生成 Draw.io 图表
 
@@ -310,7 +277,7 @@ python scripts/csv2drawio.py "id,label,parent\nCEO,CEO,\nVP1,VP Sales,CEO"
 
 ---
 
-### 17. 🧬 vue-auto-tester（Vue 3 自动测试）
+### 14. 🧬 vue-auto-tester（Vue 3 自动测试）
 
 **功能**：自动测试和调试 Vue 3 项目
 
@@ -338,7 +305,7 @@ npx playwright install chromium
 
 ---
 
-### 18. 📰 news-research（行业新闻研究）
+### 15. 📰 news-research（行业新闻研究）
 
 **功能**：AI 行业新闻 RSS 聚合 + 深度分析
 
@@ -346,7 +313,7 @@ npx playwright install chromium
 
 ---
 
-### 19. 🐦 x-post-fetch（X 帖子抓取）
+### 16. 🐦 x-post-fetch（X 帖子抓取）
 
 **功能**：X (Twitter) 帖子抓取，支持 auth_token
 
@@ -354,7 +321,7 @@ npx playwright install chromium
 
 ---
 
-### 20. 📦 github-to-skills（GitHub 仓库转 AI Skills）
+### 17. 📦 github-to-skills（GitHub 仓库转 AI Skills）
 
 **功能**：将 GitHub 仓库自动转换为可安装的 AI Skills
 
@@ -389,7 +356,7 @@ created_at: 2026-02-25
 
 ---
 
-### 21. ⚙️ skill-manager（Skill 生命周期管理）
+### 18. ⚙️ skill-manager（Skill 生命周期管理）
 
 **功能**：管理已安装的 GitHub-based Skills
 
@@ -425,7 +392,7 @@ python3 scripts/scan_and_check.py ~/.openclaw/workspace/skills
 
 ---
 
-### 22. 🔄 skill-evolution-manager（Skill 持续改进）
+### 19. 🔄 skill-evolution-manager（Skill 持续改进）
 
 **功能**：基于用户反馈持续改进 Skills
 
@@ -459,7 +426,7 @@ python3 scripts/smart_stitch.py <skill-dir>
 
 ---
 
-### 23. 🧠 memory-manager（知识记忆管理）
+### 20. 🧠 memory-manager（知识记忆管理）
 
 **功能**：管理 OpenClaw 的长期记忆系统，与 Obsidian vault 集成
 
@@ -482,7 +449,7 @@ npx clawhub@latest install memory-manager
 
 ---
 
-### 24. 🔗 link-to-knowledge（链接转知识条目）
+### 21. 🔗 link-to-knowledge（链接转知识条目）
 
 **功能**：将 URL 转换为知识库条目
 
@@ -490,7 +457,7 @@ npx clawhub@latest install memory-manager
 
 ---
 
-### 25. 📝 notion（Notion API）
+### 22. 📝 notion（Notion API）
 
 **功能**：Notion 页面、数据库、块管理
 
@@ -524,7 +491,7 @@ curl -X POST "https://api.notion.com/v1/databases/{id}/query" ...
 
 ---
 
-### 26. 💎 obsidian（Obsidian 笔记）
+### 23. 💎 obsidian（Obsidian 笔记）
 
 **功能**：管理 Obsidian vault - 搜索、创建、移动笔记
 
@@ -555,7 +522,7 @@ obsidian-cli move "old/path" "new/path"
 
 ---
 
-### 27. 🧾 summarize（摘要工具）
+### 24. 🧾 summarize（摘要工具）
 
 **功能**：快速摘要 URL、本地文件、YouTube 视频
 
@@ -586,7 +553,7 @@ summarize "https://youtu.be/xxx" --youtube auto
 
 ---
 
-### 28. 🔍 tavily-search（Tavily AI 搜索）
+### 25. 🔍 tavily-search（Tavily AI 搜索）
 
 **功能**：专为 AI 优化的网页搜索
 
@@ -617,15 +584,7 @@ node scripts/search.mjs "query" --topic news --days 7
 
 ---
 
-### 29. 📊 skill-audit（Skill 审计）
-
-**功能**：审计检查 Skill 质量
-
-**使用**：查看 `skill-audit/SKILL.md`
-
----
-
-### 30. 🏢 research-company（公司调研）
+### 26. 🏢 research-company（公司调研）
 
 **功能**：自动调研公司，生成 PDF 报告
 
@@ -641,7 +600,7 @@ pip install reportlab
 
 ---
 
-### 31. 📰 tech-news-digest（技术新闻每日摘要）
+### 28. 📰 tech-news-digest（技术新闻每日摘要）
 
 **功能**：每日技术新闻摘要和追踪
 
@@ -666,13 +625,10 @@ openclaw-skills/
 ├── webapp-testing/         # Web 测试
 ├── weather/                # 天气查询
 ├── weixin-reader/          # 微信文章读取
-├── find-skills/            # 搜索 skills
-├── systematic-debugging/   # 调试方法
 ├── ddg-search/             # DuckDuckGo 搜索
 ├── jina-reader/            # 网页内容提取
 ├── github-search/          # GitHub 仓库搜索
 ├── http-client/            # HTTP 客户端
-├── skill-creator/          # 技能创建指南
 ├── drawio-diagrams/        # Draw.io 图表
 ├── vue-auto-tester/        # Vue 3 自动测试
 ├── news-research/           # 新闻研究
@@ -686,7 +642,6 @@ openclaw-skills/
 ├── obsidian/               # Obsidian 笔记
 ├── summarize/             # 摘要工具
 ├── tavily-search/          # Tavily AI 搜索
-├── skill-audit/           # Skill 审计
 ├── research-company/      # 公司调研
 ├── tech-news-digest/     # 技术新闻每日摘要
 └── README.md             # 本文件
@@ -741,10 +696,14 @@ playwright install
 
 ## 📝 更新日志
 
+### v2.0.0 (2026-02-27)
+- 删除使用率低的技能：skill-audit, skill-creator, find-skills, systematic-debugging
+- 保留技能从 31 个精简到 27 个
+
 ### v1.9.0 (2026-02-27)
 - 新增本地技能：notion, obsidian, summarize, tavily-search
 - 新增 tech-news-digest
-- 新增 link-to-knowledge, skill-audit, research-company
+- 新增 link-to-knowledge, research-company
 
 ### v1.8.0 (2026-02-27)
 - 删除付费浏览器技能：browser-use, browser-cash, kesslerio-stealth-browser
@@ -776,8 +735,7 @@ playwright install
 ### v1.1.0 (2026-02-05)
 - 新增 9 个免费实用技能
   - pdf, pptx, docx, xlsx, canvas-design
-  - webapp-testing, weather, find-skills
-  - systematic-debugging
+  - webapp-testing, weather
 
 ### v1.0.0 (2026-02-03)
 - 初始版本，添加 7 个核心技能
