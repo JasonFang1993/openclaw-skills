@@ -4,7 +4,34 @@
 VAULT_PATH="${OBSIDIAN_VAULT:-$HOME/Obsidian/knowledge-base}"
 
 extract_url() { echo "$1" | grep -oE 'https?://[^[:space:]]+' | head -1; }
-fetch_content() { curl -s "https://r.jina.ai/http://${1#http://}" | head -c 25000; }
+
+# 根据 URL 类型选择合适的抓取方式
+fetch_content() {
+    local url="$1"
+    local content=""
+    
+    if echo "$url" | grep -q "mp.weixin.qq.com"; then
+        # 微信文章 → 使用 weixin-reader（过滤调试输出）
+        content=$(~/.openclaw/workspace/skills/weixin-reader/scripts/reader.sh "$url" 2>/dev/null | tail -n +10)
+    elif echo "$url" | grep -q "github.com"; then
+        # GitHub → 尝试获取 raw 内容
+        local repo_url="${url%.git}"
+        local readme_url=""
+        if echo "$url" | grep -q "/blob/"; then
+            # 已经是文件链接，直接获取
+            readme_url="${url/github.com/raw.githubusercontent.com}"
+        else
+            # 仓库首页，获取 README
+            readme_url="$repo_url/raw/main/README.md"
+        fi
+        [ -n "$readme_url" ] && content=$(curl -s "$readme_url" | head -c 25000)
+    else
+        # 其他网页 → 使用 jina.ai
+        content=$(curl -s "https://r.jina.ai/http://${url#http://}" | head -c 25000)
+    fi
+    
+    echo "$content"
+}
 sanitize() { echo "$1" | tr -cd '[:alnum:][:space:]_-' | tr ' ' '-' | tr '[:upper:]' '[:lower:]' | head -c 50; }
 
 call_ai_summary() {
