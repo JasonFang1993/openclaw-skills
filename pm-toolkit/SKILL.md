@@ -7,284 +7,396 @@ description: 去中心化项目管理工具箱。基于 STATE.yaml 的多 AI 协
 
 去中心化项目管理工具箱，结合 **STATE.yaml 模式** + **事件驱动追踪**。
 
-## 两种模式
+---
 
-### 模式 1: STATE.yaml (多 AI 协作)
-- 多个 AI 通过共享文件协调
-- 无中央指挥，AI 自行 pick 任务
-- 适合：多 subagent 并行工作
+## 🎯 这是什么？
 
-### 模式 2: Event-Driven (事件驱动)
-- 自然语言更新项目状态
-- 自动记录决策、阻塞、进展
-- 适合：单人项目管理
+一个让**多个 AI 员工**能**自行协调**工作的工具。
+
+- 不需要你一直盯着
+- AI 自己知道要做什么
+- 自动记录进度和决策
+- 适合复杂项目
 
 ---
 
-## 核心概念
+## 👥 适用场景
 
-### STATE.yaml - 任务协调文件
+| 场景 | 需要 |
+|------|------|
+| 多个 AI 同时干活 | ✅ |
+| 大项目需要分工 | ✅ |
+| 记录每个决策原因 | ✅ |
+| 一个人管理多个项目 | ✅ |
+| 小任务不需要 | ❌ |
+
+---
+
+## 🏗️ 核心概念
+
+### STATE.yaml - 任务表
+
+就像一个共享的**任务看板**，所有 AI 都能看到：
 
 ```yaml
-# 项目状态文件
 project: my-project
 updated: 2026-02-28T10:00:00Z
 
 tasks:
   - id: task-001
-    status: in_progress    # todo | in_progress | done | blocked
-    owner: ai-frontend
-    started: 2026-02-28T09:00:00Z
-    notes: "正在开发首页"
+    status: in_progress     # todo | in_progress | done | blocked
+    owner: opencode-frontend  # 谁负责
+    description: 开发首页
     
   - id: task-002
     status: done
-    owner: ai-backend
-    completed: 2026-02-28T08:00:00Z
-    output: src/api/auth.ts
-    
-  - id: task-003
-    status: blocked
-    owner: ai-frontend
-    blocked_by: task-002
-    notes: "等待 API 完成"
+    owner: opencode-backend
+    output: src/api/auth.ts   # 产出物
 
 next_actions:
-  - "ai-backend: 继续开发 API"
-  - "ai-frontend: API 完成后开始前端对接"
+  - "opencode-frontend: 首页完成后对接 API"
 ```
 
----
+### EVENTS.yaml - 决策日志
 
-### 事件日志 - 记录所有决策
+记录所有重要决定，方便以后追溯：
 
 ```yaml
 events:
   - type: decision
     time: 2026-02-28T09:00:00Z
-    content: "决定使用 React 替代 Vue"
-    context: "因为团队更熟悉 React"
+    content: "决定用 React 不用 Vue"
+    reason: "团队更熟悉 React，生态更好"
     
   - type: blocker
     time: 2026-02-28T10:00:00Z
-    content: "API 文档不完整"
+    content: "后端 API 文档不完整"
     resolved: false
-    
-  - type: pivot
-    time: 2026-02-28T11:00:00Z
-    content: "从付费订阅改为免费增值模式"
-    reason: "市场调研显示用户对付费敏感"
 ```
 
 ---
 
-## 功能
+## 📦 包含内容
 
-| 功能 | 说明 |
+| 文件 | 用途 |
 |------|------|
-| 📝 STATE.yaml 管理 | AI 自行更新任务状态 |
-| 🔄 事件记录 | 记录决策、阻塞、进展 |
-| 🤖 多 AI 协调 | Subagent 通过文件协作 |
-| 📊 每日汇总 | 自动生成 standup 报告 |
-| 🔍 自然语言查询 | "项目进度怎么样？" |
-| 🔗 Git 集成 | 代码提交关联项目 |
+| `pm-init.sh` | 创建新项目 |
+| `pm-task.sh` | 添加任务 |
+| `pm-update.sh` | 更新任务状态 |
+| `pm-status.sh` | 查看项目进度 |
+| `pm-event.sh` | 记录事件 |
 
 ---
 
-## 目录结构
+## 🚀 快速开始
 
+### 1. 安装
+
+```bash
+# 克隆 skills
+git clone git@github.com:JasonFang1993/openclaw-skills.git ~/.openclaw/skills
+
+# 设置环境变量
+export PROJECTS_DIR="$HOME/projects"
 ```
-projects/
-├── my-app/
-│   ├── STATE.yaml           # 任务状态
-│   ├── EVENTS.yaml         # 事件日志
-│   └── SPEC.md             # 项目规格
-├── website-redesign/
-│   ├── STATE.yaml
-│   └── EVENTS.yaml
-└── PROJECT_REGISTRY.yaml    # 项目索引
+
+### 2. 创建项目
+
+```bash
+cd ~/.openclaw/skills/pm-toolkit/scripts
+./pm-init.sh my-app "做一个 AI 助手"
+```
+
+输出：
+```
+📁 创建项目: my-app
+✅ 项目已创建: ~/projects/my-app
+
+下一步:
+  pm-task.sh my-app --id task-001 --desc '第一个任务'
+```
+
+### 3. 添加任务
+
+```bash
+./pm-task.sh my-app --id frontend-home --desc "开发首页" --owner opencode-frontend
+./pm-task.sh my-app --id backend-api --desc "开发 API" --owner opencode-backend
+./pm-task.sh my-app --id test-api --desc "写测试" --owner opencode-qa
+```
+
+### 4. 派给 AI 员工
+
+```bash
+# 前端员工
+tmux new -d -s opencode-frontend "opencode run '读取 ~/projects/my-app/STATE.yaml，找到 owner=opencode-frontend 的任务，完成后用 pm-update.sh 更新状态'"
+
+# 后端员工
+tmux new -d -s opencode-backend "opencode run '读取 ~/projects/my-app/STATE.yaml，找到 owner=opencode-backend 的任务，完成后用 pm-update.sh 更新状态'"
+```
+
+### 5. 查看进度
+
+```bash
+./pm-status.sh my-app
+```
+
+输出：
+```
+📊 my-app 状态
+================
+
+📋 总任务: 3
+⏳ 待办: 1 | 🔵 进行中: 1 | ✅ 完成: 1 | 🚧 阻塞: 0
+
+✅ 已完成:
+  - backend-api: 开发 API → src/api/auth.ts
+
+🔵 进行中:
+  - frontend-home: 开发首页
+
+⏳ 待办:
+  - test-api: 写测试
+
+最后更新: 2026-02-28T10:30:00Z
+```
+
+### 6. 记录决策
+
+```bash
+./pm-event.sh my-app --type decision --content "用 React 不用 Vue" --reason "团队更熟悉"
 ```
 
 ---
 
-## 使用方法
+## 📋 完整命令参考
 
-### 1. 创建新项目
-
-```bash
-pm-init.sh my-project "做一个 AI 助手"
-```
-
-### 2. 更新任务状态
+### pm-init.sh - 初始化项目
 
 ```bash
-# AI 完成一个任务
-pm-update.sh my-project --task task-001 --status done --output "src/index.ts"
-
-# 遇到阻塞
-pm-update.sh my-project --task task-002 --status blocked --blocked-by task-001
+pm-init.sh <项目名> [描述]
 ```
 
-### 3. 记录事件
+示例：
+```bash
+pm-init.sh ai-product "做一个 AI 产品"
+```
 
+### pm-task.sh - 添加任务
+
+```bash
+pm-task.sh <项目名> --id <任务ID> --desc <描述> [--owner <负责人>]
+```
+
+示例：
+```bash
+pm-task.sh my-app --id task-001 --desc "开发登录页面" --owner opencode-frontend
+```
+
+### pm-update.sh - 更新状态
+
+```bash
+pm-update.sh <项目名> --task <任务ID> --status <状态> [--output <产出>] [--notes <备注>]
+```
+
+状态选项：`todo` | `in_progress` | `done` | `blocked`
+
+示例：
+```bash
+# 开始做
+pm-update.sh my-app --task task-001 --status in_progress
+
+# 做完了
+pm-update.sh my-app --task task-001 --status done --output "src/index.ts"
+
+# 遇到问题
+pm-update.sh my-app --task task-002 --status blocked --notes "等待后端 API"
+```
+
+### pm-status.sh - 查看状态
+
+```bash
+pm-status.sh <项目名>
+```
+
+### pm-event.sh - 记录事件
+
+```bash
+pm-event.sh <项目名> --type <类型> --content <内容> [--reason <原因>]
+```
+
+类型选项：`decision` | `blocker` | `pivot` | `progress`
+
+示例：
 ```bash
 # 记录决策
-pm-event.sh my-project --type decision --content "决定用 TypeScript"
+pm-event.sh my-app --type decision --content "用 React 不用 Vue" --reason "团队熟悉"
 
 # 记录阻塞
-pm-event.sh my-project --type blocker --content "后端 API 延迟"
-```
+pm-event.sh my-app --type blocker --content "API 文档不完整"
 
-### 4. 查询状态
-
-```bash
-# 查看项目进度
-pm-status.sh my-project
-
-# 查看所有阻塞
-pm-blockers.sh
-
-# 每日汇总
-pm-standup.sh
+# 记录方向调整
+pm-event.sh my-app --type pivot --content "从付费改免费" --reason "市场调研显示"
 ```
 
 ---
 
-## 自然语言交互
+## 🧠 AI 员工如何使用
 
-### AI Agent 指令
+### 给 AI 的指令模板
 
 ```
 你是一个项目经理 AI。
 
-当用户说：
-- "完成了 XXX" → 更新 STATE.yaml，标记任务为 done
-- "遇到 XXX 问题" → 记录 blocker 事件
-- "决定 XXX" → 记录 decision 事件
-- "开始做 XXX" → 创建新任务，标记为 in_progress
+1. 读取 ~/projects/<项目名>/STATE.yaml
+2. 找到 owner=你的名字 的任务
+3. 完成开发
+4. 用 pm-update.sh 更新状态
+5. 用 pm-event.sh 记录重要决策
+6. 提交 git
 
-当用户问：
-- "项目进度怎么样？" → 读取 STATE.yaml，生成进度报告
-- "有什么阻塞？" → 列出所有 blocker
-- "为什么当时决定 XXX？" → 搜索 EVENTS.yaml 中的 decision
+示例指令：
+pm-update.sh my-app --task task-001 --status done --output "src/index.ts"
+```
 
-每个任务完成后要：
-1. 更新 STATE.yaml
-2. 提交 git
-3. 报告给主 AI
+### AI 自主工作流程
+
+```
+AI 员工:
+1. 读取 STATE.yaml
+2. 找到自己的任务 (owner=自己)
+3. 开始开发
+4. 更新状态为 in_progress
+5. 开发完成
+6. 更新状态为 done，填写 output
+7. 记录 event (如果有决策)
+8. 提交 git
 ```
 
 ---
 
-## 输出示例
-
-### 项目状态查询
+## 📊 项目结构
 
 ```
-📊 my-project 进度
-
-✅ 已完成 (2):
-- task-002: API 认证 (output: src/api/auth.ts)
-- task-003: 数据库设计
-
-⏳ 进行中 (1):
-- task-001: 前端页面 (started: 09:00)
-
-🚧 阻塞 (1):
-- task-004: 等待 API 完成
-
-📝 下一步:
-- task-004: 后端完成后对接
-```
-
-### 每日 Standup
-
-```
-📅 每日汇总 (2026-02-28)
-
-昨天完成:
-- task-002: API 认证
-- task-003: 数据库设计
-
-今天计划:
-- task-001: 前端页面
-- task-004: API 对接
-
-阻塞:
-- task-004 等待后端 API
-
-决策记录:
-- 10:00 决定使用 TypeScript
-- 11:00 决定用 React 生态
+projects/
+├── my-app/
+│   ├── STATE.yaml      # 任务状态
+│   ├── EVENTS.yaml    # 事件日志
+│   ├── README.md      # 项目说明
+│   └── src/           # 代码
+│
+├── another-project/
+│   ├── STATE.yaml
+│   └── EVENTS.yaml
+│
+└── PROJECT_REGISTRY.yaml  # 项目索引
 ```
 
 ---
 
-## Git 集成
+## 🔄 完整项目流程示例
 
-每次状态更新自动提交：
+### Step 1: 规划 (监工)
 
 ```bash
-git add STATE.yaml EVENTS.yaml
-git commit -m "chore: update project state"
-git push
+# 创建项目
+pm-init.sh ai-assistant "AI 助手产品"
+
+# 添加任务
+pm-task.sh ai-assistant --id ui-home --desc "首页 UI" --owner opencode-ui
+pm-task.sh ai-assistant --id ui-login --desc "登录页" --owner opencode-ui
+pm-task.sh ai-assistant --id api-auth --desc "认证 API" --owner opencode-backend
+pm-task.sh ai-assistant --id api-chat --desc "对话 API" --owner opencode-backend
+pm-task.sh ai-assistant --id test-api --desc "API 测试" --owner opencode-qa
 ```
 
----
-
-## 与 Subagent 协作
-
-```
-主 AI:
-1. 用户给了一个大任务
-2. 创建 STATE.yaml
-3. spawn 多个 subagent，每个分配任务
-
-Subagent:
-1. 读取 STATE.yaml 找到自己的任务
-2. 完成后更新 STATE.yaml
-3. 报告给主 AI
-
-主 AI:
-1. 定期检查 STATE.yaml
-2. 生成进度报告给用户
-```
-
----
-
-## 对比传统 Kanban
-
-| 特性 | 传统 Kanban | PM-Toolkit |
-|------|-------------|-------------|
-| 更新方式 | 手动拖卡片 | 自然语言/自动 |
-| 上下文 | 丢失 | 完整保留 |
-| 多 AI 协作 | 不支持 | 去中心化 |
-| 决策追溯 | 困难 | 完整记录 |
-| 自动化 | 低 | 高 |
-
----
-
-## 依赖
-
-- bash
-- git
-- yaml 解析 (python3)
-- 可选: gh CLI (Git 集成)
-
----
-
-## 快速开始
+### Step 2: 派活 (监工)
 
 ```bash
-# 1. 初始化项目
-pm-init.sh my-project "项目描述"
+# 前端团队
+tmux new -d -s opencode-ui "opencode run '...'
 
-# 2. 添加任务
-pm-task.sh my-project --id task-001 --desc "开发首页"
+# 后端团队  
+tmux new -d -s opencode-backend "opencode run '...'
 
-# 3. 更新状态
-pm-update.sh my-project --task task-001 --status in_progress
-
-# 4. 查看状态
-pm-status.sh my-project
+# 测试团队
+tmux new -d -s opencode-qa "opencode run '...'
 ```
+
+### Step 3: 执行 (AI 员工)
+
+AI 们自行：
+- 读取 STATE.yaml
+- pick 自己的任务
+- 开发
+- 更新状态
+
+### Step 4: 监控 (监工)
+
+```bash
+pm-status.sh ai-assistant
+```
+
+### Step 5: 验收 (监工)
+
+- 代码审查
+- 测试
+- 合并发布
+
+---
+
+## ⚙️ 配置选项
+
+### 环境变量
+
+```bash
+# 项目目录 (默认: ~/projects)
+export PROJECTS_DIR="$HOME/projects"
+```
+
+---
+
+## ❓ 常见问题
+
+### Q: 一个人还需要用这个吗？
+
+A: 小项目不需要。多个 AI 协作、复杂项目、大任务分工时才需要。
+
+### Q: 一定要用 tmux 吗？
+
+A: 可以用其他方式启动 AI，只要让 AI 能访问 STATE.yaml 就行。
+
+### Q: Git 集成是必须的吗？
+
+A: 推荐使用，能记录所有变更历史。
+
+### Q: 怎么让 AI 知道自己的任务？
+
+A: 在派活时告诉 AI："你的 owner 是 opencode-frontend，读取 STATE.yaml 找到你的任务"。
+
+---
+
+## 🔗 相关技能
+
+- [link-to-knowledge](/link-to-knowledge) - 网页知识保存
+- [OpenClaw Subagents](https://github.com/openclaw/openclaw) - 多 AI 协作
+
+---
+
+## ✅ 总结
+
+| 特性 | 说明 |
+|------|------|
+| 多 AI 协作 | 多个 AI 通过文件自行协调 |
+| 状态追踪 | 任务状态实时更新 |
+| 决策记录 | 所有重要决定都有记录 |
+| Git 集成 | 变更历史可追溯 |
+| 简单易用 | 命令行工具，上手快 |
+
+---
+
+## 🚀 下一步
+
+1. 运行 `pm-init.sh` 创建第一个项目
+2. 添加任务
+3. 启动 AI 员工
+4. 查看进度
