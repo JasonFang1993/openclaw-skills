@@ -13,33 +13,61 @@ description: 将网页链接自动转换为 Obsidian 笔记，包含原文和 AI
 |------|------|
 | 🔗 URL 识别 | 自动从消息中提取 URL |
 | 📥 网页抓取 | 使用 jina-reader 抓取完整内容 |
-| 🤖 AI 总结 | 用 OpenCode (minimax) 提取标题、核心观点、结论、标签 |
-| 📝 双文件输出 | 原文 + 总结分开存储 |
-| 🏷️ 自动标签 | AI 自动生成标签 |
+| 🤖 AI 总结 | 用 OpenCode (minimax) 提取标题、核心观点、标签 |
+| 📝 单文件存储 | 原文 + 总结合并在一个文件 |
+| 🏷️ 标签分类 | 按第一个 AI 标签自动归类 |
+| 📋 索引更新 | 自动更新搜索索引 |
 
 ## 输出结构
 
 ```
-Obsidian Vault/
-├── articles/
-│   └── {年份}/
-│       └── {月份}/
-│           └── {标题}.md      # 原文
-└── summaries/
-    └── {年份}/
-        └── {月份}/
-            └── {标题}-summary.md  # AI 总结
+knowledge-base/
+├── AI/                         # 按标签分类（AI 生成的第一个标签）
+│   └── ai-trends-2026.md      # 合并笔记（原文+总结）
+├── 产品/
+│   └── product-ideas.md
+├── 编程/
+│   └── rust-tutorial.md
+├── 未分类/                      # 没有标签时
+└── .index/
+    └── index.md               # 搜索索引
 ```
 
-## Frontmatter 格式
+## 单文件格式
 
-```yaml
+```markdown
 ---
-title: "文章标题"
-source: "原始URL"
-tags: ["标签1", "标签2"]
+title: "AI 趋势 2026"
+source: "https://..."
+tags: ["AI", "趋势"]
 date: "2026-02-28"
 ---
+
+# AI 趋势 2026
+
+> 来源: https://...
+
+---
+
+## 📥 原文摘要
+
+[抓取的网页内容]
+
+---
+
+## 💡 AI 总结
+
+[AI 提取的核心观点]
+
+---
+
+## 🗣️ 我的想法
+
+[你补充的想法]
+
+---
+
+*保存时间: 2026-02-28*
 ```
 
 ## 使用方法
@@ -51,7 +79,7 @@ date: "2026-02-28"
 link-to-knowledge.sh "https://example.com/article"
 
 # 指定 vault 路径
-link-to-knowledge.sh "https://example.com" --vault ~/Obsidian/MyVault
+link-to-knowledge.sh "https://example.com" --vault ~/Obsidian/knowledge-base
 ```
 
 ### 环境变量
@@ -59,9 +87,6 @@ link-to-knowledge.sh "https://example.com" --vault ~/Obsidian/MyVault
 ```bash
 # 设置默认 vault 路径
 export OBSIDIAN_VAULT="/path/to/your/vault"
-
-# 然后直接运行
-link-to-knowledge.sh "https://example.com"
 ```
 
 ## 依赖
@@ -71,41 +96,6 @@ link-to-knowledge.sh "https://example.com"
 | curl | 网页抓取 |
 | opencode | AI 总结（需要配置 minimax 模型）|
 | python3 | JSON 解析 |
-
-## 注意事项
-
-1. **API 配置**: 确保 opencode 已配置 minimax 或其他模型
-2. **vault 路径**: 首次使用需设置 `OBSIDIAN_VAULT` 环境变量
-3. **内容长度**: 原文限制 20000 字符
-4. **文件名**: 自动 sanitized，确保兼容文件系统
-
-## 示例输出
-
-### 原文笔记 (articles/2026/02/example.md)
-```markdown
----
-title: "Example Article"
-source: "https://example.com/article"
-tags: ["科技", "AI"]
-date: "2026-02-28"
----
-
-# Example Article
-
-...原文内容...
-```
-
-### 总结笔记 (summaries/2026/02/example-summary.md)
-```markdown
----
-title: "Example Article - 总结"
-source: "https://example.com/article"
-tags: ["科技", "AI"]
-date: "2026-02-28"
----
-
-本文主要讨论了 AI 的发展趋势和未来影响。核心观点包括...
-```
 
 ---
 
@@ -128,131 +118,65 @@ AI: 📥 检测到链接，正在抓取...
     🤖 AI 分析中...
     ✅ 已保存!
     
-    📄 原文: articles/2026/02/xxx.md
-    📄 总结: summaries/2026/02/xxx-summary.md
-```
-
-### 自动处理流程
-
-```
-收到 URL → jina-reader 抓取 → OpenCode 总结 → 写入 knowledge-base
+    📄 笔记: AI/ai-trends-2026.md
+    🏷️ 标签: AI, 趋势
 ```
 
 ---
 
-## 💾 存储结构
+## 💾 存储与检索
 
 ### 本地存储 (Obsidian Vault)
 
 ```
-knowledge-base/                 # Obsidian vault 目录
-├── articles/                    # 原文
-│   └── 2026/
-│       └── 02/
-│           └── ai-trends.md
-├── summaries/                  # AI 总结
-│   └── 2026/
-│       └── 02/
-│           └── ai-trends-summary.md
-├── inbox/                      # 待整理
-└── .git/                      # Git 版本控制
+knowledge-base/
+├── AI/                    # 标签目录
+│   └── xxx.md           # 笔记文件
+├── 产品/
+│   └── xxx.md
+├── .index/
+│   └── index.md          # 索引（Cmd+K 搜索）
+└── inbox/                # 待整理
 ```
 
-### 远程备份 (GitHub)
+### 检索方式
+
+| 方式 | 操作 |
+|------|------|
+| 按标签 | 打开对应文件夹 |
+| 全局搜索 | Cmd+K 搜索关键字 |
+| 索引 | 打开 .index/index.md |
+| Graph View | Obsidian 右下角 graph 查看关联 |
+
+---
+
+## 🔄 远程备份
+
+### GitHub
 
 ```
 GitHub: github.com/JasonFang1993/knowledge-base
-    ↓ 定期自动同步
-本地: ~/Obsidian/knowledge-base
 ```
 
----
-
-## 🔍 读取与管理
-
-### 方式 1: Obsidian 本地阅读
+### 自动同步
 
 ```bash
-# 克隆到本地
-git clone git@github.com:JasonFang1993/knowledge-base.git ~/Obsidian/knowledge-base
-
-# 打开 Obsidian → 选择 vault → knowledge-base
-```
-
-### 方式 2: Obsidian + Git 同步
-
-```bash
-# 每次修改后提交
-cd ~/Obsidian/knowledge-base
-git add -A && git commit -m "chore: sync" && git push
-```
-
-### 方式 3: 自动同步 (推荐)
-
-```bash
-# 添加 crontab 定时同步
-crontab -e
-
-# 添加这一行（每 30 分钟自动同步）
+# crontab (每 30 分钟)
 */30 * * * * cd ~/Obsidian/knowledge-base && git add -A && git commit -m "chore: sync" && git push
 ```
-
----
-
-## 🔄 完整工作流
-
-```
-┌─────────────┐     ┌─────────────┐     ┌─────────────┐
-│  Discord/   │────▶│  OpenClaw   │────▶│  Obsidian   │
-│  WhatsApp   │     │  (处理+AI)  │     │  (本地)     │
-└─────────────┘     └─────────────┘     └─────────────┘
-                                               │
-                                               ▼
-                                         ┌─────────────┐
-                                         │   GitHub    │
-                                         │ knowledge-  │
-                                         │   base      │
-                                         └─────────────┘
-```
-
-### 每一步说明
-
-| 步骤 | 做什么 | 工具 |
-|------|--------|------|
-| 1 | 用户发送 URL | Discord/WhatsApp |
-| 2 | 抓取网页内容 | jina-reader |
-| 3 | AI 提取总结 | OpenCode (minimax) |
-| 4 | 写入本地 Vault | link-to-knowledge.sh |
-| 5 | Obsidian 打开阅读 | Obsidian |
-| 6 | 自动/手动同步到 GitHub | Git |
 
 ---
 
 ## 🛠️ 初始化设置
 
-### 1. 克隆知识库
-
 ```bash
+# 1. 克隆
 git clone git@github.com:JasonFang1993/knowledge-base.git ~/Obsidian/knowledge-base
-cd ~/Obsidian/knowledge-base
-```
 
-### 2. 配置自动同步
-
-```bash
-# 方法 A: crontab (每 30 分钟)
-*/30 * * * * cd ~/Obsidian/knowledge-base && git add -A && git commit -m "chore: sync" && git push
-
-# 方法 B: Obsidian Git 插件
-# 安装 Obsidian → 设置 → 第三方插件 → Git → 启用
-```
-
-### 3. 设置环境变量
-
-```bash
-# 添加到 ~/.bashrc 或 ~/.zshrc
+# 2. 设置环境变量
 echo 'export OBSIDIAN_VAULT="$HOME/Obsidian/knowledge-base"' >> ~/.bashrc
-source ~/.bashrc
+
+# 3. 打开 Obsidian → 选 vault → knowledge-base
 ```
 
 ---
@@ -261,8 +185,8 @@ source ~/.bashrc
 
 | 操作 | 怎么做 |
 |------|--------|
-| 保存文章 | 发链接到 Discord: `保存 https://...` |
-| 阅读 | 打开 Obsidian → 选择 knowledge-base vault |
-| 搜索 | Cmd+K 搜索关键字 / 按标签筛选 |
-| 同步 | 自动 (crontab) 或手动 git push |
-| 多设备 | 每个设备都 clone 一份，pull 同步 |
+| 保存 | 发链接到 Discord: `保存 https://...` |
+| 阅读 | 打开 Obsidian |
+| 搜索 | Cmd+K 或按标签找 |
+| 补充 | 在 "我的想法" 区域添加笔记 |
+| 同步 | 自动 crontab 或手动 git push |
