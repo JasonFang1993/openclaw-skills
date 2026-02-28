@@ -4,8 +4,8 @@
 VAULT_PATH="${OBSIDIAN_VAULT:-$HOME/Obsidian/knowledge-base}"
 
 extract_url() { echo "$1" | grep -oE 'https?://[^[:space:]]+' | head -1; }
-fetch_content() { curl -s "https://r.jina.ai/http://${1#http://}" | head -c sanitize() {25000; }
- echo "$1" | tr -cd '[:alnum:][:space:]_-' | tr ' ' '-' | tr '[:upper:]' '[:lower:]' | head -c 50; }
+fetch_content() { curl -s "https://r.jina.ai/http://${1#http://}" | head -c 25000; }
+sanitize() { echo "$1" | tr -cd '[:alnum:][:space:]_-' | tr ' ' '-' | tr '[:upper:]' '[:lower:]' | head -c 50; }
 
 call_ai_summary() {
     opencode run "分析以下内容，提取:

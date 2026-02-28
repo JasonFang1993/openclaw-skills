@@ -7,6 +7,17 @@ description: 将网页链接自动转换为 Obsidian 笔记。采用 PARA 方法
 
 将网页链接转换为 Obsidian 笔记的 skill。采用 **PARA 方法** + **Obsidian 最佳实践**。
 
+## 功能概览
+
+| 功能 | 说明 |
+|------|------|
+| 🔗 URL 识别 | 自动从消息中提取 URL |
+| 📥 网页抓取 | 使用 jina.ai 抓取内容 |
+| 🤖 AI 分类 | AI 自动判断 PARA 分类 |
+| 🏷️ 标签生成 | AI 自动生成中文标签 |
+| 📝 双链 | 自动添加 [[Wiki链接]] |
+| 📋 索引更新 | 自动更新总索引 |
+
 ## PARA 方法
 
 | 分类 | 说明 | 例子 |
@@ -16,18 +27,7 @@ description: 将网页链接自动转换为 Obsidian 笔记。采用 PARA 方法
 | **R**esources | 感兴趣的主题 | AI、编程、摄影 |
 | **A**rchives | 已完成/暂停 | 旧项目、已过气 |
 
-## 功能
-
-| 功能 | 说明 |
-|------|------|
-| 🔗 URL 识别 | 自动从消息中提取 URL |
-| 📥 网页抓取 | 使用 jina-reader 抓取内容 |
-| 🤖 AI 分类 | AI 自动判断 PARA 分类 |
-| 🏷️ 标签生成 | AI 自动生成中文标签 |
-| 📝 双链 | 自动添加 [[Wiki链接]] |
-| 📋 索引更新 | 自动更新总索引 |
-
-## 输出结构 (PARA)
+## 输出结构
 
 ```
 knowledge-base/
@@ -35,16 +35,18 @@ knowledge-base/
 ├── 📁 Projects/              # 项目
 │   └── AI/
 │       └── xxx.md
-├── 📁 Areas/               # 领域
+├── 📁 Areas/                 # 领域
 │   ├── AI/
 │   │   └── ai-trends.md
 │   ├── 产品/
 │   └── 编程/
-├── 📁 Resources/            # 资源
+├── 📁 Resources/             # 资源
+│   ├── AI/
+│   │   └── xxx.md
 │   ├── 趋势/
 │   └── 工具/
-├── 📁 Archives/            # 归档
-└── 🔍 index.md            # 总索引
+├── 📁 Archives/              # 归档
+└── 🔍 index.md               # 总索引
 ```
 
 ## 笔记格式
@@ -94,139 +96,138 @@ date: 2026-02-28
 
 ## 使用方法
 
-```bash
-# 基本用法
-link-to-knowledge.sh "https://example.com/article"
+### 方式一：link 命令（推荐）
 
-# 指定 vault
-link-to-knowledge.sh "https://example.com" --vault ~/Obsidian/knowledge-base
+```bash
+# 保存链接
+link https://example.com/article
+
+# 或直接运行脚本
+~/.openclaw/workspace/openclaw-skills/link-to-knowledge/scripts/link-to-knowledge.sh "https://example.com"
 ```
+
+### 方式二：发到 Discord
+
+直接发送链接即可：
+- `保存 https://...`
+- `收藏这个 https://...`
 
 ## 环境变量
 
-```bash
-export OBSIDIAN_VAULT="/path/to/your/vault"
-```
+| 变量 | 说明 | 默认值 |
+|------|------|--------|
+| `OBSIDIAN_VAULT` | 知识库路径 | `$HOME/Obsidian/knowledge-base` |
 
----
-
-## 📱 频道使用
-
-### 触发方式
-
-| 场景 | 怎么说 |
-|------|--------|
-| 保存链接 | `保存 https://...` |
-| 收藏 | `收藏这个 https://...` |
-
-### 对话示例
-
-```
-你: https://mp.weixin.qq.com/s/xxx
-
-AI: 📥 检测到链接...
-    🤖 AI 分析中...
-    ✅ 已保存!
-    
-    📄 笔记: Resources/AI/ai-trends.md
-    🏷️ PARA: R (Resources)
-    🏷️ 标签: AI, 趋势
-```
-
----
-
-## 🔍 Obsidian 检索方式
-
-| 方式 | 操作 |
-|------|------|
-| 按 PARA | 打开对应文件夹 |
-| 按标签 | 点击 tag 或搜索 #标签 |
-| 全局搜索 | Cmd+K 搜索 |
-| 索引 | 打开 index.md |
-| 双链 | 点击 [[笔记名]] 跳转 |
-| Graph View | 右下角查看关联 |
-
----
-
-## 🔄 远程同步
+### 配置
 
 ```bash
-# GitHub
-github.com/JasonFang1993/knowledge-base
+# 临时设置
+export OBSIDIAN_VAULT="/path/to/vault"
 
-# 自动同步
-*/30 * * * * cd ~/Obsidian/knowledge-base && git add -A && git commit -m "chore: sync" && git push
-```
-
----
-
-## 🛠️ 初始化
-
-```bash
-# 1. 克隆
-git clone git@github.com:JasonFang1993/knowledge-base.git ~/Obsidian/knowledge-base
-
-# 2. 环境变量
-echo 'export OBSIDIAN_VAULT="$HOME/Obsidian/knowledge-base"' >> ~/.bashrc
-
-# 3. 打开 Obsidian
-```
-
----
-
-## 📋 日常使用
-
-| 操作 | 怎么做 |
-|------|--------|
-| 保存 | 发链接到 Discord |
-| 阅读 | Obsidian 打开 |
-| 搜索 | Cmd+K / 按 PARA 找 |
-| 补充 | 在 "我的想法" 区域写 |
-| 归档 | 移动到 Archives 文件夹 |
-
----
-
-## 🛠️ 初始化（只需一次）
-
-### 一键初始化
-
-```bash
-# 运行初始化脚本（会自动检测，跳过已完成的步骤）
-cd ~/.openclaw/skills/link-to-knowledge/scripts
-./init.sh
-```
-
-初始化脚本会自动：
-1. ✅ 克隆 knowledge-base 仓库
-2. ✅ 创建 PARA 目录结构
-3. ✅ 配置环境变量
-4. ✅ 创建便捷命令 `link`
-5. ✅ 可选：配置自动同步
-
-> 💡 重复运行会自动跳过已完成的步骤（幂等）
-
-### 手动初始化
-
-```bash
-# 1. 克隆
-git clone git@github.com:JasonFang1993/knowledge-base.git ~/Obsidian/knowledge-base
-
-# 2. 环境变量
+# 永久设置（已自动配置）
 echo 'export OBSIDIAN_VAULT="$HOME/Obsidian/knowledge-base"' >> ~/.bashrc
 source ~/.bashrc
 ```
 
----
+## 初始化
 
-## 🚀 快速使用
-
-初始化后，使用方式：
+### 自动初始化
 
 ```bash
-# 方式 1: 使用 link 命令
-link https://example.com/article
-
-# 方式 2: 发链接到 Discord
-保存 https://example.com/article
+cd ~/.openclaw/workspace/openclaw-skills/link-to-knowledge/scripts
+./init.sh
 ```
 
+初始化步骤：
+1. ✅ 克隆 knowledge-base 仓库
+2. ✅ 创建 PARA 目录结构
+3. ✅ 配置环境变量
+4. ✅ 创建便捷命令 `link`
+
+### 手动初始化
+
+```bash
+# 1. 克隆仓库
+git clone git@github.com:JasonFang1993/knowledge-base.git ~/Obsidian/knowledge-base
+
+# 2. 配置环境变量
+echo 'export OBSIDIAN_VAULT="$HOME/Obsidian/knowledge-base"' >> ~/.bashrc
+source ~/.bashrc
+```
+
+## 远程同步
+
+### GitHub 仓库
+
+- 仓库地址：github.com/JasonFang1993/knowledge-base
+
+### 自动同步 Cron
+
+```bash
+# 每 30 分钟同步
+*/30 * * * * cd ~/Obsidian/knowledge-base && git add -A && git commit -m "chore: sync" && git push
+```
+
+### 手动同步
+
+```bash
+cd ~/Obsidian/knowledge-base
+git add -A
+git commit -m "feat: 添加新笔记"
+git push
+```
+
+## 故障排除
+
+### 常见问题
+
+| 问题 | 解决方案 |
+|------|----------|
+| 语法错误 | 确保 bash 版本 ≥ 4.0 |
+| 无法抓取 | 检查网络连接 |
+| AI 分析失败 | 检查 opencode 是否可用 |
+| 权限错误 | 确保 vault 目录可写 |
+
+### 测试脚本
+
+```bash
+# 语法检查
+bash -n ~/.openclaw/workspace/openclaw-skills/link-to-knowledge/scripts/link-to-knowledge.sh
+
+# 测试运行
+link https://example.com
+```
+
+## 目录说明
+
+| 目录 | 用途 |
+|------|------|
+| `Inbox/` | 收集箱，新保存的笔记会同步复制到这里 |
+| `Projects/` | 正在进行的工作项目 |
+| `Areas/` | 长期关注的领域 |
+| `Resources/` | 感兴趣的主题资源 |
+| `Archives/` | 已完成或暂停的内容 |
+| `index.md` | 总索引，快速查看所有保存的内容 |
+
+## 依赖
+
+- bash ≥ 4.0
+- curl
+- python3 (用于 JSON 解析)
+- git (用于同步)
+- opencode (用于 AI 分析，可选)
+
+---
+
+## 📌 快速开始
+
+```bash
+# 1. 初始化（已完成）
+source ~/.bashrc
+
+# 2. 保存知识
+link https://mp.weixin.qq.com/s/xxx
+
+# 3. 查看知识库
+ls ~/Obsidian/knowledge-base/
+```
