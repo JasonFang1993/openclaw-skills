@@ -1,24 +1,23 @@
 #!/bin/bash
-# pm-update.sh - 更新任务状态
+# pm-update.sh - 更新任务状态（自动触发代码审查）
 
 PROJECTS_DIR="${PROJECTS_DIR:-$HOME/projects}"
 
 if [ -z "$1" ] || [ -z "$2" ]; then
-    echo "用法: pm-update.sh <项目名> --task <任务ID> --status <状态> [--output <产出>] [--notes <备注>] [--review]"
+    echo "用法: pm-update.sh <项目名> --task <任务ID> --status <状态> [--output <产出>] [--notes <备注>] [--no-review]"
     echo ""
     echo "状态选项:"
     echo "  todo           - 待办"
     echo "  in_progress    - 进行中"
-    echo "  pending_review - 待审查 (自动触发代码审查)"
-    echo "  done           - 已完成"
+    echo "  done           - 已完成 (自动触发代码审查)"
     echo "  blocked        - 阻塞"
     echo ""
     echo "示例:"
-    echo "  # 完成后自动审查"
-    echo "  pm-update.sh my-app --task task-001 --status done --output src/index.ts --review"
-    echo ""
-    echo "  # 直接完成（不审查）"
+    echo "  # 完成后自动审查（默认）"
     echo "  pm-update.sh my-app --task task-001 --status done --output src/index.ts"
+    echo ""
+    echo "  # 跳过审查"
+    echo "  pm-update.sh my-app --task task-001 --status done --no-review"
     exit 1
 fi
 
@@ -29,7 +28,7 @@ TASK_ID=""
 STATUS=""
 OUTPUT=""
 NOTES=""
-AUTO_REVIEW=false
+SKIP_REVIEW=false
 
 while [ $# -gt 0 ]; do
     case "$1" in
@@ -37,7 +36,7 @@ while [ $# -gt 0 ]; do
         --status) STATUS="$2"; shift 2 ;;
         --output) OUTPUT="$2"; shift 2 ;;
         --notes) NOTES="$2"; shift 2 ;;
-        --review) AUTO_REVIEW=true; shift ;;
+        --no-review) SKIP_REVIEW=true; shift ;;
         *) shift ;;
     esac
 done
@@ -89,11 +88,14 @@ for task in state.get('tasks', []):
             task['notes'] = "$NOTES"
             
         updated = True
-        print(f"✅ 任务更新: $TASK_ID ({old_status} → $STATUS)")
         
-        # 如果是待审查状态，需要触发代码审查
-        if "$STATUS" == "pending_review":
-            print(f"⏳ 等待代码审查...")
+        # 完成后自动触发审查（除非明确跳过）
+        if "$STATUS" == "done" and "$SKIP_REVIEW" != "true":
+            task['needs_review'] = True
+            print(f"✅ 任务更新: $TASK_ID ({old_status} → $STATUS)")
+            print(f"⏳ 将自动触发代码审查...")
+        else:
+            print(f"✅ 任务更新: $TASK_ID ({old_status} → $STATUS})")
         break
 
 if not updated:
@@ -111,10 +113,12 @@ cd "$PROJECT_DIR"
 git add STATE.yaml 2>/dev/null
 git commit -m "chore: update $TASK_ID to $STATUS" 2>/dev/null || true
 
-# 如果开启自动审查且状态为待审查
-if [ "$AUTO_REVIEW" = true ]; then
+# 如果是完成状态且不跳过审查，自动触发审查
+if [ "$STATUS" = "done" ] && [ "$SKIP_REVIEW" != "true" ]; then
     echo ""
     echo "🚀 自动触发代码审查..."
     cd "$(dirname "$0")"
     ./pm-review.sh "$PROJECT" "$TASK_ID"
+elif [ "$STATUS" = "done" ] && [ "$SKIP_REVIEW" = "true" ]; then
+    echo "⏭️ 已跳过代码审查"
 fi
