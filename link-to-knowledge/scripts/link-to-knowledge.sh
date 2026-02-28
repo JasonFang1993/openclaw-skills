@@ -1,16 +1,22 @@
 #!/bin/bash
-# link-to-knowledge: 将网页链接转换为 Obsidian 笔记
+# link-to-knowledge: 将网页链接转换为 Obsidian 笔记 (PARA 结构)
 
 VAULT_PATH="${OBSIDIAN_VAULT:-$HOME/Obsidian/knowledge-base}"
 
 extract_url() { echo "$1" | grep -oE 'https?://[^[:space:]]+' | head -1; }
-fetch_content() { curl -s "https://r.jina.ai/http://${1#http://}" | head -c 25000; }
-sanitize() { echo "$1" | tr -cd '[:alnum:][:space:]_-' | tr ' ' '-' | tr '[:upper:]' '[:lower:]' | head -c 50; }
+fetch_content() { curl -s "https://r.jina.ai/http://${1#http://}" | head -c sanitize() {25000; }
+ echo "$1" | tr -cd '[:alnum:][:space:]_-' | tr ' ' '-' | tr '[:upper:]' '[:lower:]' | head -c 50; }
 
 call_ai_summary() {
-    opencode run "分析以下内容，提取 title、summary(100字内)、tags(2-4个中文标签)。以 JSON 返回: {\"title\":\"...\",\"summary\":\"...\",\"tags\":[\"...\"]}
+    opencode run "分析以下内容，提取:
+- title: 文章标题
+- summary: 核心观点(50-100字)
+- para: 归类到 P(项目)/A(领域)/R(资源)/A(归档)
+- tags: 2-4个中文标签
 
-$1" 2>/dev/null | grep -oP '\{.*\}' | tail -1
+以 JSON 返回: {\"title\":\"...\",\"summary\":\"...\",\"para\":\"P/A/R/A\",\"tags\":[\"...\"]}
+
+内容: $1" 2>/dev/null | grep -oP '\{.*\}' | tail -1
 }
 
 main() {
@@ -26,34 +32,47 @@ main() {
     
     TITLE=$(echo "$AI_RESP" | python3 -c "import sys,json; print(json.load(sys.stdin).get('title','untitled'))" 2>/dev/null || echo "untitled")
     SUMMARY=$(echo "$AI_RESP" | python3 -c "import sys,json; print(json.load(sys.stdin).get('summary','无'))" 2>/dev/null || echo "无")
+    PARA=$(echo "$AI_RESP" | python3 -c "import sys,json; print(json.load(sys.stdin).get('para','R'))" 2>/dev/null || echo "R")
     TAGS=$(echo "$AI_RESP" | python3 -c "import sys,json; print(','.join(json.load(sys.stdin).get('tags',[])))" 2>/dev/null || echo "")
     
     YEAR=$(date +%Y); MONTH=$(date +%m); DATE=$(date +%Y-%m-%d)
     FILE=$(sanitize "$TITLE")
     
-    # 确定目录：如果有标签，用第一个标签作为目录
+    # PARA 目录映射
+    case "$PARA" in
+        P) DIR="Projects" ;;
+        A) DIR="Areas" ;;
+        R) DIR="Resources" ;;
+        *) DIR="Resources" ;;
+    esac
+    
+    # 如果有标签，用第一个标签作为子目录
     if [ -n "$TAGS" ]; then
-        TAG_DIR=$(echo "$TAGS" | cut -d',' -f1)
+        SUB_DIR=$(echo "$TAGS" | cut -d',' -f1)
+        SUBDIR_PATH="$DIR/$SUB_DIR"
     else
-        TAG_DIR="未分类"
+        SUBDIR_PATH="$DIR"
     fi
     
     # 创建目录
-    mkdir -p "$VAULT_PATH/$TAG_DIR"
+    mkdir -p "$VAULT_PATH/$SUBDIR_PATH"
+    mkdir -p "$VAULT_PATH/Inbox"
     mkdir -p "$VAULT_PATH/.index"
     
-    # 写入合并的笔记（原文 + 总结）
-    cat > "$VAULT_PATH/$TAG_DIR/$FILE.md" << EOF
+    # 写入笔记
+    cat > "$VAULT_PATH/$SUBDIR_PATH/$FILE.md" << EOF
 ---
 title: "$TITLE"
 source: "$URL"
 tags: [$([ -n "$TAGS" ] && echo "\"$(echo "$TAGS" | tr ',' '","')\"" || echo "")]
+para: $PARA
 date: "$DATE"
 ---
 
 # $TITLE
 
-> 来源: $URL
+> 来源: [$URL]($URL)
+> 分类: [[$DIR]]
 
 ---
 
@@ -75,30 +94,37 @@ $SUMMARY
 
 ---
 
-*保存时间: $DATE*
+## 🔗 相关笔记
+
+[[Inbox/]] [[Areas/]] [[Resources/]] [[Archives/]]
+
+---
+
+*保存时间: $DATE | PARA: $PARA*
 EOF
 
+    # 复制到 Inbox（临时）
+    cp "$VAULT_PATH/$SUBDIR_PATH/$FILE.md" "$VAULT_PATH/Inbox/$DATE-$FILE.md" 2>/dev/null || true
+
     # 更新索引
-    INDEX_FILE="$VAULT_PATH/.index/index.md"
+    INDEX_FILE="$VAULT_PATH/index.md"
     {
         echo "---
-date: $DATE
 tags: [$([ -n "$TAGS" ] && echo "\"$(echo "$TAGS" | tr ',' '","')\"" || echo "")]
 ---
 
 # 知识索引
 
 ## 最近保存
-| 日期 | 标题 | 标签 |
-|------|------|------|
-| $DATE | [[../$TAG_DIR/$FILE.md|$TITLE]] | $TAGS |
+
+| 日期 | 标题 | PARA | 标签 |
+|------|------|------|------|
+| $DATE | [[$SUBDIR_PATH/$FILE.md|$TITLE]] | $PARA | $TAGS |
 
 " > "$INDEX_FILE.tmp"
         
-        # 如果索引已存在，追加
         if [ -f "$INDEX_FILE" ]; then
-            # 跳过前 6 行（frontmatter），追加内容
-            tail -n +7 "$INDEX_FILE" >> "$INDEX_FILE.tmp"
+            tail -n +8 "$INDEX_FILE" >> "$INDEX_FILE.tmp" 2>/dev/null || true
             mv "$INDEX_FILE.tmp" "$INDEX_FILE"
         else
             mv "$INDEX_FILE.tmp" "$INDEX_FILE"
@@ -106,8 +132,9 @@ tags: [$([ -n "$TAGS" ] && echo "\"$(echo "$TAGS" | tr ',' '","')\"" || echo "")
     } 2>/dev/null || true
 
     echo "✅ 完成!"
-    echo "📄 笔记: $VAULT_PATH/$TAG_DIR/$FILE.md"
-    echo "📋 索引: $VAULT_PATH/.index/index.md"
+    echo "📄 笔记: $VAULT_PATH/$SUBDIR_PATH/$FILE.md"
+    echo "📋 索引: $VAULT_PATH/index.md"
+    echo "🏷️ 分类: $PARA ($DIR)"
 }
 
 main "$@"
