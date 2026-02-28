@@ -400,3 +400,84 @@ A: 在派活时告诉 AI："你的 owner 是 opencode-frontend，读取 STATE.ya
 2. 添加任务
 3. 启动 AI 员工
 4. 查看进度
+
+---
+
+## 🔍 代码审查整合
+
+### 完整工作流
+
+```
+AI 完成开发 → pm-update --status pending_review → 自动审查 → 通过 → done
+                                                      ↓
+                                                 失败 → 打回
+```
+
+### 审查流程
+
+| 步骤 | AI | 说明 |
+|------|-----|------|
+| 1 | 完成开发 | - |
+| 2 | 更新状态 | `pm-update.sh --status pending_review --review` |
+| 3 | 自动触发 | 3 个 AI 同时审查 |
+| 4 | 审查通过 | 自动标记 done |
+| 5 | 审查失败 | 打回重做 |
+
+### 3 个 AI 审查
+
+| AI | 职责 |
+|-----|------|
+| Codex | 主力审查，抓逻辑错误 |
+| Gemini | 安全审查，发现漏洞 |
+| Claude Code | 设计审查，防止过度设计 |
+
+### 使用方法
+
+```bash
+# AI 完成后，触发代码审查
+pm-update.sh my-app --task task-001 --status pending_review --review
+
+# 或者直接完成（跳过审查）
+pm-update.sh my-app --task task-001 --status done --output "src/index.ts"
+```
+
+### 手动触发审查
+
+```bash
+pm-review.sh my-app task-001
+```
+
+### 审查输出示例
+
+```
+🔍 开始代码审查: my-app / task-001
+================================
+任务: 开发首页
+负责人: opencode-frontend
+产出: src/index.ts
+
+🤖 启动 Code Review...
+
+🔴 Codex 审查中...
+✅ Codex: 通过 - 代码逻辑正确，无明显错误
+
+🟡 Gemini 审查中...
+✅ Gemini: 通过 - 无安全漏洞
+
+🔵 Claude Code 审查中...
+✅ Claude Code: 通过 - 设计合理
+
+================================
+✅ 代码审查完成!
+
+📝 任务 task-001 审查通过，已标记为完成
+```
+
+### 状态流转
+
+```
+todo → in_progress → pending_review → done
+                              ↓
+                           blocked (审查失败)
+```
+
