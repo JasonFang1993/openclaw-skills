@@ -481,3 +481,66 @@ todo → in_progress → pending_review → done
                            blocked (审查失败)
 ```
 
+
+---
+
+## 🔔 阻塞通知
+
+### 自动通知
+
+当任务标记为 `blocked` 时，自动发送通知：
+
+```bash
+# 阻塞时自动通知
+pm-update.sh my-app --task task-001 --status blocked --notes "等后端 API"
+
+# 输出:
+# 🚧 任务阻塞，将发送通知...
+# 📢 发送阻塞通知...
+# ✅ Discord/Telegram 通知已发送
+```
+
+### 通知渠道
+
+| 渠道 | 环境变量 |
+|------|----------|
+| Discord | `DISCORD_WEBHOOK` |
+| Telegram | `TELEGRAM_BOT_TOKEN` + `TELEGRAM_CHAT_ID` |
+
+### 配置示例
+
+```bash
+# Discord
+export DISCORD_WEBHOOK="https://discord.com/api/webhooks/xxx"
+
+# Telegram
+export TELEGRAM_BOT_TOKEN="123456:ABC-DEF1234ghIkl-zyx57W2v1u123ew11"
+export TELEGRAM_CHAT_ID="123456789"
+```
+
+### 通知类型
+
+| 类型 | 触发 | 颜色 |
+|------|------|------|
+| blocked | 任务阻塞 | 🔴 红色 |
+| done | 任务完成 | 🟢 绿色 |
+| failed | 任务失败 | 🔴 红色 |
+| review | 需要审查 | 🟡 黄色 |
+
+---
+
+## ⚙️ 完整流程
+
+```
+AI 执行任务
+    ↓
+状态更新 pm-update.sh --status done/blocked
+    ↓
+    ├── done → 自动触发代码审查
+    │           ├── 通过 → 真正完成
+    │           └── 失败 → 打回
+    │
+    └── blocked → 自动发送通知
+                    └── Discord/Telegram
+```
+
