@@ -20,7 +20,7 @@
 | **http-client** | HTTP 客户端（配置文件、请求管理、历史追踪） | ⭐ |
 | **drawio-diagrams** | Draw.io 图表生成（Mermaid/CSV/XML） | ⭐ |
 | **vue-auto-tester** | Vue 3 自动测试（Vitest + Playwright） | ⭐ |
-| **news-research** | AI 行业新闻研究（RSS 聚合 + 深度分析） | ⭐ |
+| **news-research** | AI行业新闻深度分析（每条新闻含个人洞察，中文输出） | ⭐ |
 | **x-post-fetch** | X (Twitter) 帖子抓取（支持 auth_token） | ⭐ |
 | **github-to-skills** | 将 GitHub 仓库自动转换为 AI Skills | ⭐⭐ |
 | **skill-manager** | 管理 Skill 生命周期（检查更新、删除） | ⭐⭐ |
@@ -32,7 +32,7 @@
 | **summarize** | 摘要 URL/文件/YouTube | ⭐ |
 | **tavily-search** | Tavily AI 搜索（专为 AI 设计） | ⭐ |
 | **research-company** | 公司调研，生成 PDF 报告 | ⭐ |
-| **tech-news-digest** | 技术新闻每日摘要 | ⭐ |
+| **tech-news-digest** | 技术新闻每日摘要（5层数据收集，多格式输出） | ⭐ |
 
 ---
 
@@ -305,9 +305,15 @@ npx playwright install chromium
 
 ---
 
-### 15. 📰 news-research（行业新闻研究）
+### 15. 📰 news-research（AI行业新闻深度分析）
 
-**功能**：AI 行业新闻 RSS 聚合 + 深度分析
+**功能**：AI行业新闻深度研究与分析，每条新闻含个人洞察，中文输出
+
+**特点**：
+- 专注AI行业，中英文源混合
+- 每条新闻有深度分析和思考
+- 智能筛选重点新闻
+- 中文Markdown报告输出
 
 **使用**：查看 `news-research/SKILL.md`
 
@@ -602,7 +608,13 @@ pip install reportlab
 
 ### 28. 📰 tech-news-digest（技术新闻每日摘要）
 
-**功能**：每日技术新闻摘要和追踪
+**功能**：5层数据收集（RSS/Twitter/GitHub/Reddit/Web），支持多格式输出（Discord/Email/PDF），适合每日简报和定时推送
+
+**特点**：
+- 138个预设数据源（RSS、KOL、GitHub、Reddit、Web Search）
+- 支持定时任务（Cron）
+- 多平台推送（Discord、Email、PDF）
+- 适合运营团队每日简报
 
 **安装**：
 ```bash
