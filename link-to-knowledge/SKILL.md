@@ -183,3 +183,50 @@ echo 'export OBSIDIAN_VAULT="$HOME/Obsidian/knowledge-base"' >> ~/.bashrc
 | 搜索 | Cmd+K / 按 PARA 找 |
 | 补充 | 在 "我的想法" 区域写 |
 | 归档 | 移动到 Archives 文件夹 |
+
+---
+
+## 🛠️ 初始化（只需一次）
+
+### 一键初始化
+
+```bash
+# 运行初始化脚本（会自动检测，跳过已完成的步骤）
+cd ~/.openclaw/skills/link-to-knowledge/scripts
+./init.sh
+```
+
+初始化脚本会自动：
+1. ✅ 克隆 knowledge-base 仓库
+2. ✅ 创建 PARA 目录结构
+3. ✅ 配置环境变量
+4. ✅ 创建便捷命令 `link`
+5. ✅ 可选：配置自动同步
+
+> 💡 重复运行会自动跳过已完成的步骤（幂等）
+
+### 手动初始化
+
+```bash
+# 1. 克隆
+git clone git@github.com:JasonFang1993/knowledge-base.git ~/Obsidian/knowledge-base
+
+# 2. 环境变量
+echo 'export OBSIDIAN_VAULT="$HOME/Obsidian/knowledge-base"' >> ~/.bashrc
+source ~/.bashrc
+```
+
+---
+
+## 🚀 快速使用
+
+初始化后，使用方式：
+
+```bash
+# 方式 1: 使用 link 命令
+link https://example.com/article
+
+# 方式 2: 发链接到 Discord
+保存 https://example.com/article
+```
+
