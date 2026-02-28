@@ -137,3 +137,132 @@ AI: 📥 检测到链接，正在抓取...
 ```
 收到 URL → jina-reader 抓取 → OpenCode 总结 → 写入 knowledge-base
 ```
+
+---
+
+## 💾 存储结构
+
+### 本地存储 (Obsidian Vault)
+
+```
+knowledge-base/                 # Obsidian vault 目录
+├── articles/                    # 原文
+│   └── 2026/
+│       └── 02/
+│           └── ai-trends.md
+├── summaries/                  # AI 总结
+│   └── 2026/
+│       └── 02/
+│           └── ai-trends-summary.md
+├── inbox/                      # 待整理
+└── .git/                      # Git 版本控制
+```
+
+### 远程备份 (GitHub)
+
+```
+GitHub: github.com/JasonFang1993/knowledge-base
+    ↓ 定期自动同步
+本地: ~/Obsidian/knowledge-base
+```
+
+---
+
+## 🔍 读取与管理
+
+### 方式 1: Obsidian 本地阅读
+
+```bash
+# 克隆到本地
+git clone git@github.com:JasonFang1993/knowledge-base.git ~/Obsidian/knowledge-base
+
+# 打开 Obsidian → 选择 vault → knowledge-base
+```
+
+### 方式 2: Obsidian + Git 同步
+
+```bash
+# 每次修改后提交
+cd ~/Obsidian/knowledge-base
+git add -A && git commit -m "chore: sync" && git push
+```
+
+### 方式 3: 自动同步 (推荐)
+
+```bash
+# 添加 crontab 定时同步
+crontab -e
+
+# 添加这一行（每 30 分钟自动同步）
+*/30 * * * * cd ~/Obsidian/knowledge-base && git add -A && git commit -m "chore: sync" && git push
+```
+
+---
+
+## 🔄 完整工作流
+
+```
+┌─────────────┐     ┌─────────────┐     ┌─────────────┐
+│  Discord/   │────▶│  OpenClaw   │────▶│  Obsidian   │
+│  WhatsApp   │     │  (处理+AI)  │     │  (本地)     │
+└─────────────┘     └─────────────┘     └─────────────┘
+                                               │
+                                               ▼
+                                         ┌─────────────┐
+                                         │   GitHub    │
+                                         │ knowledge-  │
+                                         │   base      │
+                                         └─────────────┘
+```
+
+### 每一步说明
+
+| 步骤 | 做什么 | 工具 |
+|------|--------|------|
+| 1 | 用户发送 URL | Discord/WhatsApp |
+| 2 | 抓取网页内容 | jina-reader |
+| 3 | AI 提取总结 | OpenCode (minimax) |
+| 4 | 写入本地 Vault | link-to-knowledge.sh |
+| 5 | Obsidian 打开阅读 | Obsidian |
+| 6 | 自动/手动同步到 GitHub | Git |
+
+---
+
+## 🛠️ 初始化设置
+
+### 1. 克隆知识库
+
+```bash
+git clone git@github.com:JasonFang1993/knowledge-base.git ~/Obsidian/knowledge-base
+cd ~/Obsidian/knowledge-base
+```
+
+### 2. 配置自动同步
+
+```bash
+# 方法 A: crontab (每 30 分钟)
+*/30 * * * * cd ~/Obsidian/knowledge-base && git add -A && git commit -m "chore: sync" && git push
+
+# 方法 B: Obsidian Git 插件
+# 安装 Obsidian → 设置 → 第三方插件 → Git → 启用
+```
+
+### 3. 设置环境变量
+
+```bash
+# 添加到 ~/.bashrc 或 ~/.zshrc
+echo 'export OBSIDIAN_VAULT="$HOME/Obsidian/knowledge-base"' >> ~/.bashrc
+source ~/.bashrc
+```
+
+---
+
+## 📋 日常使用
+
+| 操作 | 怎么做 |
+|------|--------|
+| 保存文章 | 发链接到 Discord: `保存 https://...` |
+| 阅读 | 打开 Obsidian → 选择 knowledge-base vault |
+| 搜索 | Cmd+K 搜索关键字 / 按标签筛选 |
+| 同步 | 自动 (crontab) 或手动 git push |
+| 多设备 | 每个设备都 clone 一份，pull 同步 |
