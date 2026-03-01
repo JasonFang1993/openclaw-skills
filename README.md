@@ -32,7 +32,7 @@
 | **summarize** | 摘要 URL/文件/YouTube | ⭐ |
 | **tavily-search** | Tavily AI 搜索（专为 AI 设计） | ⭐ |
 | **research-company** | 公司调研，生成 PDF 报告 | ⭐ |
-| **tech-news-digest** | 技术新闻每日摘要（5层数据收集，多格式输出） | ⭐ |
+| **tech-news-digest** | 技术新闻每日摘要 + AI 深度分析（500+字/篇，独立观点） | ⭐ |
 
 ---
 
@@ -606,22 +606,43 @@ pip install reportlab
 
 ---
 
-### 28. 📰 tech-news-digest（技术新闻每日摘要）
+### 28. 📰 tech-news-digest（技术新闻每日摘要 + AI 深度分析）
 
-**功能**：5层数据收集（RSS/Twitter/GitHub/Reddit/Web），支持多格式输出（Discord/Email/PDF），适合每日简报和定时推送
+**功能**：5层数据收集 + AI 深度分析 + 定时推送
 
-**特点**：
-- 138个预设数据源（RSS、KOL、GitHub、Reddit、Web Search）
-- 支持定时任务（Cron）
-- 多平台推送（Discord、Email、PDF）
-- 适合运营团队每日简报
+**增强版特点**（vs 基础版）：
+- ✅ **AI 深度分析**：每篇新闻 500+ 字深度解读 + 独立观点
+- ✅ **质量检查清单**：严格筛选，确保内容质量
+- ✅ **子 agent 工作流**：初稿 → 审核 → 修正 → 发送
+- ✅ **中文输出**：默认中文简报
+
+**标准**：
+- 只选 AI 相关新闻
+- 每篇 500+ 字
+- 每篇有独立观点
+- 没有水文
+
+**工作流程**：
+```
+9:00 AM (Cron)
+    ↓
+抓取新闻 (RSS/Twitter/GitHub)
+    ↓
+子 agent 筛选 + 写初稿
+    ↓
+人工审核 (质量检查)
+    ↓
+修正 (如需要)
+    ↓
+发送 (Discord)
+```
 
 **安装**：
 ```bash
 npx clawhub@latest install tech-news-digest
 ```
 
-**使用**：查看 `tech-news-digest/SKILL.md`
+**使用**：查看 `tech-news-digest/SKILL.md` 和 `tech-news-digest/CUSTOM.md`
 
 ---
 
