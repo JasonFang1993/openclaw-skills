@@ -63,6 +63,29 @@ function fetchWeChatArticle(url, userAgent = DEFAULT_UA) {
 }
 
 function extractContent(html, url) {
+  // Method 1: Try to extract js_content (WeChat main content area)
+  let contentArea = null;
+  
+  // Try different patterns to find the content area
+  const contentPatterns = [
+    /id="js_content"([\s\S]*?)(?=<div id="bottom|<div class="comment|<section class="reward_list)/,
+    /class="rich_media_content"[^>]*>([\s\S]*?)<\/div>/,
+    /id="page_content"([\s\S]*?)<div id="bottom/,
+  ];
+  
+  let patternUsed = 'full-html';
+  for (const pattern of contentPatterns) {
+    const match = html.match(pattern);
+    if (match && match[1] && match[1].length > 500) {
+      contentArea = match[1];
+      patternUsed = pattern.toString().slice(0, 50);
+      break;
+    }
+  }
+  
+  // Fallback: use full HTML if content area not found
+  let textSource = contentArea || html;
+
   // Extract title
   const titleMatch = html.match(/<title[^>]*>([^<]+)<\/title>/i);
   const title = titleMatch ? titleMatch[1].trim() : 'Unknown Title';
@@ -71,8 +94,8 @@ function extractContent(html, url) {
   const descMatch = html.match(/<meta[^>]*name=["']description["'][^>]*content=["']([^"']+)["']/i);
   const description = descMatch ? descMatch[1].trim() : '';
 
-  // Clean HTML and extract text
-  const cleanText = html
+  // Clean HTML and extract text from content area
+  const cleanText = textSource
     // Remove scripts
     .replace(/<script[^>]*>[\s\S]*?<\/script>/gi, '')
     // Remove styles
@@ -98,15 +121,15 @@ function extractContent(html, url) {
     .replace(/\n{3,}/g, '\n\n')
     .trim();
 
-  // Extract paragraphs
+  // Extract paragraphs - be more permissive with length
   const paragraphs = cleanText.split('\n')
     .map(line => line.trim())
     .filter(line => line.length > 10)
-    .filter(line => line.length < 500)
+    .filter(line => line.length < 2000)  // Increased from 500 to allow longer paragraphs
     .filter(line => !line.toLowerCase().includes('http'))
     .filter(line => !line.toLowerCase().includes('wx_'))
     .filter(line => !line.match(/^\d+$/))  // Remove pure numbers
-    .slice(0, 100);  // Limit to 100 paragraphs
+    .slice(0, 200);  // Limit to 200 paragraphs
 
   return {
     title,
@@ -140,7 +163,7 @@ function formatOutput(data, options = {}) {
   }
 
   output += `---\n`;
-  output += `共提取 ${data.paragraphCount} 段内容\n`;
+  output += `共提取 ${data.paragraphCount} 段内容，原始 HTML ${(data.rawLength / 1024 / 1024).toFixed(2)} MB，提取文本 ${(data.extractedLength / 1024).toFixed(1)} KB\n`;
 
   return output;
 }
