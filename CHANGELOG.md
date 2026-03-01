@@ -56,3 +56,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 - Initial release with 7 core skills
+
+---
+
+## [v2.0.0] - 2026-02-28
+
+### Added
+- link-to-knowledge: 网页链接自动转为知识库（PARA结构）
+- pm-toolkit: 去中心化项目管理（多AI协作、代码审查、测试整合）
+- cron-tools: 定时任务（每日简报、每周复盘）
+- init-all: 一键初始化配置
+- x-post-fetch: X(Twitter)帖子抓取
+
+### Features
+- 多AI员工协作模式
+- 自动代码审查（3个AI）
+- 自动测试整合
+- 阻塞自动通知
+- 一键换电脑恢复

@@ -27,6 +27,9 @@
 | **skill-evolution-manager** | 基于用户反馈持续改进 Skills | ⭐⭐ |
 | **memory-manager** | 知识记忆管理（Obsidian 集成） | ⭐⭐ |
 | **link-to-knowledge** | 链接转为知识库条目 | ⭐ |
+| **pm-toolkit** | 去中心化项目管理（多 AI 协作） | ⭐⭐ |
+| **cron-tools** | 定时任务（每日简报、每周复盘） | ⭐ |
+| **init-all** | 一键初始化（换电脑恢复配置） | ⭐ |
 | **notion** | Notion API（页面、数据库、块管理） | ⭐⭐ |
 | **obsidian** | Obsidian 笔记（vault 管理、搜索、创建） | ⭐ |
 | **summarize** | 摘要 URL/文件/YouTube | ⭐ |
