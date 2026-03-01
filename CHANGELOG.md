@@ -7,22 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+- (2026-03-01) weixin-reader: 优化微信文章提取算法，增加 js_content 区域识别，提升长文章提取能力
+
 ### Added
 - (2026-02-27) Added local skills: notion, obsidian, summarize, tavily-search
 - (2026-02-27) Added tech-news-digest
 - (2026-02-27) Added Khazix-Skills: github-to-skills, skill-manager, skill-evolution-manager
-
-### Removed
-- (2026-02-27) Removed low-usage skills: skill-audit, skill-creator, find-skills, systematic-debugging
-
-### Added
-- (2026-02-27) Removed paid browser skills: browser-use, browser-cash, kesslerio-stealth-browser
-
-### Changed
-- (2026-02-27) reorganized README.md structure and order
-
-### Fixed
-- (2026-02-27) Added github_url metadata to three new skills for tracking
 
 ---
 
