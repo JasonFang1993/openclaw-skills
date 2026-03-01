@@ -544,3 +544,65 @@ AI 执行任务
                     └── Discord/Telegram
 ```
 
+
+---
+
+## 🧪 测试整合
+
+### 自动测试流程
+
+```
+代码审查通过 → 自动运行测试 → 通过 → 完成
+                              ↓
+                           失败 → 打回
+```
+
+### 支持的测试框架
+
+| 语言 | 测试命令 |
+|------|----------|
+| Node.js | `npm test` |
+| Rust | `cargo test` |
+| Go | `go test ./...` |
+| Python | `pytest` |
+
+### 完整流程
+
+```
+AI 完成开发
+    ↓
+pm-update.sh --status done
+    ↓
+🔍 3 个 AI 审查
+    ↓
+🧪 自动运行测试
+    ↓
+✅ 通过 → 真正完成
+❌ 失败 → 打回重做
+```
+
+### 状态流转
+
+```
+todo → in_progress → done → testing → done
+                              ↓
+                         testing_failed → 打回
+```
+
+### 测试输出示例
+
+```
+🧪 开始测试: my-app / task-001
+================================
+📦 检测到 Node.js 项目
+🚀 运行测试: npm test
+
+  PASS  test/app.test.js
+  PASS  test/api.test.js
+
+================================
+✅ 测试通过!
+
+📝 任务 task-001 测试通过，已完成
+```
+
