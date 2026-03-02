@@ -22,6 +22,7 @@
 | **vue-auto-tester** | Vue 3 自动测试（Vitest + Playwright） | ⭐ |
 | **news-research** | AI行业新闻深度分析（每条新闻含个人洞察，中文输出） | ⭐ |
 | **x-post-fetch** | X (Twitter) 帖子抓取（支持 auth_token） | ⭐ |
+| **agent-reach** | AI 互联网工具全家桶（Twitter/B站/YouTube等） | ⭐⭐ |
 | **github-to-skills** | 将 GitHub 仓库自动转换为 AI Skills | ⭐⭐ |
 | **skill-manager** | 管理 Skill 生命周期（检查更新、删除） | ⭐⭐ |
 | **skill-evolution-manager** | 基于用户反馈持续改进 Skills | ⭐⭐ |
@@ -51,7 +52,7 @@ npx clawhub@latest install <skill-name>
 npx clawhub@latest install pdf
 
 # 安装所有 skill
-for skill in pdf pptx docx xlsx canvas-design webapp-testing weather weixin-reader ddg-search jina-reader github-search http-client drawio-diagrams vue-auto-tester news-research x-post-fetch github-to-skills skill-manager skill-evolution-manager memory-manager link-to-knowledge notion obsidian summarize tavily-search research-company tech-news-digest; do
+for skill in pdf pptx docx xlsx canvas-design webapp-testing weather weixin-reader ddg-search jina-reader github-search http-client drawio-diagrams vue-auto-tester news-research x-post-fetch agent-reach github-to-skills skill-manager skill-evolution-manager memory-manager link-to-knowledge notion obsidian summarize tavily-search research-company tech-news-digest; do
   npx clawhub@latest install $skill
 done
 ```
@@ -330,7 +331,35 @@ npx playwright install chromium
 
 ---
 
-### 17. 📦 github-to-skills（GitHub 仓库转 AI Skills）
+### 17. 🌐 agent-reach（AI 互联网工具全家桶）
+
+**功能**：统一打包全网平台读取工具，Twitter、B站、YouTube、小红书、Reddit 等一个命令全装
+
+**特点**：
+- 一键安装，全部平台搞定
+- 免费开源，无需 API Key（Cookie 登录）
+- 兼容所有 Agent（Claude Code、OpenClaw、Cursor 等）
+- 脚手架设计，不满意可以换掉单个工具
+
+**与现有技能的区别**：
+| 场景 | 推荐 | 说明 |
+|------|------|------|
+| 需要多平台 | agent-reach | 一个命令全装 |
+| 只要 Twitter | x-post-fetch | 轻量快速 |
+| 只要网页 | jina-reader | 更轻量 |
+
+**安装**：
+```
+帮我安装 Agent Reach：https://raw.githubusercontent.com/Panniantong/agent-reach/main/docs/install.md
+```
+
+**使用**：安装后直接告诉 Agent 要做什么（读链接、搜推特等）
+
+**文档**：查看 `agent-reach/SKILL.md`
+
+---
+
+### 19. 📦 github-to-skills（GitHub 仓库转 AI Skills）
 
 **功能**：将 GitHub 仓库自动转换为可安装的 AI Skills
 
@@ -609,7 +638,7 @@ pip install reportlab
 
 ---
 
-### 28. 📰 tech-news-digest（技术新闻每日摘要 + AI 深度分析）
+### 29. 📰 tech-news-digest（技术新闻每日摘要 + AI 深度分析）
 
 **功能**：5层数据收集 + AI 深度分析 + 定时推送
 
@@ -669,6 +698,7 @@ openclaw-skills/
 ├── vue-auto-tester/        # Vue 3 自动测试
 ├── news-research/           # 新闻研究
 ├── x-post-fetch/           # X 帖子抓取
+├── agent-reach/            # AI 互联网工具全家桶
 ├── github-to-skills/       # GitHub 转 Skills
 ├── skill-manager/          # 生命周期管理
 ├── skill-evolution-manager/ # 持续改进
