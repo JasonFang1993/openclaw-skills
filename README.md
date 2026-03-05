@@ -4,54 +4,111 @@
 
 ## 📦 技能列表
 
-| 技能名称 | 功能描述 | 安装难度 |
-|---------|---------|---------|
-| **pdf** | PDF 处理（提取、合并、创建、水印） | ⭐ |
-| **pptx** | PPT 制作（幻灯片、模板、设计） | ⭐ |
-| **docx** | Word 文档（报告、合同、表格） | ⭐ |
-| **xlsx** | Excel 数据（表格、公式、图表） | ⭐ |
-| **canvas-design** | 视觉设计（海报、艺术创作） | ⭐ |
-| **webapp-testing** | Web 应用测试（Playwright） | ⭐ |
-| **weather** | 天气查询（免费无需 API） | ⭐ |
-| **weixin-reader** | 微信文章读取（反爬虫破解） | ⭐ |
-| **ddg-search** | DuckDuckGo 免费网页搜索 | ⭐ |
-| **jina-reader** | 网页内容提取（Jina AI） | ⭐ |
-| **github-search** | GitHub 仓库搜索（API、Stars、详细信息） | ⭐ |
-| **http-client** | HTTP 客户端（配置文件、请求管理、历史追踪） | ⭐ |
-| **drawio-diagrams** | Draw.io 图表生成（Mermaid/CSV/XML） | ⭐ |
-| **vue-auto-tester** | Vue 3 自动测试（Vitest + Playwright） | ⭐ |
-| **news-research** | AI行业新闻深度分析（每条新闻含个人洞察，中文输出） | ⭐ |
-| **x-post-fetch** | X (Twitter) 帖子抓取（支持 auth_token） | ⭐ |
-| **agent-reach** | AI 互联网工具全家桶（Twitter/B站/YouTube等） | ⭐⭐ |
-| **github-to-skills** | 将 GitHub 仓库自动转换为 AI Skills | ⭐⭐ |
-| **skill-manager** | 管理 Skill 生命周期（检查更新、删除） | ⭐⭐ |
-| **skill-evolution-manager** | 基于用户反馈持续改进 Skills | ⭐⭐ |
-| **memory-manager** | 知识记忆管理（Obsidian 集成） | ⭐⭐ |
-| **link-to-knowledge** | 链接转为知识库条目 | ⭐ |
-| **pm-toolkit** | 去中心化项目管理（多 AI 协作） | ⭐⭐ |
-| **cron-tools** | 定时任务（每日简报、每周复盘） | ⭐ |
-| **init-all** | 一键初始化（换电脑恢复配置） | ⭐ |
-| **notion** | Notion API（页面、数据库、块管理） | ⭐⭐ |
-| **obsidian** | Obsidian 笔记（vault 管理、搜索、创建） | ⭐ |
-| **summarize** | 摘要 URL/文件/YouTube | ⭐ |
-| **tavily-search** | Tavily AI 搜索（专为 AI 设计） | ⭐ |
-| **research-company** | 公司调研，生成 PDF 报告 | ⭐ |
-| **tech-news-digest** | 技术新闻每日摘要 + AI 深度分析（500+字/篇，独立观点） | ⭐ |
-| **feishu-permission-transfer** | 飞书文档权限转让 | ⭐ |
-| **web-to-markdown** | 网页转Markdown阅读（技术文档转换） | ⭐ |
-| **seo-audit** | 网站SEO审计 | ⭐ |
-| **website-health** | 网站健康检查 | ⭐ |
-| **code-review** | 代码审查最佳实践 | ⭐ |
-| **strategy-writing** | 写作策略与反思 | ⭐ |
-| **marketing-psychology** | 营销心理学原理与应用 | ⭐ |
-| **pricing-strategy** | 定价策略 | ⭐ |
-| **web-design-guidelines** | 网页设计指南 | ⭐ |
-| **frontend-design** | 前端设计规范 | ⭐ |
-| **ui-ux-pro-max** | UI/UX设计与无障碍 | ⭐ |
-| **tailwind-design-system** | Tailwind CSS设计系统 | ⭐ |
-| **ai-image-generation** | AI图像生成指南 | ⭐ |
-| **markdown-to-html** | Markdown转HTML | ⭐ |
-| **github-ssh-fix** | GitHub SSH连接修复 | ⭐ |
+### 📄 文档处理
+
+| 技能名称 | 功能描述 |
+|---------|---------|
+| **pdf** | PDF 处理（提取、合并、创建，水印） |
+| **pptx** | PPT 制作（幻灯片、模板，设计） |
+| **docx** | Word 文档（报告、合同、表格） |
+| **xlsx** | Excel 数据（表格、公式、图表） |
+| **markdown-to-html** | Markdown转HTML |
+
+### 🔍 搜索与阅读
+
+| 技能名称 | 功能描述 |
+|---------|---------|
+| **ddg-search** | DuckDuckGo 免费网页搜索 |
+| **jina-reader** | 网页内容提取（Jina AI） |
+| **weixin-reader** | 微信文章读取（反爬虫破解） |
+| **tavily-search** | Tavily AI 搜索（专为 AI 设计） |
+| **web-to-markdown** | 网页转Markdown阅读（技术文档转换） |
+
+### 🎨 设计
+
+| 技能名称 | 功能描述 |
+|---------|---------|
+| **canvas-design** | 视觉设计（海报、艺术创作） |
+| **web-design-guidelines** | 网页设计指南与最佳实践 |
+| **frontend-design** | 前端设计与开发规范 |
+| **ui-ux-pro-max** | UI/UX设计与无障碍指南 |
+| **tailwind-design-system** | Tailwind CSS设计系统 |
+| **ai-image-generation** | AI图像生成指南（DALL-E、Midjourney、Stable Diffusion） |
+
+### 💻 工程
+
+| 技能名称 | 功能描述 |
+|---------|---------|
+| **code-review** | 代码审查最佳实践 |
+| **webapp-testing** | Web 应用测试（Playwright） |
+| **vue-auto-tester** | Vue 3 自动测试（Vitest + Playwright） |
+| **http-client** | HTTP 客户端（配置文件、请求管理） |
+| **github-search** | GitHub 仓库搜索 |
+
+### 📊 增长与营销
+
+| 技能名称 | 功能描述 |
+|---------|---------|
+| **seo-audit** | 网站SEO审计与分析 |
+| **website-health** | 网站健康检查 |
+| **marketing-psychology** | 营销心理学原理与应用 |
+| **pricing-strategy** | 定价策略与技巧 |
+
+### ✍️ 写作
+
+| 技能名称 | 功能描述 |
+|---------|---------|
+| **strategy-writing** | 写作策略与反思 |
+| **summarize** | 摘要 URL/文件/YouTube |
+
+### 🔧 飞书集成
+
+| 技能名称 | 功能描述 |
+|---------|---------|
+| **feishu-permission-transfer** | 飞书文档权限转让 |
+
+### 🛠️ 工具
+
+| 技能名称 | 功能描述 |
+|---------|---------|
+| **github-ssh-fix** | GitHub SSH连接修复（22端口被墙） |
+| **weather** | 天气查询（免费无需API） |
+| **drawio-diagrams** | Draw.io 图表生成 |
+
+### 🧠 AI与研究
+
+| 技能名称 | 功能描述 |
+|---------|---------|
+| **news-research** | AI行业新闻深度分析 |
+| **tech-news-digest** | 技术新闻每日摘要 |
+| **research-company** | 公司调研，生成PDF报告 |
+| **agent-reach** | AI互联网工具全家桶（Twitter/B站/YouTube） |
+| **x-post-fetch** | X (Twitter) 帖子抓取 |
+
+### 📋 项目管理
+
+| 技能名称 | 功能描述 |
+|---------|---------|
+| **pm-toolkit** | 去中心化项目管理（多AI协作） |
+| **cron-tools** | 定时任务（每日简报、每周复盘） |
+
+### 💡 知识管理
+
+| 技能名称 | 功能描述 |
+|---------|---------|
+| **memory-manager** | 知识记忆管理（Obsidian集成） |
+| **link-to-knowledge** | 链接转为知识库条目 |
+| **notion** | Notion API（页面、数据库） |
+| **obsidian** | Obsidian 笔记 |
+
+### 🔄 自动化
+
+| 技能名称 | 功能描述 |
+|---------|---------|
+| **init-all** | 一键初始化（换电脑恢复配置） |
+| **skill-manager** | 管理Skill生命周期 |
+| **skill-evolution-manager** | 基于反馈持续改进 |
+| **github-to-skills** | GitHub仓库转AI Skills |
 
 ---
 
