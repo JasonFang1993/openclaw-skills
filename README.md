@@ -74,6 +74,7 @@
 | **github-ssh-fix** | GitHub SSH连接修复（22端口被墙） |
 | **weather** | 天气查询（免费无需API） |
 | **drawio-diagrams** | Draw.io 图表生成 |
+| **debug-tool-capabilities** | 诊断 OpenClaw 工具能力缺失（exec/read/http） |
 
 ### 🧠 AI与研究
 
