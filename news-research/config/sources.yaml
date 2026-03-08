@@ -1,0 +1,207 @@
+# 新闻源配置文件
+# 使用RSS订阅源 + Browser兜底
+
+sources:
+  # ===== 英文源 - AI专业媒体 =====
+  - priority: 1
+    name: "MIT Tech Review AI"
+    url: "https://www.technologyreview.com/feed/"
+    weight: 5
+    category: "ai_news"
+    type: "rss"
+    lang: "en"
+
+  - priority: 2
+    name: "VentureBeat AI"
+    url: "https://venturebeat.com/ai/feed/"
+    weight: 5
+    category: "ai_news"
+    type: "rss"
+    lang: "en"
+
+  - priority: 3
+    name: "Wired AI"
+    url: "https://www.wired.com/feed/tag/ai/latest/rss"
+    weight: 4
+    category: "ai_news"
+    type: "rss"
+    lang: "en"
+
+  # ===== 英文源 - 科技媒体 =====
+  - priority: 4
+    name: "TechCrunch"
+    url: "https://techcrunch.com/feed/"
+    weight: 4
+    category: "tech"
+    type: "rss"
+    lang: "en"
+
+  - priority: 5
+    name: "Ars Technica"
+    url: "https://feeds.arstechnica.com/arstechnica/index"
+    weight: 4
+    category: "tech"
+    type: "rss"
+    lang: "en"
+
+  - priority: 6
+    name: "The Verge"
+    url: "https://www.theverge.com/rss/index.xml"
+    weight: 4
+    category: "tech"
+    type: "rss"
+    lang: "en"
+
+  # ===== 英文源 - Google News =====
+  - priority: 7
+    name: "Google News AI"
+    url: "https://news.google.com/rss/search?q=AI%20artificial%20intelligence"
+    weight: 4
+    category: "ai_news"
+    type: "rss"
+    lang: "en"
+
+  - priority: 8
+    name: "Google News AI Funding"
+    url: "https://news.google.com/rss/search?q=AI%20funding%20investment%20startup"
+    weight: 4
+    category: "funding"
+    type: "rss"
+    lang: "en"
+
+  # ===== 英文源 - 商业/财经 =====
+  - priority: 9
+    name: "Reuters Tech"
+    url: "https://www.reutersagency.com/feed/?taxonomy=topics&post_type=best&topic=tech"
+    weight: 5
+    category: "business"
+    type: "rss"
+    lang: "en"
+
+  - priority: 10
+    name: "CNBC"
+    url: "https://search.cnbc.com/rs/search/combinedcms/?q=AI&t=1500&num=20"
+    weight: 4
+    category: "business"
+    type: "rss"
+    lang: "en"
+
+  # ===== 中文源 - 权威科技媒体 =====
+  - priority: 11
+    name: "钛媒体"
+    url: "https://www.tmtpost.com/feed"
+    weight: 5
+    category: "tech"
+    type: "rss"
+    lang: "zh"
+    keywords:
+      - "AI"
+      - "人工智能"
+      - "大模型"
+      - "LLM"
+      - "GPT"
+      - "融资"
+      - "发布"
+
+  - priority: 12
+    name: "爱范儿"
+    url: "https://www.ifanr.com/feed"
+    weight: 4
+    category: "tech"
+    type: "rss"
+    lang: "zh"
+    keywords:
+      - "AI"
+      - "人工智能"
+      - "大模型"
+
+  # ===== 中文源 - 需要Browser兜底 =====
+  - priority: 13
+    name: "36氪"
+    url: "https://www.36kr.com/information/AI/"
+    weight: 5
+    category: "ai_news"
+    type: "html"
+    need_browser: true
+    lang: "zh"
+
+  - priority: 14
+    name: "量子位"
+    url: "https://www.qbitai.com/"
+    weight: 5
+    category: "ai_news"
+    type: "html"
+    need_browser: true
+    lang: "zh"
+
+  - priority: 15
+    name: "机器之心"
+    url: "https://www.jiqizhixin.com/news"
+    weight: 5
+    category: "ai_news"
+    type: "html"
+    need_browser: true
+    lang: "zh"
+
+# 搜索关键词配置
+search:
+  # 英文关键词
+  default_keywords_en:
+    - "AI"
+    - "artificial intelligence"
+    - "machine learning"
+    - "LLM"
+    - "GPT"
+    - "deep learning"
+    - "neural network"
+    - "funding"
+    - "investment"
+  
+  # 中文关键词
+  default_keywords_zh:
+    - "人工智能"
+    - "AI"
+    - "大模型"
+    - "LLM"
+    - "GPT"
+    - "机器学习"
+    - "深度学习"
+    - "融资"
+
+# 去重配置
+dedup:
+  title_similarity_threshold: 0.7
+  check_cross_day: true
+
+# 排序配置
+ranking:
+  source_weights:
+    # 英文源
+    mit_technology_review: 5
+    venturebeat: 5
+    wired: 4
+    techcrunch: 4
+    ars_technica: 4
+    the_verge: 4
+    google_news: 3
+    reuters: 5
+    cnbc: 4
+    # 中文源
+    "36kr": 5
+    "量子位": 5
+    "机器之心": 5
+    "钛媒体": 5
+    "爱范儿": 4
+  
+  content_factors:
+    has_numbers: 1
+    has_quote: 1
+    has_analysis: 2
+
+# 输出配置
+output:
+  format: "markdown"
+  max_news: 30
+  include_summary: true
+  include_highlights: true
+  translate: true  # 默认开启中文翻译

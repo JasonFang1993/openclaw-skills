@@ -1,0 +1,22 @@
+{
+  "name": "@openclaw/http-client",
+  "version": "1.0.0",
+  "description": "Advanced HTTP client with custom headers, POST body, authentication support",
+  "main": "bin/http-client.js",
+  "bin": {
+    "http-client": "bin/http-client.js"
+  },
+  "scripts": {
+    "test": "node bin/http-client.js --help"
+  },
+  "keywords": [
+    "http",
+    "client",
+    "api",
+    "rest",
+    "request",
+    "authentication"
+  ],
+  "author": "OpenClaw",
+  "license": "MIT"
+}

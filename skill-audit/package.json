@@ -1,0 +1,30 @@
+{
+  "name": "@openclaw/skill-audit",
+  "version": "1.0.0",
+  "description": "Security audit tool to detect compromised, poisoned, or maliciously modified agent skills",
+  "main": "bin/skill-audit.js",
+  "bin": {
+    "skill-audit": "bin/skill-audit.js"
+  },
+  "scripts": {
+    "audit": "node bin/skill-audit.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "security",
+    "audit",
+    "skill",
+    "malware",
+    "static-analysis",
+    "agent"
+  ],
+  "author": "OpenClaw",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/openclaw/openclaw"
+  },
+  "engines": {
+    "node": ">=16.0.0"
+  }
+}
