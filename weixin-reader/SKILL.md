@@ -14,25 +14,37 @@ description: Read and extract readable content from WeChat Official Account arti
 # Save to file
 ./scripts/reader.sh "https://mp.weixin.qq.com/s/..." > output.txt
 
+# JSON output (for automation)
+node scripts/reader.js --json "https://mp.weixin.qq.com/s/..."
+
+# Quiet mode (suppress fetch logs)
+node scripts/reader.js --quiet "https://mp.weixin.qq.com/s/..."
+
 # Custom User-Agent
 node scripts/reader.js "https://mp.weixin.qq.com/s/..."
 ```
 
 ## How It Works
 
-1. **User-Agent Spoofing**: Uses iPhone Safari user-agent to bypass WeChat's mobile detection
-2. **HTML Fetching**: Uses Node.js https module for reliable requests
-3. **Text Extraction**: 
-   - Removes `<script>` and `<style>` tags
-   - Strips all HTML tags
-   - Decodes HTML entities (&nbsp;, &lt;, &gt;, &amp;)
-   - Filters out short lines and URLs
-   - Returns clean paragraphs
+1. **Multi-UA Retry (兼容增强)**
+   - Tries multiple user-agents (mobile WeChat / mobile Safari / desktop) to improve compatibility
+2. **Robust HTML Fetching**
+   - Uses Node.js https/http modules
+   - Follows redirects and keeps timeout protection
+3. **Content Extraction + Fallback**
+   - Prefers `#js_content` / rich media content blocks
+   - Removes `<script>` / `<style>` / tags and decodes entities
+   - Detects WeChat shell pages like `轻触查看原文`
+   - On blocked shell pages, falls back to `og:title` / `og:description` extraction
+4. **Structured Output**
+   - Returns title, paragraphs, and extraction diagnostics
 
 ## Parameters
 
 - **URL**: Full WeChat article URL (required)
-- Optional: Add custom headers via environment variables
+- Optional env vars:
+  - `WEIXIN_READER_UA`: custom user-agent (prepended to retry list)
+  - `WEIXIN_READER_REFERER`: custom referer (default `https://mp.weixin.qq.com/`)
 
 ## Requirements
 
