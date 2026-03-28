@@ -131,3 +131,34 @@ I can still help you with this task directly! Would you like me to proceed?
 If this is something you do often, you could create your own skill:
 npx skills init my-xyz-skill
 ```
+
+---
+
+## Skill 选择决策树（显式）
+
+遇到任务时，按以下路径判断：
+
+```
+任务到来
+│
+├─ 我有内置工具可以直接处理？
+│    └ YES → 直接执行，不调用任何 Skill
+│
+├─ 有本地 Skill 匹配？
+│    ├ YES，且我有对应工具 → read SKILL.md → 直接执行
+│    └ YES，但我缺工具/能力 → 用 delegate-task 委托给 OpenSpace
+│
+├─ 无本地匹配，但用户想找 Skill？
+│    ├ 用 find-skills / openspace_search_skills 搜索
+│    ├ 找到匹配 → 评估：我要装吗？我能执行吗？
+│    └ 没找到 → 我自己处理，或问用户要不要委托
+│
+└─ 用户明确要求委托 → delegate-task → OpenSpace execute_task
+```
+
+### 决策原则
+
+- **优先用内置工具**，不要为了用 Skill 而用 Skill
+- **匹配度 > 数量**，找到一个精准的 比 一堆模糊的好
+- **安装新 Skill 前必须做安全审查**，参见 AGENTS.md 安全铁律
+- **出了故障查 SKILL.md**，不要跳过 Skill 直接硬编码
